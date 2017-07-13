@@ -1,0 +1,30 @@
+{
+  "name": "bhp_product",
+  "description": "Base bhp product",
+  "main": "app.js",
+  "authors": [
+    "Hardeep mehta <hardymehta@gmail.com>"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "devDependencies": {
+    "jquery": "^2.2.1",
+    "angular": "^1.5.1",
+    "moment": "^2.12.0",
+    "angular-route": "^1.5.1",
+    "angular-animate": "^1.5.1",
+    "angular-cookies": "^1.5.1",
+    "ngstorage": "^0.3.10",
+    "angular-resource": "^1.5.1",
+    "angular-sanitize": "^1.5.1",
+    "angular-touch": "^1.5.1",
+    "angular-ui-router": "ui-router#^0.2.18",
+    "angular-bootstrap": "^1.2.4",
+    "AngularJS-Toaster": "angularjs-toaster#^1.2.0",
+    "screenfull": "^3.0.0",
+    "angular-moment": "^0.10.3",
+    "angular-file-upload": "^2.2.0"
+  }
+}
