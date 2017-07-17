@@ -4,6 +4,17 @@
     <title>Trootorials</title>
   </head>
   <body>
-    Hello
+    <ul>
+    <%
+      videos.forEach(function( singleVideo, index ) {
+        %>
+        <li>
+          Name: <%= singleVideo.name %> </br>
+          Size: <%= singleVideo.size %>
+        </li>
+        <%
+      });
+    %>
+    </ul>
   </body>
 </html>

@@ -25,6 +25,8 @@ const PORT = process.env.PORT || 5000;
 
 var app = express();
 
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+
 // Set path of static assets
 if (NODE_ENV && typeof NODE_ENV !== "undefined" && (NODE_ENV == 'PROD' || NODE_ENV == 'BETA')) {
     app.set('isDevEnv', false);
