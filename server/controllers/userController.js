@@ -9,7 +9,7 @@ module.exports = function( app, passport ) {
   //Show all users
   app.get('/api/allusers' , allUsersHandler);
 
-  //Show a particular user
+  //Get 
   app.get('/api/getuser/:id' , particularUserHandler);
 
   //Add a new user
