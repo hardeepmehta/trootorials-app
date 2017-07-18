@@ -22,7 +22,7 @@ var Course = sequelize.define('Course', {
     type: Sequelize.STRING
   },
   duration: {
-    type: Sequelize.INTEGER
+    type: Sequelize.STRING
   }
 }, {
   freezeTableName: true
@@ -75,9 +75,9 @@ var Video = sequelize.define('Video', {
   },
   file: {
     type: Sequelize.STRING
-  },  
+  },
   ispublic: {
-    type: Sequelize.INTEGER
+    type: Sequelize.BOOLEAN
   }
 }, {
   freezeTableName: true
@@ -144,7 +144,7 @@ var Payment = sequelize.define('Payment', {
     type: Sequelize.STRING
   },
   transactionid: {
-    type: Sequelize.INTEGER
+    type: Sequelize.STRING
   },
   status: {
     type: Sequelize.STRING
