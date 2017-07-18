@@ -1,5 +1,5 @@
 <div class="add-row-editable-table">
-  <button class="btn btn-primary" ng-click="addUser()">Add Courses</button>
+  <button class="btn btn-primary"  data-toggle="modal" ng-click="open('app/pages/courses/addCourses/add.html', 'lg')">Add Courses</button>
 </div>
 <table class="table table-bordered table-hover table-condensed">
   <tr>
@@ -11,11 +11,11 @@
   </tr>
   <tr ng-repeat="user in users" class="editable-row">
     <td>
-        {{$index}}
+        {{user.id}}
     </td>
     <td>
-        <span editable-text="user.name" e-name="name" e-form="rowform" e-required>
-          {{ user.name || 'empty' }}
+        <span editable-text="user.title" e-name="name" e-form="rowform" e-required>
+          {{ user.title || 'empty' }}
         </span>
     </td>
     <!-- <td class="select-td">
@@ -25,16 +25,15 @@
         </span>
     </td> -->
 
-    <td class="select-td">
-        <span editable-text="user.status" e-name="status" e-form="rowform" >
-          {{ user.status }}
+    <td>
+        <span editable-text="user.description" e-name="name" e-form="rowform" e-required>
+          {{ user.description || 'empty' }}
         </span>
     </td>
 
-    <td class="select-td">
-        <span editable-select="user.group" e-name="group" onshow="loadGroups()" e-form="rowform" e-selectpicker
-              e-ng-options="g.id as g.text for g in groups">
-          {{ showGroup(user) }}
+    <td>
+        <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
+          {{ user.duration || 'empty' }}
         </span>
     </td>
     <td>
@@ -49,7 +48,7 @@
       </form>
       <div class="buttons" ng-show="!rowform.$visible">
         <button class="btn btn-primary editable-table-button btn-xs" ng-click="rowform.$show()">Edit</button>
-        <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeUser($index)">Delete</button>
+        <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeUser(user.id)">Delete</button>
       </div>
     </td>
   </tr>

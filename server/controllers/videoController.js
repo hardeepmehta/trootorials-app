@@ -1,37 +1,52 @@
+function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxx.mp4'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+
+
 const apiService = require('services/apiService'),
   sql = require('services/sqlService'),
   apiConfig = require('config/apiConfig');
 
 module.exports = function(app, passport) {
   //Show all users
-  app.get('/api/allvideos', allVideosHandler);
+  app.get('/api/allVideos', allVideosHandler);
 
   //Get Update
-  app.get('/api/getvideo/:id', particularVideoHandler);
+  app.get('/api/getVideo/:id', particularVideoHandler);
 
   //Update post
-  app.post('/api/videoUpdate/:id', VideoUpdateHandler);
+  app.post('/api/videoUpdate/:id', videoUpdateHandler);
 
   //POST Insert
-  app.post('/api/addvideo', addVideoHandler);
+  app.post('/api/addVideo', addVideoHandler);
 
   //Delete
-  app.post('/api/videoDelete/:id', VideoDeleteHandler);
+  app.post('/api/videoDelete/:id', videoDeleteHandler);
 };
 
 
 function addVideoHandler(req, res) {
+  var filename = req.body.file,
+  filename=filename.replace(filename.substring(filename.lastIndexOf('/')+1),""),
+  uuid = generateUUID();
+  filename = filename+uuid;
+
   var data = {
     title: req.body.title,
     description: req.body.description,
     author: req.body.author,
     duration: req.body.duration,
-    file: req.body.file,
-    uploadedat: req.body.uploadedat,
+    file: filename,
     ispublic: req.body.ispublic
-
   }
-  if (!(data.title && data.description && data.author && data.duration && data.file && data.uploaded && data.ispublic)) {
+
+  if (!(data.title && data.description && data.author && data.duration && data.file && data.ispublic)) {
     res.send({
       error: true,
       reason: "Insufficient parameters"
@@ -39,22 +54,23 @@ function addVideoHandler(req, res) {
 
   } else {
     var whereObj = {
-      id: req.body.title
+      title: req.body.title
     }
     sql.findOne(sql.video, whereObj, function(obj) {
 
-      if (obj.data.title) {
+      if (obj.data.id) {
         res.send({
           error: 'true',
           reason: 'Video already exists'
         })
-
       } else {
         sql.insert(sql.video, data, function(obj) {
           res.send({
             error: false,
             response: "Video created successfully"
-          });
+          }
+      );
+      //console.log(obj);
         })
       }
     })
@@ -65,8 +81,13 @@ function addVideoHandler(req, res) {
 
 function allVideosHandler(req, res, next) {
   sql.findAll(sql.video, {}, function(obj) {
-    console.log(obj);
-    if (!obj.data) {
+    //console.log(obj);
+    if(obj.data == 0)
+    res.send({
+    error: true,
+    reason: "No video found!!"
+  });
+    else if(!obj.data) {
       res.send({
         error: true,
         reason: "No data found"
@@ -104,14 +125,14 @@ function particularVideoHandler(req, res) {
   }
 }
 
-function VideoUpdateHandler(req, res, next) {
+function videoUpdateHandler(req, res, next) {
   var data = {
     title: req.body.title,
     description: req.body.description,
     author: req.body.author,
     duration: req.body.duration,
     file: req.body.file,
-    uploadedat: req.body.uploadedat,
+    //uploadedat: req.body.uploadedat,
     ispublic: req.body.ispublic
   }
 
@@ -119,11 +140,20 @@ function VideoUpdateHandler(req, res, next) {
     id: req.params.id
   }
 
-  if (!(data.title && data.description && data.author && data.file && data.uploadedat && data.ispublic))
+  if (!(data.title && data.description && data.author && data.file && data.ispublic)){
     res.send({
       error: true,
       reason: "All fields not filled"
     });
+  }
+  else {
+    sql.findOne(sql.video, whereObj, function(obj) {
+    if (!(obj.data.id)) {
+      res.send({
+        error: true,
+        response: "Video does not exist"
+      })
+    }
   else {
     sql.update(sql.video, data, whereObj, function(obj) {
       res.send({
@@ -132,25 +162,29 @@ function VideoUpdateHandler(req, res, next) {
       });
     });
   }
+});
+}
 }
 
-function VideoDeleteHandler(req, res, next) {
+function videoDeleteHandler(req, res, next) {
   var whereobj = {
     id: req.params.id
   }
 
+  sql.findOne(sql.video, whereobj, function(obj) {
+  if (!(obj.data.id)) {
+    res.send({
+      error: true,
+      response: "Video does not exist"
+    })
+  }
+  else{
   sql.delete(sql.video, whereobj, function response(obj) {
-    if (obj.data.id)
       res.send({
         error: false,
-        response: "video deleted successfully!!"
+        response: "Video deleted successfully!!"
       });
-    else {
-      res.send({
-        error: true,
-        reason: "video does not exist"
       })
-    }
-
-  });
+}
+})
 }
