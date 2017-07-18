@@ -21,7 +21,7 @@ module.exports = function(app, passport) {
 
 
 function getCourseHandler(req, res, next) {
-  sql.findAll(sql.courses,1, function validate(obj) {    
+  sql.findAll(sql.courses,1, function validate(obj) {
     if (obj.data == 0)
       res.send({
         error: true,
@@ -88,6 +88,13 @@ function CourseUpdateHandler(req, res, next) {
   var whereObj = {
     id: req.params.id
   }
+
+  if (!req.params.id) {
+    res.send({
+      error: true,
+      reason: "Insufficient parameters"
+    });
+  }
   if (!(data.title && data.description && data.duration)){
     res.send({
       error: true,
@@ -140,15 +147,18 @@ function CourseDeleteHandler(req, res, next) {
 }
 
 function getCourseUpdateHandler(req, res, next) {
-  var data = {
-    title: req.body.title,
-    description: req.body.description,
-    duration: req.body.duration
-  }
   var whereObj = {
     id: req.params.id
   }
   //else {
+  if (!req.params.id) {
+    res.send({
+      error: true,
+      reason: "Insufficient parameters"
+    });
+
+  }
+  else{
     sql.findOne(sql.courses, whereObj, function(obj) {
     if (!(obj.data.id)) {
       res.send({
@@ -162,5 +172,5 @@ function getCourseUpdateHandler(req, res, next) {
       });
     }
   });
-//}
+}
 }
