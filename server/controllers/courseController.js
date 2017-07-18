@@ -21,9 +21,13 @@ module.exports = function(app, passport) {
 
 
 function getCourseHandler(req, res, next) {
-  sql.findAll(sql.courses, {}, function validate(obj) {
-    console.log(obj);
-    if (!obj.data)
+  sql.findAll(sql.courses,1, function validate(obj) {    
+    if (obj.data == 0)
+      res.send({
+        error: true,
+        reason: "No data found"
+      });
+    else if (!obj.data)
       res.send({
         error: true,
         reason: "No data found"
