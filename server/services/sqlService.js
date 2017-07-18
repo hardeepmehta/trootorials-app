@@ -75,10 +75,7 @@ var Video = sequelize.define('Video', {
   },
   file: {
     type: Sequelize.STRING
-  },
-  uploadedat: {
-    type: Sequelize.STRING
-  },
+  },  
   ispublic: {
     type: Sequelize.INTEGER
   }
