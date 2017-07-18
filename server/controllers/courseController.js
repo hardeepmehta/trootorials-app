@@ -1,24 +1,24 @@
-
-  const apiService = require('services/apiService'),
-    sql = require('services/sqlService'),
-    apiConfig = require('config/apiConfig');
+const apiService = require('services/apiService'),
+  sql = require('services/sqlService'),
+  apiConfig = require('config/apiConfig');
 
 module.exports = function(app, passport) {
-  // Get All Courses
-  app.get('/api/course', getCourseHandler);
-
   // Add course
-  app.post('/api/addCourse', addCourseHandler);
+  app.post('/api/addCourse', addCourseHandler); //checked
+
+  // Get All Courses
+  app.get('/api/course', getCourseHandler); //checked
 
   //Update post
-  app.post('/api/courseUpdate/:id', CourseUpdateHandler);
+  app.post('/api/courseUpdate/:id', CourseUpdateHandler);  //checked
 
   //get Update
-  app.get('/api/courseUpdateGet/:id', getCourseUpdateHandler);
+  app.get('/api/courseUpdateGet/:id', getCourseUpdateHandler);  //checked
 
   //Delete
   app.post('/api/courseDelete/:id', CourseDeleteHandler);
 };
+
 
 function getCourseHandler(req, res, next) {
   sql.findAll(sql.courses, {}, function validate(obj) {
@@ -81,46 +81,59 @@ function CourseUpdateHandler(req, res, next) {
     duration: req.body.duration
   }
 
-  var whereobj = {
+  var whereObj = {
     id: req.params.id
   }
-
-  if (!(data.title && data.description && data.duration))
+  if (!(data.title && data.description && data.duration)){
     res.send({
       error: true,
       reason: "All fields not filled"
     });
-  else {
-    sql.update(sql.courses, data, whereObj, function(obj) {
-      res.send({
-        error: false,
-        response: "Updated successfully"
-      });
-    });
   }
-}
+  else
+    {
+      sql.findOne(sql.courses, whereObj, function(obj) {
+      if (!(obj.data.id)) {
+        res.send({
+          error: true,
+          response: "Course does not exist"
+        })
+      }
+      else {
+        sql.update(sql.courses, data, whereObj, function(obj) {
+          res.send({
+            error: false,
+            response: "Updated successfully"
+          });
+        });
+      }
+
+    });
+    }
+  }
+
 
 function CourseDeleteHandler(req, res, next) {
   var whereobj = {
     id: req.params.id
   }
-
-  sql.delete(sql.courses, whereobj, function response(obj) {
-    if (obj.data.id)
+  sql.findOne(sql.courses, whereobj, function(obj) {
+  if (!(obj.data.id)) {
+    res.send({
+      error: true,
+      response: "Course does not exist"
+    })
+  }
+  else{
+  sql.delete(sql.courses, whereobj, function(obj) {
       res.send({
         error: false,
         response: "Course deleted successfully!!"
       });
-    else {
-      res.send({
-        error: true,
-        reason: "Course does not exist"
       })
-    }
-
-  });
 }
-
+})
+}
 
 function getCourseUpdateHandler(req, res, next) {
   var data = {
@@ -128,22 +141,22 @@ function getCourseUpdateHandler(req, res, next) {
     description: req.body.description,
     duration: req.body.duration
   }
-  var whereobj = {
+  var whereObj = {
     id: req.params.id
   }
-
-  if (!(data.title && data.description && data.duration))
-    res.send({
-      error: true,
-      reason: "All fields not filled"
-    });
-  else {
-    sql.update(sql.courses, data, whereObj, function(obj) {
+  //else {
+    sql.findOne(sql.courses, whereObj, function(obj) {
+    if (!(obj.data.id)) {
+      res.send({
+        error: true,
+        response: "Course does not exist"
+      })
+    } else {
       res.send({
         error: false,
-        response: "Updated successfully"
+        response: obj
       });
-    });
-
-  }
+    }
+  });
+//}
 }
