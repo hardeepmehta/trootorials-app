@@ -9,41 +9,44 @@
       .controller('UserPageCtrl', UserPageCtrl);
 
   /** @ngInject */
-  function UserPageCtrl($scope, $filter, editableOptions, editableThemes,$window) {
+  function UserPageCtrl($scope, $filter, editableOptions, editableThemes, $window, $http) {
+      $http.get("http://localhost:7800/api/allusers"). then(function(response) {
+        console.log("hit");
+        console.log("response"+JSON.stringify(response.data.data));
+        $scope.users = response.data.data;
+      });
 
-
-
-    $scope.users = [
-      {
-        "UserId": 1,
-        "CourseId": 1,
-        "PaymentId": 454545,
-        "CourseName": "MEAN STACK",
-
-      },
-      {
-        "UserId": 1,
-        "CourseId": 2,
-        "PaymentId": 454545,
-        "CourseName": "FULL STACK",
-
-      },
-      {
-        "UserId": 1,
-        "CourseId": 3,
-        "PaymentId": 454545,
-        "CourseName": "MEAN STACK",
-
-      },
-      {
-        "UserId": 1,
-        "CourseId": 4,
-        "PaymentId": 2454545,
-        "CourseName": "MEAN STACK",
-
-      }
-
-    ];
+    // $scope.users = [
+    //   {
+    //     "UserId": 1,
+    //     "CourseId": 1,
+    //     "PaymentId": 454545,
+    //     "CourseName": "MEAN STACK",
+    //
+    //   },
+    //   {
+    //     "UserId": 1,
+    //     "CourseId": 2,
+    //     "PaymentId": 454545,
+    //     "CourseName": "FULL STACK",
+    //
+    //   },
+    //   {
+    //     "UserId": 1,
+    //     "CourseId": 3,
+    //     "PaymentId": 454545,
+    //     "CourseName": "MEAN STACK",
+    //
+    //   },
+    //   {
+    //     "UserId": 1,
+    //     "CourseId": 4,
+    //     "PaymentId": 2454545,
+    //     "CourseName": "MEAN STACK",
+    //
+    //   }
+    //
+    // ];
 
     // $scope.statuses = [
     //   {value: 1, text: 'Good'},

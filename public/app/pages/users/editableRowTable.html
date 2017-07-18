@@ -4,19 +4,20 @@
 <table class="table table-bordered table-hover table-condensed">
   <tr>
     <td>UserId</td>
-    <td>CourseId</td>
-    <td>PaymentId</td>
-    <td>CourseName</td>
+    <td>Name</td>
+    <td>Mobile</td>
+    <td>Email</td>
+    <td>Password</td>
     <td align="center">Premium</td>
     <td>Action</td>
   </tr>
   <tr ng-repeat="user in users" class="editable-row">
     <td>
-        {{user.title}}
+        {{user.id}}
     </td>
     <td>
-        <span editable-text="user.CourseId" e-name="name" e-form="rowform" e-required>
-          {{ user.CourseId || 'empty' }}
+        <span editable-text="user.name" e-name="name" e-form="rowform" e-required>
+          {{ user.name || 'empty' }}
         </span>
     </td>
     <!-- <td class="select-td">
@@ -27,17 +28,25 @@
     </td> -->
 
     <td >
-        <span editable-text="user.PaymentId" e-name="name" e-form="rowform" >
-          {{ user.PaymentId }}
+        <span editable-text="user.mobile" e-name="name" e-form="rowform" >
+          {{ user.mobile }}
         </span>
     </td>
 
     <td>
-        <span editable-text="user.CourseName" e-name="name" e-form="rowform" >
-          {{ user.CourseName }}
+        <span editable-text="user.email" e-name="name" e-form="rowform" >
+          {{ user.email }}
         </span>
     </td>
+
     <td>
+        <span editable-text="user.password" e-name="name" e-form="rowform" >
+          {{ user.password }}
+        </span>
+    </td>
+
+    <td>
+
 
       <div class="checkbox" style="text-align:Center;">
   <label><input type="checkbox" value=""></label>
