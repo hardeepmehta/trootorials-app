@@ -30,7 +30,7 @@ module.exports = function(app, passport) {
 }
 
 function allUsersHandler(req, res, next) {
-  sql.findAll(sql.users, 1, function(obj) {
+  sql.findAll(sql.users, {}, function(obj) {
     //console.log(obj);
     if (obj.data.length == 0) {
       res.send({
