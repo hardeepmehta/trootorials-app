@@ -16,7 +16,8 @@
             //icon: 'ion-compose',
             order: 800,
           },
-        });
+        })
+
   }
 
 })();
