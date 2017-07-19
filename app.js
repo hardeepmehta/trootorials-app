@@ -10,6 +10,9 @@ const bodyParser = require('body-parser'),
     passportLocal = require('passport-local'),
     serveStatic = require('serve-static'),
     expressSession = require('express-session');
+    var _ = require("lodash");
+    var jwt = require('jsonwebtoken');
+    var passportJWT = require("passport-jwt");
 
 // Load environment variables
 require('dotenv').config({
@@ -73,15 +76,6 @@ app.use(function(req, res, next) {
     .use(passport.initialize())
     .use(passport.session());
 
-passport.use(new passportLocal.Strategy( require('services/verifyService') ));
-
-passport.serializeUser(function(user, done){
-    done(null, user.id);
-});
-
-passport.deserializeUser(function( id, done ) {
-    require('services/deserializeService')( id, done );
-});
 
 // Logging response time
 app.use(function(req, res, next) {
@@ -102,6 +96,11 @@ app.use(function(err, req, res, next) {
     logger.error("Error: ", err);
     next(err);
 });
+
+//passport.use(new passportLocal.Strategy( require('services/strategyService') ));
+
+passport.use(require('services/strategyService'));
+app.use(passport.initialize());
 
 var server = http.createServer(app).listen(PORT, function() {
     logger.log('info', 'Express server listening on port ' + PORT);
