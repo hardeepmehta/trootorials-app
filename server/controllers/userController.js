@@ -7,32 +7,32 @@ var encryptService = require('services/encryptionService');
 module.exports = function(app, passport) {
 
   //Add a new user
-  app.post('/api/adduser', addUserHandler);   //checked
+  app.post('/api/add-user', addUserHandler);   //checked
 
   //Show all users
-  app.get('/api/allusers', allUsersHandler); //checked
+  app.get('/api/all-users', allUsersHandler); //checked
 
   //Get
-  app.get('/api/getuser/:id', particularUserHandler);  //checked
+  app.get('/api/get-user/:id', particularUserHandler);  //checked
 
   //Delete a user
-  app.post('/api/deleteuser/:id', deleteHandler);  //checked
+  app.post('/api/delete-user/:id', deleteHandler);  //checked
 
   //Update a user
-  app.post('/api/updateuser/:id', updateHandler);
+  app.post('/api/edit-user/:id', updateHandler);
 
   //Reset password
-  app.post('/api/resetpassword/:id', resetPasswordHandler);
+  app.post('/api/update-password/:id', resetPasswordHandler);
 
   //show password
-  app.get('/api/showpassword/:id', showPasswordHandler);
+  app.get('/api/show-password/:id', showPasswordHandler);
 
 }
 
 function allUsersHandler(req, res, next) {
   sql.findAll(sql.users, {}, function(obj) {
     //console.log(obj);
-    if (obj.data.length == 0) {
+    if (obj.error == true || obj.data.length == 0) {
       res.send({
         error: true,
         reason: "No data found"

@@ -4,25 +4,25 @@ const apiService = require('services/apiService'),
 
 module.exports = function(app, passport) {
   // Add course
-  app.post('/api/addCourse', addCourseHandler); //checked
+  app.post('/api/add-course', addCourseHandler); //checked
 
   // Get All Courses
-  app.get('/api/course', getCourseHandler); //checked
+  app.get('/api/all-courses', getCourseHandler); //checked
 
   //Update post
-  app.post('/api/courseUpdate/:id', CourseUpdateHandler);  //checked
+  app.post('/api/edit-course/:id', CourseUpdateHandler);  //checked
 
   //get Update
-  app.get('/api/courseUpdateGet/:id', getCourseUpdateHandler);  //checked
+  app.get('/api/get-course/:id', getCourseUpdateHandler);  //checked
 
   //Delete
-  app.post('/api/courseDelete/:id', CourseDeleteHandler);
+  app.post('/api/delete-course/:id', CourseDeleteHandler);
 };
 
 
 function getCourseHandler(req, res, next) {
   sql.findAll(sql.courses,{}, function(obj) {
-    if (obj.data.length == 0)
+    if (obj.error == true || obj.data.length == 0)
       res.send({
         error: true,
         reason: "No data found"

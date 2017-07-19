@@ -15,19 +15,19 @@ const apiService = require('services/apiService'),
 
 module.exports = function(app, passport) {
   //Show all users
-  app.get('/api/allVideos', allVideosHandler);
+  app.get('/api/all-videos', allVideosHandler);
 
   //Get Update
-  app.get('/api/getVideo/:id', particularVideoHandler);
+  app.get('/api/get-video/:id', particularVideoHandler);
 
   //Update post
-  app.post('/api/videoUpdate/:id', videoUpdateHandler);
+  app.post('/api/edit-video/:id', videoUpdateHandler);
 
   //POST Insert
-  app.post('/api/addVideo', addVideoHandler);
+  app.post('/api/add-video', addVideoHandler);
 
   //Delete
-  app.post('/api/videoDelete/:id', videoDeleteHandler);
+  app.post('/api/delete-video/:id', videoDeleteHandler);
 };
 
 
@@ -82,7 +82,7 @@ function addVideoHandler(req, res) {
 function allVideosHandler(req, res, next) {
   sql.findAll(sql.video, {}, function(obj) {
     //console.log(obj);
-    if(obj.data == 0)
+    if(obj.error == true || obj.data.length == 0)
     res.send({
     error: true,
     reason: "No video found!!"
@@ -136,7 +136,7 @@ function videoUpdateHandler(req, res, next) {
     ispublic: req.body.ispublic
   }
 
-  var whereobj = {
+  var whereObj = {
     id: req.params.id
   }
 

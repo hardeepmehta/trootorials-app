@@ -3,10 +3,10 @@ const apiService = require('services/apiService'),
   apiConfig = require('config/apiConfig');
 
 module.exports = function(app, passport) {
-// Get All feedback
-app.get('/api/feedback/:id', getFeedbackHandler);
+// Get feedback
+app.get('/api/get-feedback/:id', getFeedbackHandler);
 // Add feedback
-app.post('/api/addFeedback', addFeedbackHandler);
+app.post('/api/add-feedback', addFeedbackHandler);
 };
 
 
@@ -21,7 +21,7 @@ function getFeedbackHandler(req, res, next) {
   }
 
   sql.findAll(sql.feedback, whereobj, function validate(obj){
-    if(obj.data == 0)
+    if(obj.error == true || obj.data.length == 0)
     res.send({
     error: true,
     reason: "No data found!!"
