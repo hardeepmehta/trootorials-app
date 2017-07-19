@@ -2,6 +2,7 @@ var sql = require('services/sqlService');
 const apiService = require('services/apiService'),
   apiConfig = require('config/apiConfig');
 var encryptService = require('services/encryptionService');
+var authenticate = require('services/authService');
 
 
 module.exports = function(app, passport) {
@@ -30,23 +31,26 @@ module.exports = function(app, passport) {
 }
 
 function allUsersHandler(req, res, next) {
-  sql.findAll(sql.users, {}, function(obj) {
-    //console.log(obj);
-    if (obj.error == true || obj.data.length == 0) {
-      res.send({
-        error: true,
-        reason: "No data found"
-      });}
-      else if (!obj.data)
-        res.send({
-          error: true,
-          reason: "No data found"
-        });
+ authenticate.auth(req,res,next, function( status ) {
+   console.log("status"+status);
+   sql.findAll(sql.users, {}, function(obj) {
+     //console.log(obj);
+     if (obj.error == true || obj.data.length == 0) {
+       res.send({
+         error: true,
+         reason: "No data found"
+       });}
+       else if (!obj.data)
+         res.send({
+           error: true,
+           reason: "No data found"
+         });
 
-    else {
-      res.send(obj);
-    }
-  });
+     else {
+       res.send(obj);
+     }
+   });
+ });
 }
 
 function particularUserHandler(req, res) {

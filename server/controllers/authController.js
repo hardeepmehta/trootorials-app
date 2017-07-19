@@ -1,26 +1,111 @@
 const apiService = require('services/apiService'),
-    apiConfig = require('config/apiConfig');
+ apiConfig = require('config/apiConfig');
+var _ = require("lodash");
+var jwt = require('jsonwebtoken');
+var passportJWT = require("passport-jwt");
+var encryptService = require('services/encryptionService');
+var sql = require('services/sqlService');
 
-module.exports = function( app, passport ) {
-    // Login User
-    app.post('/api/login', passport.authenticate('local', {failureFlash: true} ), loginHandler);
+var jwtOptions = {}
+jwtOptions.jwtFromRequest = passportJWT.ExtractJwt.fromAuthHeader();
+jwtOptions.secretOrKey = 'tasmanianDevil';
 
-    // Check if user is logged in
-    app.get('/api/loggedin', isLoggedInHandler);
+module.exports = function(app, passport) {
+  // Login User
+  app.post('/api/login', loginHandler);
 
-    // Logout User
-    app.get('/api/logout', logoutHandler);
+  // Check if user is logged in
+  app.get('/api/loggedin', isLoggedInHandler);
+
+  // Logout
+  app.get('/api/logout', logoutHandler)
 };
 
 function loginHandler(req, res, next) {
-    res.send({user: req.user});
+  console.log("req.body" + req.body);
+  var whereObj = {
+    name: req.body.name
+  }
+  console.log("whereObj name" + whereObj.id);
+  if (!req.body.name) {
+    res.send({
+      error: true,
+      reason: "Insufficient parameters"
+    });
+  } else {
+    sql.findOne(sql.users, whereObj, function(obj) {
+      if (!(obj.data.id)) {
+        res.send({
+          error: true,
+          response: "User does not exist" + JSON.stringify(obj)
+        })
+      } else {
+
+        if (obj.data.password == encryptService.encrypt(req.body.password)) {
+          var payload = {
+            id: obj.data.id
+          };
+          var token = jwt.sign(payload, jwtOptions.secretOrKey);
+          res.json({
+            message: "ok",
+            token: token
+          });
+        } else {
+          res.status(401).json({
+            message: "passwords did not match"
+          });
+        }
+      }
+    });
+  }
 }
 
 function isLoggedInHandler(req, res, next) {
-    res.send(req.isAuthenticated() ? req.user : '0');
+  var token = req.body.token || req.query.token || req.headers.authentication;
+  console.log("req.headers" + JSON.stringify(req.headers));
+  console.log("token fetched " + token);
+  if (token) {
+    jwt.verify(token, jwtOptions.secretOrKey, function(err, decoded) {
+      if (err) {
+        return res.json({
+          success: false,
+          message: 'Failed to authenticate token.'
+        });
+      } else {
+        req.decoded = decoded;
+        var whereObj = {
+          id: req.decoded.id
+        }
+        sql.findOne(sql.users, whereObj, function(obj) {
+          if (!(obj.data.id)) {
+            res.send({
+              error: true,
+              response: "User does not exist"
+            })
+          } else {
+            res.send({
+              error: false,
+              response: {
+                id: obj.data.id,
+                name: obj.data.name,
+                password: obj.data.password,
+                level: obj.data.level,
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+  else {
+    return res.status(403).send({
+      success: false,
+      message: 'No token provided.'
+    });
+  }
 }
 
 function logoutHandler(req, res, next) {
-    req.logout();
-    res.redirect('/');
+  req.logout();
+  res.redirect('/');
 }
