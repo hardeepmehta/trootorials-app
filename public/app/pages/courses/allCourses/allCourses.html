@@ -1,13 +1,13 @@
-<div class="row">
-  <div class="col-md-4">
+<div class="row" ng-controller="displayAllCourses">
+  <div ng-repeat="gotCourse in reciCourse" class="col-md-4">
     <div class="panel panel-primary">
-      <div class="panel-heading">Front End Ninja</div>
+      <div class="panel-heading">{{gotCourse.title}}</div>
         <img src="assets/img/app/thumbnail.jpg" alt="" width="100%">
-      <div class="panel-body">Our HTML5, CSS3 & Bootstrap course includes basic to advanced level. This Training Course covers the elements combined with JavaScript and jQuery to build powerful applications.We also provide basic overview of application server, apache and node.</div>
-      <div class="panel-footer"><a href="#">View More</a></div>
+      <div class="panel-body">{{gotCourse.description}}</div>
+      <div class="panel-footer"><a href="#">{{gotCourse.duration}}</a></div>
     </div>
 
-  </div>
+  <!-- </div>
   <div class="col-md-4">
     <div class="panel panel-primary">
       <div class="panel-heading">MEAN Stack Ninja</div>
@@ -25,5 +25,5 @@
       <div class="panel-body">In this course you will learn AngularJS and ionicJS. AngularJS Training provides you the skills needed to create dynamic web applications. IonicJS helps you build native-looking Mobile apps using web technologies like HTML, CSS, and JavaScript.</div>
       <div class="panel-footer"><a href="#">View More</a></div>
     </div>
-  </div>
+  </div> -->
 </div>
