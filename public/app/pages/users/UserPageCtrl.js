@@ -10,7 +10,7 @@
 
   /** @ngInject */
   function UserPageCtrl($scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal, baProgressModal) {
-    $http.get("http://localhost:7800/api/allusers").then(function(response) {
+    $http.get("/api/all-users").then(function(response) {
       $scope.users = response.data.data;
     });
 
@@ -19,7 +19,7 @@
       $http({
           method: 'POST',
           format: 'json',
-          url: 'http://localhost:7800/api/adduser',
+          url: '/api/add-user',
           data: JSON.stringify({
             name: named,
             mobile: mobiled,
@@ -41,7 +41,7 @@
     $scope.removeCourse = function(id) {
       var m = parseInt(id);
       if (confirm("Are you sure you want to delete?") == true) {
-        $http.post("http://localhost:7800/api/deleteuser/" + m).then(function(response) {
+        $http.post("http://localhost:7800/api/delete-user/" + m).then(function(response) {
         });
         $window.location.reload()
       } else {
@@ -62,7 +62,7 @@
       $http({
           method: 'POST',
           format: 'json',
-          url: 'http://localhost:7800/api/updateuser/'+m,
+          url: 'http://localhost:7800/api/edit-user/'+m,
           data: JSON.stringify({
             name: titled,
             mobile: descriptiond,
@@ -79,22 +79,6 @@
         });
     }
 
-    // $scope.addUser = function() {
-    //   // $http.post("http://localhost:7800/api/addCourse").then(function(response) {
-    //   //         console.log("hit");
-    //   //         console.log("response"+JSON.stringify(response.data.data));
-    //   //         // console.log("respomse data "+JSON.stringify(response.data));
-    //   //
-    //   //       //  $scope.users = response.data.data;
-    //   //     });
-    //   $scope.inserted = {
-    //     // id: $scope.users.length+1,
-    //     title: '',
-    //     description: null,
-    //     duration: null
-    //   };
-    //   $scope.users.push($scope.inserted);
-    // }
     $scope.open = function(page, size) {
       $uibModal.open({
         animation: true,
@@ -112,7 +96,6 @@
     editableOptions.theme = 'bs3';
     editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
     editableThemes['bs3'].cancelTpl = '<button type="button" ng-click="$form.$cancel()" class="btn btn-default btn-with-icon"><i class="ion-close-round"></i></button>';
-
 
   }
 

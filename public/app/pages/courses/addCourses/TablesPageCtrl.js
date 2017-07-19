@@ -2,17 +2,22 @@
  * @author v.lugovsky
  * created on 16.12.2015
  */
+// const Sequelize = require('sequelize');
+
+
 (function() {
   'use strict';
 
   angular.module('BlurAdmin.pages.courses.addCourses')
     .controller('TablesPageCtrl', TablesPageCtrl);
 
-
   /** @ngInject */
   function TablesPageCtrl($scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal, baProgressModal) {
 
-    $http.get("http://localhost:7800/api/course").then(function(response) {
+    // express = require('express'),
+    // console.log("environment:"+process.env['MYSQL_HOST']);
+
+    $http.get("/api/all-courses").then(function(response) {
       $scope.users = response.data.data;
     });
 
@@ -21,7 +26,7 @@
       $http({
           method: 'POST',
           format: 'json',
-          url: 'http://localhost:7800/api/addCourse',
+          url: '/api/add-course',
           data: JSON.stringify({
             title: titled,
             description: descriptiond,
@@ -41,7 +46,7 @@
     $scope.removeCourse = function(id) {
       var m = parseInt(id);
       if (confirm("Are you sure you want to delete?") == true) {
-        $http.post("http://localhost:7800/api/courseDelete/" + m).then(function(response) {
+        $http.post("/api/delete-course/" + m).then(function(response) {
         });
         $window.location.reload()
       } else {
@@ -62,7 +67,7 @@
       $http({
           method: 'POST',
           format: 'json',
-          url: 'http://localhost:7800/api/courseUpdate/'+m,
+          url: '/api/edit-course/'+m,
           data: JSON.stringify({
             title: titled,
             description: descriptiond,
@@ -77,22 +82,7 @@
         });
     }
 
-    // $scope.addUser = function() {
-    //   // $http.post("http://localhost:7800/api/addCourse").then(function(response) {
-    //   //         console.log("hit");
-    //   //         console.log("response"+JSON.stringify(response.data.data));
-    //   //         // console.log("respomse data "+JSON.stringify(response.data));
-    //   //
-    //   //       //  $scope.users = response.data.data;
-    //   //     });
-    //   $scope.inserted = {
-    //     // id: $scope.users.length+1,
-    //     title: '',
-    //     description: null,
-    //     duration: null
-    //   };
-    //   $scope.users.push($scope.inserted);
-    // }
+
     $scope.open = function(page, size) {
       $uibModal.open({
         animation: true,

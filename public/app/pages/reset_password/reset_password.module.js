@@ -11,6 +11,7 @@
           url: '/reset_password',
           templateUrl: 'app/pages/reset_password/reset_password.html',
           title: 'Reset Password',
+          controller:'PasswordPageCtrl',
           sidebarMeta: {
             icon: 'ion-compose',
             order: 800,
