@@ -11,11 +11,13 @@
           url: '/allCourses',
           templateUrl: 'app/pages/courses/allCourses/allCourses.html',
           title: 'All Courses',
+          controller:'displayAllCourses',
           sidebarMeta: {
             //icon: 'ion-compose',
             order: 800,
           },
         });
+
   }
 
 })();
