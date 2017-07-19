@@ -9,92 +9,105 @@
       .controller('UserPageCtrl', UserPageCtrl);
 
   /** @ngInject */
-  function UserPageCtrl($scope, $filter, editableOptions, editableThemes, $window, $http) {
-      $http.get("http://localhost:7800/api/allusers"). then(function(response) {
-        console.log("hit");
-        console.log("response"+JSON.stringify(response.data.data));
-        $scope.users = response.data.data;
-      });
-
-    // $scope.users = [
-    //   {
-    //     "UserId": 1,
-    //     "CourseId": 1,
-    //     "PaymentId": 454545,
-    //     "CourseName": "MEAN STACK",
-    //
-    //   },
-    //   {
-    //     "UserId": 1,
-    //     "CourseId": 2,
-    //     "PaymentId": 454545,
-    //     "CourseName": "FULL STACK",
-    //
-    //   },
-    //   {
-    //     "UserId": 1,
-    //     "CourseId": 3,
-    //     "PaymentId": 454545,
-    //     "CourseName": "MEAN STACK",
-    //
-    //   },
-    //   {
-    //     "UserId": 1,
-    //     "CourseId": 4,
-    //     "PaymentId": 2454545,
-    //     "CourseName": "MEAN STACK",
-    //
-    //   }
-    //
-    // ];
-
-    // $scope.statuses = [
-    //   {value: 1, text: 'Good'},
-    //   {value: 2, text: 'Awesome'},
-    //   {value: 3, text: 'Excellent'},
-    // ];
-
-    // $scope.groups = [
-    //   {id: 1, text: '30 hours'},
-    //   {id: 2, text: '35 hours'},
-    //   {id: 3, text: '40 hours'},
-    //   {id: 4, text: '40 hours'}
-    // ];
-    //
-    // $scope.showGroup = function(user) {
-    //   if(user.group && $scope.groups.length) {
-    //     var selected = $filter('filter')($scope.groups, {id: user.group});
-    //     return selected.length ? selected[0].text : 'Not set';
-    //   } else return 'Not set'
-    // };
-    //
-    // $scope.showStatus = function(user) {
-    //   var selected = [];
-    //   if(user.status) {
-    //     selected = $filter('filter')($scope.statuses, {value: user.status});
-    //   }
-    //   return selected.length ? selected[0].text : 'Not set';
-    // };
+  function UserPageCtrl($scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal, baProgressModal) {
+    $http.get("http://localhost:7800/api/allusers").then(function(response) {
+      $scope.users = response.data.data;
+    });
 
 
-    $scope.removeUser = function(index) {
+    $scope.createPost = function(named, mobiled, emailid, passwordv ,levelid) {
+      $http({
+          method: 'POST',
+          format: 'json',
+          url: 'http://localhost:7800/api/adduser',
+          data: JSON.stringify({
+            name: named,
+            mobile: mobiled,
+            email: emailid,
+            password: passwordv,
+            level: levelid
+          })
+        })
+        .then(function(success) {
+          //console.log("hit " + JSON.stringify(success));
+          $window.location.reload()
+        }, function(error) {
+          //console.log("not hit " + JSON.stringify(error));
+        });
+    }
+
+
+
+    $scope.removeCourse = function(id) {
+      var m = parseInt(id);
       if (confirm("Are you sure you want to delete?") == true) {
-          $scope.users.splice(index, 1);
+        $http.post("http://localhost:7800/api/deleteuser/" + m).then(function(response) {
+        });
+        $window.location.reload()
       } else {
-
       }
-
     };
 
-    $scope.addUser = function() {
-      $scope.inserted = {
-        id: $scope.users.length+1,
-        name: '',
-        status: null,
-        group: null
-      };
-      $scope.users.push($scope.inserted);
+    $scope.updateCourse = function(id,titled, descriptiond, durationd) {
+      $window.location.reload()
+
+     console.log("scope id"+id);
+     console.log("scope title"+titled);
+     console.log("scope descriptiond"+descriptiond);
+     console.log("scope durationd"+durationd);
+    //  console.log("scope user"+JSON.stringify($scope.users));
+
+
+      var m = parseInt(id);
+      $http({
+          method: 'POST',
+          format: 'json',
+          url: 'http://localhost:7800/api/updateuser/'+m,
+          data: JSON.stringify({
+            name: titled,
+            mobile: descriptiond,
+            email: durationd,
+            password: durationd,
+            level: durationd
+          })
+        })
+        .then(function(success) {
+          console.log("hit " + JSON.stringify(success));
+          //$window.location.reload()
+        }, function(error) {
+          console.log("not hit " + JSON.stringify(error));
+        });
+    }
+
+    // $scope.addUser = function() {
+    //   // $http.post("http://localhost:7800/api/addCourse").then(function(response) {
+    //   //         console.log("hit");
+    //   //         console.log("response"+JSON.stringify(response.data.data));
+    //   //         // console.log("respomse data "+JSON.stringify(response.data));
+    //   //
+    //   //       //  $scope.users = response.data.data;
+    //   //     });
+    //   $scope.inserted = {
+    //     // id: $scope.users.length+1,
+    //     title: '',
+    //     description: null,
+    //     duration: null
+    //   };
+    //   $scope.users.push($scope.inserted);
+    // }
+    $scope.open = function(page, size) {
+      $uibModal.open({
+        animation: true,
+        templateUrl: page,
+        size: size,
+        resolve: {
+          items: function() {
+            return $scope.items;
+          }
+        }
+      });
     };
+    $scope.openProgressDialog = baProgressModal.open;
 
     editableOptions.theme = 'bs3';
     editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
