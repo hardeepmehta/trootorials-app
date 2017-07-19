@@ -10,10 +10,10 @@
     <td>Actions</td>
   </tr>
   <tr ng-repeat="user in users" class="editable-row">
-    <td>
+    <td ng-model="form.id">
         {{user.id}}
     </td>
-    <td>
+    <td ng-model="form.title">
         <span editable-text="user.title" e-name="name" e-form="rowform" e-required>
           {{ user.title || 'empty' }}
         </span>
@@ -25,13 +25,13 @@
         </span>
     </td> -->
 
-    <td>
+    <td ng-model="form.description">
         <span editable-text="user.description" e-name="name" e-form="rowform" e-required>
           {{ user.description || 'empty' }}
         </span>
     </td>
 
-    <td>
+    <td ng-model="form.duration">
         <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
           {{ user.duration || 'empty' }}
         </span>
@@ -39,7 +39,7 @@
     <td>
       <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline"
             shown="inserted == user">
-        <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary editable-table-button btn-xs">
+        <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary editable-table-button btn-xs" ng-click="updateCourse(user.id,user.title,user.description,user.duration)" >
           Save
         </button>
         <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default editable-table-button btn-xs">
@@ -48,7 +48,7 @@
       </form>
       <div class="buttons" ng-show="!rowform.$visible">
         <button class="btn btn-primary editable-table-button btn-xs" ng-click="rowform.$show()">Edit</button>
-        <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeUser(user.id)">Delete</button>
+        <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeCourse(user.id)">Delete</button>
       </div>
     </td>
   </tr>
