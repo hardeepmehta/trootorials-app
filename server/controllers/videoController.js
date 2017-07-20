@@ -61,7 +61,7 @@ function addVideoHandler(req, res) {
       if (obj.data.id) {
         res.send({
           error: 'true',
-          reason: 'Video already exists'
+          reason: 'Video already created'
         })
       } else {
         sql.insert(sql.video, data, function(obj) {
@@ -81,7 +81,7 @@ function addVideoHandler(req, res) {
 
 function allVideosHandler(req, res, next) {
   sql.findAll(sql.video, {}, function(obj) {
-    //console.log(obj);
+
     if(obj.error == true || obj.data.length == 0)
     res.send({
     error: true,
@@ -143,7 +143,7 @@ function videoUpdateHandler(req, res, next) {
   if (!(data.title && data.description && data.author && data.file && data.ispublic)){
     res.send({
       error: true,
-      reason: "All fields not filled"
+      reason: "Insufficient parameters"
     });
   }
   else {
@@ -172,7 +172,13 @@ function videoDeleteHandler(req, res, next) {
   }
 
   sql.findOne(sql.video, whereobj, function(obj) {
-  if (!(obj.data.id)) {
+    if(!req.params.id){
+      res.send({
+        error: true,
+        response: "Insufficient parameters"
+      })
+    }
+  else if(!(obj.data.id)) {
     res.send({
       error: true,
       response: "Video does not exist"

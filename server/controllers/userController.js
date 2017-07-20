@@ -103,7 +103,7 @@ function addUserHandler(req, res) {
       if (obj.data.id) {
         res.send({
           error: 'true',
-          reason: 'User already exists'
+          reason: 'User already created'
         })
 
       } else {
@@ -120,18 +120,25 @@ function addUserHandler(req, res) {
 }
 
 function deleteHandler(req, res) {
-  var whereobj = {
+  var whereObj = {
     id: req.params.id
   }
-  sql.findOne(sql.users, whereobj, function(obj) {
-  if (!(obj.data.id)) {
-    res.send({
+  sql.findOne(sql.users, whereObj, function(obj) {
+    if (!req.params.id) {
+      res.send({
+        error: true,
+        response: "Insufficient parameters"
+      });
+    }
+
+    else if(!(obj.data.id)) {
+      res.send({
       error: true,
       response: "User does not exist"
     })
   }
   else{
-  sql.delete(sql.users, whereobj, function(obj) {
+  sql.delete(sql.users, whereObj, function(obj) {
       res.send({
         error: false,
         response: "User deleted successfully!!"
@@ -148,7 +155,7 @@ function updateHandler(req, res) {
     email: req.body.email,
     password: encryptService.encrypt(req.body.password),
     level: req.body.level,
-    //token: req.body.token
+
 
   }
   var whereObj = {

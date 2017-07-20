@@ -50,7 +50,7 @@ function addCourseHandler(req, res, next) {
   if (!(data.title && data.description && data.duration)) {
     res.send({
       error: true,
-      reason: "All fields not filled!!"
+      reason: "Insufficient parameters!!"
     });
 
   } else {
@@ -62,14 +62,14 @@ function addCourseHandler(req, res, next) {
       if (obj.data.id) {
         res.send({
           error: 'true',
-          reason: 'course already exists!!'
+          reason: 'course already created!!'
         })
 
       } else {
         sql.insert(sql.courses, data, function(obj) {
           res.send({
             error: false,
-            response: "course successfully added"
+            response: "course created successfully"
           });
         })
 
@@ -129,7 +129,13 @@ function CourseDeleteHandler(req, res, next) {
     id: req.params.id
   }
   sql.findOne(sql.courses, whereobj, function(obj) {
-  if (!(obj.data.id)) {
+    if(!req.params.id){
+      res.send({
+        error: true,
+        response: "Insufficient parameters"
+      })
+    }
+  else if(!(obj.data.id)) {
     res.send({
       error: true,
       response: "Course does not exist"
@@ -140,10 +146,10 @@ function CourseDeleteHandler(req, res, next) {
       res.send({
         error: false,
         response: "Course deleted successfully!!"
-      });
       })
+    });
 }
-})
+});
 }
 
 function getCourseUpdateHandler(req, res, next) {
