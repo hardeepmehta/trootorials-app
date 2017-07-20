@@ -9,36 +9,43 @@
       .controller('DashboardPieChartCtrl', DashboardPieChartCtrl);
 
   /** @ngInject */
-  function DashboardPieChartCtrl($scope, $timeout, baConfig, baUtil) {
+  function DashboardPieChartCtrl($scope, $timeout, $http, $window, baConfig, baUtil) {
+     $http.get("http://localhost:7800/api/all-summary"). then(function(response) {
+       console.log(response.data[0].courses);
+       console.log(response.data[1].videos);
+       console.log(response.data[2].users);
+       $scope.charts = [{
+         color: pieColor,
+         description: 'All Courses',
+         stats: response.data[0].courses,
+         icon: 'book',
+         link: '#/courses/allCourses'
+
+       },
+       {
+         color: pieColor,
+         description: 'All Videos',
+         stats: response.data[1].videos,
+         icon: 'video-camera',
+         link: '#/videos/allVideos'
+
+       }, {
+         color: pieColor,
+         description: 'Total Users',
+         stats: response.data[2].users,
+         icon: 'user',
+         link: '#/users'
+
+
+       }
+       ];
+
+        });
+
+
+
     var pieColor = baUtil.hexToRGB(baConfig.colors.defaultText, 0.2);
-    $scope.charts = [{
-      color: pieColor,
-      description: 'All Courses',
-      stats: '20',
-      icon: 'book',
-      link: '#/courses/allCourses'
-    }, {
-      color: pieColor,
-      description: 'All Videos',
-      stats: '145',
-      icon: 'video-camera',
-      link: '#/videos/allVideos'
 
-    }, {
-      color: pieColor,
-      description: 'Total Users',
-      stats: '8,391',
-      icon: 'user',
-      link: '#/users'
-
-    }
-    //  {
-    //   color: pieColor,
-    //   description: 'Returned',
-    //   stats: '32,592',
-    //   icon: 'refresh',
-    // }
-    ];
 
     function getRandomArbitrary(min, max) {
       return Math.random() * (max - min) + min;
