@@ -66,10 +66,11 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
         });
     }
 
-    $scope.removeCourse = function(id) {
+    $scope.removeCourse = function(id, $index) {
       var m = parseInt(id);
-      if (confirm("Are you sure you want to delete?") == true) {
+      if ($window.confirm("Are you sure you want to delete?") == true) {
         $http.post("/api/delete-user/" + m).then(function(response) {
+          $scope.users.splice( $index, 1 );
         });
         // $window.location.reload()
       } else {
