@@ -1,22 +1,16 @@
-/**
- * @author v.lugovsky
- * created on 16.12.2015
- */
-// const Sequelize = require('sequelize');
 
+/** @ngInject */
+var localstorageApp = angular.module('BlurAdmin.pages.courses.addCourses');
+    localstorageApp.controller('TablesPageCtrl',['$scope', '$filter', 'editableOptions', 'editableThemes','$window', '$http', '$uibModal','baProgressModal','localStorageService',
 
-(function() {
-  'use strict';
+  function ($scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal, baProgressModal,localStorageService) {
 
-  angular.module('BlurAdmin.pages.courses.addCourses')
-    .controller('TablesPageCtrl', TablesPageCtrl);
-
-  /** @ngInject */
-  function TablesPageCtrl($scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal, baProgressModal) {
-
-    // express = require('express'),
-    // console.log("environment:"+process.env['MYSQL_HOST']);
-
+    console.log("retrieve" + localStorageService.get('TOKEN'))
+    var token = localStorageService.get('TOKEN')
+    if(token == null){
+      $window.location.href = '/index.html';
+    }
+    
     $http.get("/api/all-courses").then(function(response) {
       $scope.users = response.data.data;
     });
@@ -34,63 +28,107 @@
           })
         })
         .then(function(success) {
-          //console.log("hit " + JSON.stringify(success));
           $window.location.reload()
         }, function(error) {
-          //console.log("not hit " + JSON.stringify(error));
         });
     }
-
-
 
     $scope.removeCourse = function(id) {
       var m = parseInt(id);
       if (confirm("Are you sure you want to delete?") == true) {
-        $http.post("/api/delete-course/" + m).then(function(response) {
+        $http.post("http://localhost:7800/api/delete-course/" + m).then(function(response) {
         });
         $window.location.reload()
       } else {
       }
     };
 
-    $scope.updateCourse = function(id,titled, descriptiond, durationd) {
-      $window.location.reload()
-
-     console.log("scope id"+id);
-     console.log("scope title"+titled);
-     console.log("scope descriptiond"+descriptiond);
-     console.log("scope durationd"+durationd);
-    //  console.log("scope user"+JSON.stringify($scope.users));
 
 
-      var m = parseInt(id);
-      $http({
-          method: 'POST',
-          format: 'json',
-          url: '/api/edit-course/'+m,
-          data: JSON.stringify({
-            title: titled,
-            description: descriptiond,
-            duration: durationd
-          })
-        })
-        .then(function(success) {
-          console.log("hit " + JSON.stringify(success));
-          //$window.location.reload()
-        }, function(error) {
-          console.log("not hit " + JSON.stringify(error));
-        });
-    }
-
-
-    $scope.open = function(page, size) {
+    // $scope.addUser = function() {
+    //   // $http.post("http://localhost:7800/api/addCourse").then(function(response) {
+    //   //         console.log("hit");
+    //   //         console.log("response"+JSON.stringify(response.data.data));
+    //   //         // console.log("respomse data "+JSON.stringify(response.data));
+    //   //
+    //   //       //  $scope.users = response.data.data;
+    //   //     });
+    //   $scope.inserted = {
+    //     // id: $scope.users.length+1,
+    //     title: '',
+    //     description: null,
+    //     duration: null
+    //   };
+    //   $scope.users.push($scope.inserted);
+    // }
+    $scope.open = function(e,id,page, size, addOrEdit) {
+      $scope.id = id;
       $uibModal.open({
         animation: true,
         templateUrl: page,
         size: size,
+        controller: ['$scope', '$http', 'id', function( $scope, $http, id ) {
+          $scope.add = true ;
+          $scope.form = {};
+
+          $scope.getCourse = function(id){
+             $scope.gotCourse = {};
+             $http.get("/api/get-course/"+id).then(function(response) {
+             $scope.gotCourse = response.data.response.data;
+            console.log($scope.gotCourse);
+            $scope.form.title = $scope.gotCourse.title;  //set to fields
+            $scope.form.description = $scope.gotCourse.description;
+            $scope.form.duration = $scope.gotCourse.duration;
+
+
+
+          });
+      }
+
+
+
+          $scope.updateCourse = function() {
+          console.log("Update called");
+            $scope.id = id;
+
+            var m = parseInt(id);
+            console.log($scope.form);
+            $http({
+                method: 'POST',
+                format: 'json',
+                url: '/api/edit-course/'+m,
+                data:JSON.stringify({
+                  title: $scope.form.title,
+                  description: $scope.form.description,
+                  duration: $scope.form.duration
+                })
+              })
+              .then(function(success) {
+                console.log("api");
+                console.log("hit " + JSON.stringify(success));
+                //$window.location.reload()
+              }, function(error) {
+                console.log("not hit " + JSON.stringify(error));
+              });
+          }
+          if(addOrEdit == 1){
+            $scope.getCourse(id);
+            $scope.add = false;
+            //$scope.updateCourse();
+          }
+          else{
+            $scope.add = true;
+
+          }
+
+
+        }],
         resolve: {
           items: function() {
             return $scope.items;
+          },
+          id: function() {
+            return $scope.id;
           }
         }
       });
@@ -104,4 +142,4 @@
 
   }
 
-})();
+]);

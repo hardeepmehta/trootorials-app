@@ -1,16 +1,19 @@
-/**
- * @author v.lugovksy
- * created on 16.12.2015
- */
-(function () {
-  'use strict';
 
-  angular.module('BlurAdmin.pages.dashboard')
-      .controller('DashboardPieChartCtrl', DashboardPieChartCtrl);
+// (function () {
+//   'use strict';
 
-  /** @ngInject */
-  function DashboardPieChartCtrl($scope, $timeout, $http, $window, baConfig, baUtil) {
-     $http.get("http://localhost:7800/api/all-summary"). then(function(response) {
+var localstorageApp = angular.module('BlurAdmin.pages.dashboard');
+
+  localstorageApp.controller('DashboardPieChartCtrl',['$scope', '$timeout', '$http', '$window', 'baConfig', 'baUtil','localStorageService',
+      function($scope, $timeout, $http, $window, baConfig, baUtil,localStorageService) {
+
+      console.log("retrieve" + localStorageService.get('TOKEN'))
+        var token = localStorageService.get('TOKEN')
+        if(token == null){
+          $window.location.href = '/index.html';
+        }
+
+     $http.get("/api/all-summary"). then(function(response) {
        console.log(response.data[0].courses);
        console.log(response.data[1].videos);
        console.log(response.data[2].users);
@@ -18,34 +21,28 @@
          color: pieColor,
          description: 'All Courses',
          stats: response.data[0].courses,
-         icon: 'book',
+        //  icon: 'book',
          link: '#/courses/allCourses'
-
        },
        {
          color: pieColor,
          description: 'All Videos',
          stats: response.data[1].videos,
-         icon: 'video-camera',
+        //  icon: 'video-camera',
          link: '#/videos/allVideos'
 
        }, {
          color: pieColor,
          description: 'Total Users',
          stats: response.data[2].users,
-         icon: 'user',
+        //  icon: 'user',
          link: '#/users'
-
-
        }
        ];
 
         });
 
-
-
     var pieColor = baUtil.hexToRGB(baConfig.colors.defaultText, 0.2);
-
 
     function getRandomArbitrary(min, max) {
       return Math.random() * (max - min) + min;
@@ -85,4 +82,4 @@
       updatePieCharts();
     }, 1000);
   }
-})();
+]);

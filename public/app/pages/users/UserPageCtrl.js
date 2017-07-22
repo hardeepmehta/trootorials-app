@@ -4,8 +4,10 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
 
   function ($scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal, baProgressModal,localStorageService) {
 
-    console.log("retrieve" + localStorageService.get('TOKEN'))
     var token = localStorageService.get('TOKEN')
+    if(token == null){
+      $window.location.href = '/index.html';
+    }
 
     $scope.users = [];
     $http.get("/api/all-users").then(function(response) {
@@ -46,7 +48,16 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
           // $http.get("/api/all-users").then(function(response) {
           //   $scope.users = response.data.data;
           // });
-          $window.location.href = '/users.html'
+          console.log("success data"+JSON.stringify(success.data.data));
+
+          console.log($scope.users);
+
+          $scope.users.push(success.data.data);
+
+          console.log($scope.users);
+          // $scope.users.$apply();
+
+          // $window.location.href = 'http://localhost:7800/home.html#/users'
           // $scope.users.push(data);
           //console.log("hit " + JSON.stringify(success));
           // $window.location.reload()

@@ -3,7 +3,8 @@
 
   angular.module('BlurAdmin.pages.videos', [
     'BlurAdmin.pages.videos.allVideos',
-    'BlurAdmin.pages.videos.addVideos'
+    'BlurAdmin.pages.videos.addVideos',
+    'LocalStorageModule'
   ])
       .config(routeConfig);
 
