@@ -7,5 +7,7 @@ module.exports = function(app,passport) {
     require('controllers/courseController')(app, passport);
     require('controllers/userController')(app, passport);
     require('controllers/videoController')(app, passport);
-    require('controllers/feedbackController')(app, passport);    
+    require('controllers/feedbackController')(app, passport);
+    require('controllers/startTutorialController')(app, passport);
+    require('controllers/summaryController')(app, passport);
 };

@@ -1,6 +1,6 @@
 function generateUUID() {
     var d = new Date().getTime();
-    var uuid = 'xxxxxxx.mp4'.replace(/[xy]/g, function(c) {
+    var uuid = 'xxxxxxx.png'.replace(/[xy]/g, function(c) {
         var r = (d + Math.random()*16)%16 | 0;
         d = Math.floor(d/16);
         return (c=='x' ? r : (r&0x3|0x8)).toString(16);
@@ -8,14 +8,38 @@ function generateUUID() {
     return uuid;
 };
 
+const uuidv4 = require('uuid/v4');
+var formidable = require('formidable');
+var util = require('util');
+
 
 const apiService = require('services/apiService'),
   sql = require('services/sqlService'),
   apiConfig = require('config/apiConfig');
 
 module.exports = function(app, passport) {
+
   //Show all users
   app.get('/api/all-videos', allVideosHandler);
+
+  // upload video
+  app.post('/upload', function(req, res) {
+    var form = new formidable.IncomingForm();
+    form.parse(req);
+    form.on('fileBegin', function(name, file) {
+      file.path = 'uploads/' + file.name;
+      console.log(__dirname);
+    });
+    form.on('file', function(name, file) {
+      console.log('Uploaded ' + file.name);
+    });
+    form.on('end', function() {
+        res.send({success:true})
+
+});
+    console.log('successfully uploaded')
+  })
+
 
   //Get Update
   app.get('/api/get-video/:id', particularVideoHandler);
@@ -32,21 +56,22 @@ module.exports = function(app, passport) {
 
 
 function addVideoHandler(req, res) {
-  var filename = req.body.file,
-  filename=filename.replace(filename.substring(filename.lastIndexOf('/')+1),""),
-  uuid = generateUUID();
-  filename = filename+uuid;
-
+  // var filename = req.body.file,
+  // filename=filename.replace(filename.substring(filename.lastIndexOf('/')+1),""),
+  // uuid = generateUUID();
+  // filename = filename+uuid;
+  // console.log(req.body.file[0].name);
   var data = {
     title: req.body.title,
     description: req.body.description,
     author: req.body.author,
     duration: req.body.duration,
-    file: filename,
+    file: req.body.file,
     ispublic: req.body.ispublic
   }
-
-  if (!(data.title && data.description && data.author && data.duration && data.file && data.ispublic)) {
+console.log(req.body);
+  if (!(data.title && data.description && data.author && data.duration  && data.file    && data.ispublic)) {
+      console.log(data);
     res.send({
       error: true,
       reason: "Insufficient parameters"
@@ -61,10 +86,11 @@ function addVideoHandler(req, res) {
       if (obj.data.id) {
         res.send({
           error: 'true',
-          reason: 'Video already created'
+          reason: 'Video already exists'
         })
       } else {
         sql.insert(sql.video, data, function(obj) {
+
           res.send({
             error: false,
             response: "Video created successfully"
@@ -81,7 +107,7 @@ function addVideoHandler(req, res) {
 
 function allVideosHandler(req, res, next) {
   sql.findAll(sql.video, {}, function(obj) {
-
+    //console.log(obj);
     if(obj.error == true || obj.data.length == 0)
     res.send({
     error: true,
@@ -143,7 +169,7 @@ function videoUpdateHandler(req, res, next) {
   if (!(data.title && data.description && data.author && data.file && data.ispublic)){
     res.send({
       error: true,
-      reason: "Insufficient parameters"
+      reason: "All fields not filled"
     });
   }
   else {
@@ -172,13 +198,7 @@ function videoDeleteHandler(req, res, next) {
   }
 
   sql.findOne(sql.video, whereobj, function(obj) {
-    if(!req.params.id){
-      res.send({
-        error: true,
-        response: "Insufficient parameters"
-      })
-    }
-  else if(!(obj.data.id)) {
+  if (!(obj.data.id)) {
     res.send({
       error: true,
       response: "Video does not exist"

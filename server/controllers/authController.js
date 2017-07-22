@@ -5,10 +5,15 @@ var jwt = require('jsonwebtoken');
 var passportJWT = require("passport-jwt");
 var encryptService = require('services/encryptionService');
 var sql = require('services/sqlService');
+var localstorage = require('node-localstorage')
+
+// var blacklist = require('express-jwt-blacklist');
+// var LocalStorage = require('node-localstorage').LocalStorage;
+// localStorage = new LocalStorage('./scratch');       //Directory where token will be saved
 
 var jwtOptions = {}
 jwtOptions.jwtFromRequest = passportJWT.ExtractJwt.fromAuthHeader();
-jwtOptions.secretOrKey = 'tasmanianDevil';
+jwtOptions.secretOrKey = 'Troofal'
 
 module.exports = function(app, passport) {
   // Login User
@@ -23,11 +28,15 @@ module.exports = function(app, passport) {
 
 function loginHandler(req, res, next) {
   console.log("req.body" + req.body);
+ //  if (typeof localStorage === "undefined" || localStorage === null) {
+ //
+ // }
+
   var whereObj = {
-    name: req.body.name
+    email: req.body.email
   }
-  console.log("whereObj name" + whereObj.id);
-  if (!req.body.name) {
+  console.log("whereObj email" + whereObj.email);
+  if (!req.body.email) {
     res.send({
       error: true,
       reason: "Insufficient parameters"
@@ -40,7 +49,6 @@ function loginHandler(req, res, next) {
           response: "User does not exist" + JSON.stringify(obj)
         })
       } else {
-
         if (obj.data.password == encryptService.encrypt(req.body.password)) {
           var payload = {
             id: obj.data.id
@@ -48,7 +56,8 @@ function loginHandler(req, res, next) {
           var token = jwt.sign(payload, jwtOptions.secretOrKey);
           res.json({
             message: "ok",
-            token: token
+            token: token,
+            level:obj.data.level
           });
         } else {
           res.status(401).json({
@@ -62,8 +71,10 @@ function loginHandler(req, res, next) {
 
 function isLoggedInHandler(req, res, next) {
   var token = req.body.token || req.query.token || req.headers.authentication;
-  console.log("req.headers" + JSON.stringify(req.headers));
-  console.log("token fetched " + token);
+
+  // token = localStorage.getItem('token')
+  // console.log(localStorage.getItem('token'));
+  // console.log("token fetched " + localStorage.getItem('token'));
   if (token) {
     jwt.verify(token, jwtOptions.secretOrKey, function(err, decoded) {
       if (err) {
@@ -106,6 +117,11 @@ function isLoggedInHandler(req, res, next) {
 }
 
 function logoutHandler(req, res, next) {
+  var token = req.body.token || req.query.token || req.headers.authentication;
+  console.log("token fetched " + token);
+  //jwtOptions.secretOrKey = makeid();
+  //token = 0;
+  console.log(localStorage.removeItem('myFirstKey'));
   req.logout();
-  res.redirect('/');
+  // res.redirect('/');
 }

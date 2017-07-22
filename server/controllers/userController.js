@@ -116,7 +116,8 @@ function addUserHandler(req, res) {
         sql.insert(sql.users, data, function(obj) {
           res.send({
             error: false,
-            response: "User created successfully"
+            response: "User created successfully",
+            data: obj
           });
         })
 
