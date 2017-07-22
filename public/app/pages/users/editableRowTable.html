@@ -2,7 +2,7 @@
 
 <div class="add-row-editable-table">
 </div>
-<table class="table table-bordered table-hover table-condensed">
+<table ng-controller="UserPageCtrl" class="table table-bordered table-hover table-condensed">
   <tr>
     <td>UserId</td>
     <td>Name</td>
@@ -13,7 +13,7 @@
     <td align="center">Premium</td>
     <td>Action</td>
   </tr>
-  <tr ng-controller="UserPageCtrl" ng-repeat="user in users" class="editable-row" >
+  <tr ng-repeat="user in users" class="editable-row" >
     <td>
       {{user.id}}
     </td>
@@ -64,7 +64,7 @@
       </form>
       <div class="buttons" ng-show="!rowform.$visible">
         <button class="btn btn-primary editable-table-button btn-xs" ng-click="open($event ,user.id, 'app/pages/users/addUser.html','lg',1)" data-toggle="modal" >Edit</button>
-        <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeCourse(user.id)">Delete</button>
+        <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeCourse(user.id, $index)">Delete</button>
       </div>
     </td>
   </tr>
