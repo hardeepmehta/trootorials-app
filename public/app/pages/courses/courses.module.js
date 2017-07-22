@@ -3,7 +3,8 @@
 
   angular.module('BlurAdmin.pages.courses', [
     'BlurAdmin.pages.courses.allCourses',
-    'BlurAdmin.pages.courses.addCourses'
+    'BlurAdmin.pages.courses.addCourses',
+    'LocalStorageModule'
   ])
       .config(routeConfig);
 

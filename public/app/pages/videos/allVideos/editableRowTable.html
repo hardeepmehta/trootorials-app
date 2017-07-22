@@ -1,38 +1,57 @@
 <div class="add-row-editable-table">
   <button class="btn btn-primary" data-toggle="modal" ng-click="open('app/pages/videos/addVideos/addVideos.html', 'lg')">Create</button>
-  <div class="" style="width:30%; margin-top:10px; margin-bottom:50px;">
+  <!-- <div class="" style="width:30%; margin-top:10px; margin-bottom:50px;">
     <input placeholder="Search by Course" class=" form-control col-md-4"
                type="text"/>
-  </div>
+  </div> -->
 </div>
 <table class="table table-bordered table-hover table-condensed">
   <tr>
-    <td>CourseId</td>
-    <td>VideoId</td>
-    <td>Thumbnail</td>
+    <td>Id</td>
     <td>Title</td>
+    <td>Description</td>
     <td>Author</td>
-    <td>Action</td>
+    <td>Duration</td>
+    <td>File</td>
+    <td>isPublic</td>
+    <td>action</td>
+
   </tr>
   <tr ng-repeat="user in users" class="editable-row">
     <td>
-        {{user.CourseId}}
+        {{user.id}}
     </td>
 
     <td>
-        {{user.videoID}}
+        {{user.title}}
     </td>
+    <!-- <td>
+        <img src ="{{ user.des }}" width:"50px" height="50px">
+    </td> -->
     <td>
-        <img src ="{{ user.thumbnail }}" width:"50px" height="50px">
-    </td>
-    <td>
-        <span editable-text="user.title" e-name="name" e-form="rowform" e-required>
-          {{ user.title || 'empty' }}
+        <span editable-text="user.description" e-name="name" e-form="rowform" e-required>
+          {{ user.description || 'empty' }}
         </span>
     </td>
     <td>
         <span editable-text="user.author" e-name="name" e-form="rowform" e-required>
           {{ user.author || 'empty' }}
+        </span>
+    </td>
+    <td>
+        <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
+          {{ user.duration || 'empty' }}
+        </span>
+    </td>
+    <td>
+        <span editable-text="user.file" e-name="name" e-form="rowform" e-required >
+          <a href="uploads/{{ user.file || 'empty' }}">{{ user.file || 'empty' }}</a>
+
+        </span>
+    </td>
+    <td>
+        <span editable-text="user.ispublic" e-name="name" e-form="rowform" e-required>
+          {{ user.ispublic || 'empty' }}
         </span>
     </td>
     <td>

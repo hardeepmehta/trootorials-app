@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('BlurAdmin.pages.reset_password', [])
+  angular.module('BlurAdmin.pages.reset_password', ['LocalStorageModule'])
       .config(routeConfig);
 
   /** @ngInject */

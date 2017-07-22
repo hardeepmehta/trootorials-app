@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('BlurAdmin.pages.courses.allCourses', [])
+  angular.module('BlurAdmin.pages.courses.allCourses', ['LocalStorageModule'])
       .config(routeConfig);
 
   /** @ngInject */
@@ -17,7 +17,6 @@
             order: 800,
           },
         });
-
   }
 
 })();
