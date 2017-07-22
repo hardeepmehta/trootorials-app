@@ -1,44 +1,48 @@
-/**
- * @author v.lugovksy
- * created on 16.12.2015
- */
-(function () {
-  'use strict';
 
-  angular.module('BlurAdmin.pages.dashboard')
-      .controller('DashboardPieChartCtrl', DashboardPieChartCtrl);
+// (function () {
+//   'use strict';
 
-  /** @ngInject */
-  function DashboardPieChartCtrl($scope, $timeout, baConfig, baUtil) {
+var localstorageApp = angular.module('BlurAdmin.pages.dashboard');
+
+  localstorageApp.controller('DashboardPieChartCtrl',['$scope', '$timeout', '$http', '$window', 'baConfig', 'baUtil','localStorageService',
+      function($scope, $timeout, $http, $window, baConfig, baUtil,localStorageService) {
+
+      console.log("retrieve" + localStorageService.get('TOKEN'))
+        var token = localStorageService.get('TOKEN')
+        if(token == null){
+          $window.location.href = '/index.html';
+        }
+
+     $http.get("/api/all-summary"). then(function(response) {
+       console.log(response.data[0].courses);
+       console.log(response.data[1].videos);
+       console.log(response.data[2].users);
+       $scope.charts = [{
+         color: pieColor,
+         description: 'All Courses',
+         stats: response.data[0].courses,
+        //  icon: 'book',
+         link: '#/courses/allCourses'
+       },
+       {
+         color: pieColor,
+         description: 'All Videos',
+         stats: response.data[1].videos,
+        //  icon: 'video-camera',
+         link: '#/videos/allVideos'
+
+       }, {
+         color: pieColor,
+         description: 'Total Users',
+         stats: response.data[2].users,
+        //  icon: 'user',
+         link: '#/users'
+       }
+       ];
+
+        });
+
     var pieColor = baUtil.hexToRGB(baConfig.colors.defaultText, 0.2);
-    $scope.charts = [{
-      color: pieColor,
-      description: 'All Courses',
-      stats: '20',
-      icon: 'book',
-      link: '#/courses/allCourses'
-    }, {
-      color: pieColor,
-      description: 'All Videos',
-      stats: '145',
-      icon: 'video-camera',
-      link: '#/videos/allVideos'
-
-    }, {
-      color: pieColor,
-      description: 'Total Users',
-      stats: '8,391',
-      icon: 'user',
-      link: '#/users'
-
-    }
-    //  {
-    //   color: pieColor,
-    //   description: 'Returned',
-    //   stats: '32,592',
-    //   icon: 'refresh',
-    // }
-    ];
 
     function getRandomArbitrary(min, max) {
       return Math.random() * (max - min) + min;
@@ -78,4 +82,4 @@
       updatePieCharts();
     }, 1000);
   }
-})();
+]);

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('BlurAdmin.pages.courses.addCourses', [])
+  angular.module('BlurAdmin.pages.courses.addCourses', ['LocalStorageModule'])
       .config(routeConfig);
 
   /** @ngInject */

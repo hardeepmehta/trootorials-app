@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 18, 2017 at 12:04 AM
+-- Generation Time: Jul 18, 2017 at 02:49 PM
 -- Server version: 5.7.18-0ubuntu0.16.04.1
 -- PHP Version: 7.0.18-0ubuntu0.16.04.1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `TrooDatabase`
+-- Database: `Troodatabase`
 --
 
 -- --------------------------------------------------------
@@ -30,19 +30,10 @@ CREATE TABLE `Course` (
   `id` int(11) NOT NULL,
   `title` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `duration` int(11) DEFAULT NULL,
+  `duration` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `Course`
---
-
-INSERT INTO `Course` (`id`, `title`, `description`, `duration`, `createdAt`, `updatedAt`) VALUES
-(2, 'NEW1', 'nkjdfkjdhfj', 32, '2017-07-17 10:58:03', '2017-07-17 10:58:03'),
-(3, 'absh', 'nkjdfkjdhfj', 32, '2017-07-17 11:39:19', '2017-07-17 11:39:19'),
-(4, 'absh', 'nkjdfkjdhfj', 32, '2017-07-17 17:12:02', '2017-07-17 17:12:02');
 
 -- --------------------------------------------------------
 
@@ -101,7 +92,7 @@ CREATE TABLE `Payment` (
   `mode` varchar(255) DEFAULT NULL,
   `courseid` int(11) DEFAULT NULL,
   `amount` varchar(255) DEFAULT NULL,
-  `transactionid` int(11) DEFAULT NULL,
+  `transactionid` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
@@ -120,7 +111,6 @@ CREATE TABLE `User` (
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
-  `token` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -138,11 +128,17 @@ CREATE TABLE `Video` (
   `author` varchar(255) DEFAULT NULL,
   `duration` varchar(255) DEFAULT NULL,
   `file` varchar(255) DEFAULT NULL,
-  `uploadedat` varchar(255) DEFAULT NULL,
-  `ispublic` int(11) DEFAULT NULL,
+  `ispublic` tinyint(1) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Video`
+--
+
+INSERT INTO `Video` (`id`, `title`, `description`, `author`, `duration`, `file`, `ispublic`, `createdAt`, `updatedAt`) VALUES
+(1, 'NEW1', 'nkjdfkjdhfj', 'why', '32', 'abc/def/8cdae63.mp4', 1, '2017-07-18 07:17:57', '2017-07-18 07:17:57');
 
 --
 -- Indexes for dumped tables
@@ -198,7 +194,7 @@ ALTER TABLE `Video`
 -- AUTO_INCREMENT for table `Course`
 --
 ALTER TABLE `Course`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `Feedback`
 --
@@ -224,6 +220,11 @@ ALTER TABLE `Payment`
 --
 ALTER TABLE `User`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `Video`
+--
+ALTER TABLE `Video`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

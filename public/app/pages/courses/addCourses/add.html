@@ -3,23 +3,20 @@
 
   </div>
 <div class="col-md-8 " >
-  <form ng-submit="createPost()" ng-controller="TablesPageCtrl">
+  <form ng-submit="add == true ? createPost(form.title,form.description,form.duration) : updateCourse()" ng-controller="TablesPageCtrl">
     <div class="form-group">
       <label>Title</label>
-      <input type="text" class="form-control" ng-model="form.title" name="title">
+      <input type="text" class="form-control" ng-model="form.title" name="title" required>
     </div>
 
     <div class="form-group">
       <label >Description</label>
-      <!-- <input type="text" ng-model ="description" name="description" -->
-      <textarea class="form-control" rows="5" ng-model ="form.description" name="description" placeholder="Enter Description"></textarea>
+      <textarea class="form-control" rows="5" ng-model ="form.description" name="description" placeholder="Enter Description" required></textarea>
     </div>
     <div class="form-group">
       <label >Duration</label>
-      <input type="text" class="form-control" ng-model = "form.duration" name="duration" placeholder="Enter Title">
+      <input type="text" class="form-control" ng-model = "form.duration" name="duration" placeholder="Enter duration" required>
     </div>
-
-
     <input type="submit" name="submit"></input>
   </form>
 </div>
