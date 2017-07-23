@@ -14,12 +14,6 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
     $scope.users = [];
     $scope.form = [];
 
-    $scope.levels = [{
-       level: '1'
-     },{
-       level: '2'
-     }];
-
     $http.get("/api/all-users").then(function(response) {
       $scope.users = response.data.data;
     });
@@ -45,8 +39,8 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
       modalInstance.result.then(function (selectedItem) {
         console.log("selectedItem"+JSON.stringify(selectedItem.data));
         $scope.users.push(selectedItem.data)
-       // $scope.$apply();
-        console.log("updates users"+JSON.stringify($scope.users))
+        // $scope.$apply();
+        // console.log("updates users"+JSON.stringify($scope.users))
       }, function () {
         $log.info('Modal dismissed at: ' + new Date());
       });
@@ -182,6 +176,11 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
 
 angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function ($uibModalInstance,$http) {
   var $scope = this;
+  $scope.levels = [{
+     level: '1'
+   },{
+     level: '2'
+   }];
 
   $scope.createPost = function(named, mobiled, emailid, passwordv ,levelid) {
     console.log(named);
@@ -189,7 +188,8 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function
     console.log(emailid);
     console.log(passwordv);
     console.log(levelid);
-
+    levelid = 1
+    console.log(levelid);
     var data = {
       name: named,
       mobile: mobiled,
@@ -211,12 +211,11 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function
       })
       .then(function(success) {
         console.log(success)
-//        console.log("success data"+JSON.stringify(success.data));
+        console.log("success data"+JSON.stringify(success));
 //        console.log($scope.users);
         $uibModalInstance.close(success.data.data);
       }, function(error) {
         console.log("not hit " + JSON.stringify(error));
       });
   }
-
 });
