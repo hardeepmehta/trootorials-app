@@ -1,5 +1,5 @@
 <div class="add-row-editable-table">
-  <button class="btn btn-primary" data-toggle="modal" ng-click="open('app/pages/videos/addVideos/addVideos.html', 'lg')">Create</button>
+  <button class="btn btn-primary" ng-click="redirect()">Create</button>
   <!-- <div class="" style="width:30%; margin-top:10px; margin-bottom:50px;">
     <input placeholder="Search by Course" class=" form-control col-md-4"
                type="text"/>
@@ -65,8 +65,8 @@
         </button>
       </form>
       <div class="buttons" ng-show="!rowform.$visible">
-        <button class="btn btn-primary editable-table-button btn-xs" ng-click="rowform.$show()">Edit</button>
-        <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeUser($index)">Delete</button>
+        <button class="btn btn-primary editable-table-button btn-xs" ng-click="open($event ,user.id, 'app/pages/videos/addVideos/add2.html','lg',1)">Edit</button>
+        <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeVideo(user.id, $index)">Delete</button>
       </div>
     </td>
   </tr>

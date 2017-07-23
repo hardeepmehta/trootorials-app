@@ -33,9 +33,7 @@
       if (!$rootScope.$pageFinishedLoading) {
         $rootScope.$pageFinishedLoading = true;
       }
-    }, 7000);
-
+    }, 0);
     $rootScope.$baSidebarService = baSidebarService;
   }
-
 })();
