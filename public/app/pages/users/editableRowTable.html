@@ -1,4 +1,4 @@
-<button class="btn btn-primary editable-table-button btn-xs" data-toggle="modal" ng-click="open($event , null, 'app/pages/users/addUser.html', 'lg',0)">Add</button>
+<button class="btn btn-primary editable-table-button btn-xs" data-toggle="modal" ng-click="open('lg')">Add</button>
 
 <div class="add-row-editable-table">
 </div>
@@ -13,7 +13,7 @@
     <td align="center">Premium</td>
     <td>Action</td>
   </tr>
-  <tr ng-repeat="user in users" class="editable-row" >
+  <tr ng-repeat="user in users track by $index" class="editable-row" >
     <td>
       {{user.id}}
     </td>

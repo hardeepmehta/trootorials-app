@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('BlurAdmin.pages.users', ['LocalStorageModule'])
+  angular.module('BlurAdmin.pages.users', ['LocalStorageModule','ui.bootstrap'])
       .config(routeConfig);
 
   /** @ngInject */
