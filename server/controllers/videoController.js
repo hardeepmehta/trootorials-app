@@ -11,6 +11,8 @@ function generateUUID() {
 const uuidv4 = require('uuid/v4');
 var formidable = require('formidable');
 var util = require('util');
+var fs = require('fs');
+
 
 
 const apiService = require('services/apiService'),
@@ -205,6 +207,8 @@ function videoDeleteHandler(req, res, next) {
     })
   }
   else{
+  var filePath = 'uploads/'+obj.data.file;
+  fs.unlinkSync(filePath);
   sql.delete(sql.video, whereobj, function response(obj) {
       res.send({
         error: false,

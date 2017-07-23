@@ -1,4 +1,4 @@
-<div ng-controller = "addCtrl">
+<div ng-controller = "addCtrl" style="margin:10px">
     <form class=""  method="post">
 
       <div class="form-group">
@@ -21,10 +21,18 @@
         <label >ispublic</label>
         <input type="text" class="form-control" required ng-model = "form.public"  name ="public" id="exampleInputPassword1" placeholder="Enter Author Name">
       </div>
+      <div class="row" ng-hide="display">
+        <div class="col-md-2" style="margin-top: 19px;">
+          <input type="file"  accept="video/*" file-model="myFile" required/>
+        </div>
+        <div class="col-md-8" style="margin-left:29px;">
+            <button ng-click="uploadFile()" class="btn btn-danger" style="margin:10px;">upload file</button>
+        </div>
+      </div>
 
-    <input type="file" accept="video/*" file-model="myFile" required/>
-    <button ng-click="uploadFile()" class="btn btn-danger" style="margin:10px;">upload file</button>
+      <div class="" style="padding-bottom:10px">
+        <button class="btn btn-primary" name="button" ng-click = " hello(form)">submit</button>
+      </div>
 
-    <button class="btn btn-primary" name="button" ng-click = "hello(form)">submit</button>
       </form>
 </div>
