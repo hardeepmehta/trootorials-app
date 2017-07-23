@@ -29,7 +29,7 @@
       <select ng-model="form.level" ng-options="c as c.level for c in levels" required></select>
     </div>
 
-    <input type="submit" name="submit" ng-click="createPost(form.name,form.mobile,form.email,form.password,form.level.level)" class="btn btn-default"></input>
+    <input type="submit" name="submit" ng-click="$scope.createPost(form.name,form.mobile,form.email,form.password,form.level.level)" class="btn btn-default"></input>
   </form>
 </div>
 <div class="col-md-2">

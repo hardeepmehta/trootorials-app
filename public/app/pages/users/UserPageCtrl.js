@@ -24,29 +24,55 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
       $scope.users = response.data.data;
     });
 
+    $scope.open = function (size) {
 
-    $scope.modalPopup = function(){
-      return $scope.modalInstance = $uibModal.open({
-              templateUrl: 'app/pages/users/addUser.html',
-              scope: $scope
-            });
-    }
+      var modalInstance = $uibModal.open({
+        // animation: $ctrl.animationsEnabled,
+        // ariaLabelledBy: 'modal-title',
+        // ariaDescribedBy: 'modal-body',
+        templateUrl: 'app/pages/users/addUser.html',
+        controller: 'ModalInstanceCtrl',
+        controllerAs: '$scope',
+        size: size,
+        // appendTo: parentElem,
+        resolve: {
+          users: function () {
+            return $scope.users;
+          }
+        }
+      });
 
-    $scope.openModalPopup = function () {
-      $scope.modalPopup().result
-        .then(function (data) {
-          console.log("success data in promise"+JSON.stringify(data));
-          $scope.users = JSON.stringify(data)
-          //console.log($scope.users);
-          //$scope.users.push(success.data.data);
-
-          console.log($scope.users);
-        })
-        .then(null, function (reason) {
-          console.log("failure data" + reason);
-          //$scope.handleDismiss(reason);
-        });
+      modalInstance.result.then(function (selectedItem) {
+        console.log("selectedItem"+JSON.stringify(selectedItem.data));
+        $scope.users.push(selectedItem)
+        console.log("updates users"+JSON.stringify($scope.users))
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
     };
+
+    // $scope.modalPopup = function(){
+    //   return $scope.modalInstance = $uibModal.open({
+    //           templateUrl: 'app/pages/users/addUser.html',
+    //           scope: $scope
+    //         });
+    // }
+    //
+    // $scope.openModalPopup = function () {
+    //   $scope.modalPopup().result
+    //     .then(function (data) {
+    //       console.log("success data in promise"+JSON.stringify(data));
+    //       $scope.users = JSON.stringify(data)
+    //       //console.log($scope.users);
+    //       //$scope.users.push(success.data.data);
+    //
+    //       console.log($scope.users);
+    //     })
+    //     .then(null, function (reason) {
+    //       console.log("failure data" + reason);
+    //       //$scope.handleDismiss(reason);
+    //     });
+    // };
 
     $scope.removeCourse = function(id, $index) {
       var m = parseInt(id);
@@ -58,47 +84,6 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
       }
     }
 
-    $scope.createPost = function(named, mobiled, emailid, passwordv ,levelid) {
-
-      console.log("called add");
-      console.log(named)
-      console.log(mobiled)
-
-      console.log(emailid)
-      console.log(passwordv)
-      console.log(levelid)
-      //levelid = 1
-
-      var data = {
-        name: named,
-        mobile: mobiled,
-        email: emailid,
-        password: passwordv,
-        level: levelid
-      }
-      $http({
-          method: 'POST',
-          format: 'json',
-          url: '/api/add-user',
-          data: JSON.stringify({
-            name: named,
-            mobile: mobiled,
-            email: emailid,
-            password: passwordv,
-            level: levelid
-          })
-        })
-        .then(function(success) {
-          console.log(success)
-          $scope.modalInstance.close($scope.users);
-          $state.go('users');
-          console.log("success data"+JSON.stringify(success.data));
-          console.log($scope.users);
-          // $scope = scope
-        }, function(error) {
-          //console.log("not hit " + JSON.stringify(error));
-        });
-    }
 
 
     // $scope.open = function(e,id,page, size, addOrEdit) {
@@ -185,14 +170,46 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
     //   });
     //
     // };
-    $scope.openProgressDialog = baProgressModal.open;
 
+    $scope.openProgressDialog = baProgressModal.open;
     editableOptions.theme = 'bs3';
     editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
     editableThemes['bs3'].cancelTpl = '<button type="button" ng-click="$form.$cancel()" class="btn btn-default btn-with-icon"><i class="ion-close-round"></i></button>';
+  }
+])
 
 
+angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function ($uibModalInstance,$http) {
+  var $scope = this;
+
+  $scope.createPost = function(named, mobiled, emailid, passwordv ,levelid) {
+    var data = {
+      name: named,
+      mobile: mobiled,
+      email: emailid,
+      password: passwordv,
+      level: levelid
+    }
+    $http({
+        method: 'POST',
+        format: 'json',
+        url: '/api/add-user',
+        data: JSON.stringify({
+          name: named,
+          mobile: mobiled,
+          email: emailid,
+          password: passwordv,
+          level: levelid
+        })
+      })
+      .then(function(success) {
+        console.log(success)
+//        console.log("success data"+JSON.stringify(success.data));
+//        console.log($scope.users);
+        $uibModalInstance.close(success.data.data);
+      }, function(error) {
+        console.log("not hit " + JSON.stringify(error));
+      });
   }
 
-
-])
+});
