@@ -44,7 +44,8 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
 
       modalInstance.result.then(function (selectedItem) {
         console.log("selectedItem"+JSON.stringify(selectedItem.data));
-        $scope.users.push(selectedItem)
+        $scope.users.push(selectedItem.data)
+        $scope.$apply();
         console.log("updates users"+JSON.stringify($scope.users))
       }, function () {
         $log.info('Modal dismissed at: ' + new Date());
@@ -183,6 +184,12 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function
   var $scope = this;
 
   $scope.createPost = function(named, mobiled, emailid, passwordv ,levelid) {
+    console.log(named);
+    console.log(mobiled);
+    console.log(emailid);
+    console.log(passwordv);
+    console.log(levelid);
+
     var data = {
       name: named,
       mobile: mobiled,
