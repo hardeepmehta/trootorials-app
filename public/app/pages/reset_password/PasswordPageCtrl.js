@@ -9,6 +9,14 @@ localstorageApp.controller('PasswordPageCtrl', ['$scope', '$window', '$http', 'l
     if(token == null){
       $window.location.href = '/index.html';
     }
+    token = token.substring(1, token.length - 1);
+    $http.get("/api/loggedin/"+token).then(function(response) {
+    console.log("response"+JSON.stringify(response.data.error))
+    if(response.data.error == true){
+      localStorageService.remove('TOKEN')
+      $window.location.href = '/index.html';
+    }
+    });
     var currentPassword = ""
 
     token = token.substring(1, token.length - 1);

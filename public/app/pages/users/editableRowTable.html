@@ -1,4 +1,4 @@
-<button class="btn btn-primary editable-table-button btn-xs" data-toggle="modal" ng-click="open('lg')">Add</button>
+<button class="btn btn-primary editable-table-button btn-xs" data-toggle="modal" ng-click="open('lg',1)">Add</button>
 
 <div class="add-row-editable-table">
 </div>
@@ -63,7 +63,7 @@
         </button>
       </form>
       <div class="buttons" ng-show="!rowform.$visible">
-        <button class="btn btn-primary editable-table-button btn-xs" ng-click="open($event ,user.id, 'app/pages/users/addUser.html','lg',1)" data-toggle="modal" >Edit</button>
+        <button class="btn btn-primary editable-table-button btn-xs" ng-click="open('lg',0,user.id)" data-toggle="modal" >Edit</button>
         <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeCourse(user.id, $index)">Delete</button>
       </div>
     </td>

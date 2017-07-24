@@ -10,15 +10,26 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
     if(token == null){
       $window.location.href = '/index.html';
     }
-
+    token = token.substring(1, token.length - 1);
+    $http.get("/api/loggedin/"+token).then(function(response) {
+    console.log("response"+JSON.stringify(response.data.error))
+    if(response.data.error == true){
+      localStorageService.remove('TOKEN')
+      $window.location.href = '/index.html';
+    }
+    });
     $scope.users = [];
-    $scope.form = [];
+    // $scope.form = [];
+    $scope.bool = null;
+    $scope.id = 0;
 
     $http.get("/api/all-users").then(function(response) {
       $scope.users = response.data.data;
     });
 
-    $scope.open = function (size) {
+    $scope.open = function (size,bool,id) {
+      $scope.bool = bool
+      $scope.id = id
 
       var modalInstance = $uibModal.open({
         // animation: $ctrl.animationsEnabled,
@@ -32,14 +43,21 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
         resolve: {
           users: function () {
             return $scope.users;
+          },
+          bool: function () {
+            return $scope.bool;
+          },
+          id: function () {
+            return $scope.id;
           }
         }
       });
 
       modalInstance.result.then(function (selectedItem) {
-        console.log("selectedItem"+JSON.stringify(selectedItem.data));
-        $scope.users.push(selectedItem.data)
+        // console.log("selectedItem"+JSON.stringify(selectedItem.data));
+        // $scope.users.push(selectedItem.data)
         // $scope.$apply();
+        console.log($scope.form);
         // console.log("updates users"+JSON.stringify($scope.users))
       }, function () {
         $log.info('Modal dismissed at: ' + new Date());
@@ -96,21 +114,21 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
     //          level: '2'
     //        }];
     //
-    //       $scope.getUser = function(id){
-    //
-    //          $scope.gotUser = {};
-    //          $http.get("/api/get-user/"+id).then(function(response) {
-    //         //console.log(response.data.response.data);
-    //         $scope.gotUser = response.data.response.data;
-    //         console.log($scope.gotUser.name);
-    //         $scope.form.name = $scope.gotUser.name;  //set to fields
-    //         $scope.form.mobile = $scope.gotUser.mobile;
-    //         $scope.form.email = $scope.gotUser.email;
-    //         $scope.form.password = $scope.gotUser.password;
-    //       //  $scope.form.level = $scope.gotUser.level;
-    //         $scope.form.level = $scope.levels[$scope.gotUser.level - 1];
-    //       });
-    //   }
+      //     $scope.getUser = function(id){
+      //
+      //        $scope.gotUser = {};
+      //        $http.get("/api/get-user/"+id).then(function(response) {
+      //       //console.log(response.data.response.data);
+      //       $scope.gotUser = response.data.response.data;
+      //       console.log($scope.gotUser.name);
+      //       $scope.form.name = $scope.gotUser.name;  //set to fields
+      //       $scope.form.mobile = $scope.gotUser.mobile;
+      //       $scope.form.email = $scope.gotUser.email;
+      //       $scope.form.password = $scope.gotUser.password;
+      //     //  $scope.form.level = $scope.gotUser.level;
+      //       $scope.form.level = $scope.levels[$scope.gotUser.level - 1];
+      //     });
+      // }
 
 
 
@@ -174,20 +192,40 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
 ])
 
 
-angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function ($uibModalInstance,$http) {
+angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function ($scope, $uibModalInstance,$http,bool,id,$timeout) {
   var $scope = this;
-  $scope.levels = [{
-     level: '1'
-   },{
-     level: '2'
-   }];
+  $scope.form = {};
+
+  console.log("id value "+id)
+
+  console.log("Bool value "+bool)
+  if(bool == 0) {
+      //  $scope.gotUser = {};
+       $http.get("/api/get-user/"+id).then(function(response) {
+         console.log(response);
+        //  console.log(response.data.data);
+      console.log(response.data.response.data);
+      $timeout(function(){
+        $scope.form = response.data.response.data;
+      },2000)
+      console.log("form");
+      console.log($scope.form);
+      console.log($scope.form.name);
+      // $state.go('^')
+      // $scope.gotUser = response.data.response.data;
+      // console.log($scope.gotUser.name);
+      //
+      // $scope.form.name = $scope.gotUser.name;  //set to fields
+      // $scope.form.mobile = $scope.gotUser.mobile;
+      // $scope.form.email = $scope.gotUser.email;
+      // $scope.form.password = $scope.gotUser.password;
+      // $scope.form.level = $scope.gotUser.level ;
+    });
+  }
+
+  // }
 
   $scope.createPost = function(named, mobiled, emailid, passwordv ,levelid) {
-    console.log(named);
-    console.log(mobiled);
-    console.log(emailid);
-    console.log(passwordv);
-    console.log(levelid);
     levelid = 1
     console.log(levelid);
     var data = {
