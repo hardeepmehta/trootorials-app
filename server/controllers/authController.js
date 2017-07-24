@@ -1,15 +1,10 @@
 const apiService = require('services/apiService'),
  apiConfig = require('config/apiConfig');
-var _ = require("lodash");
+// var _ = require("lodash");
 var jwt = require('jsonwebtoken');
 var passportJWT = require("passport-jwt");
 var encryptService = require('services/encryptionService');
 var sql = require('services/sqlService');
-var localstorage = require('node-localstorage')
-
-// var blacklist = require('express-jwt-blacklist');
-// var LocalStorage = require('node-localstorage').LocalStorage;
-// localStorage = new LocalStorage('./scratch');       //Directory where token will be saved
 
 var jwtOptions = {}
 jwtOptions.jwtFromRequest = passportJWT.ExtractJwt.fromAuthHeader();
@@ -20,7 +15,7 @@ module.exports = function(app, passport) {
   app.post('/api/login', loginHandler);
 
   // Check if user is logged in
-  app.get('/api/loggedin', isLoggedInHandler);
+  app.get('/api/loggedin/:token', isLoggedInHandler);
 
   // Logout
   app.get('/api/logout', logoutHandler)
@@ -28,9 +23,7 @@ module.exports = function(app, passport) {
 
 function loginHandler(req, res, next) {
   console.log("req.body" + req.body);
- //  if (typeof localStorage === "undefined" || localStorage === null) {
- //
- // }
+
 
   var whereObj = {
     email: req.body.email
@@ -70,16 +63,13 @@ function loginHandler(req, res, next) {
 }
 
 function isLoggedInHandler(req, res, next) {
-  var token = req.body.token || req.query.token || req.headers.authentication;
+  var token = req.body.token || req.query.token || req.headers.authentication || req.params.token
 
-  // token = localStorage.getItem('token')
-  // console.log(localStorage.getItem('token'));
-  // console.log("token fetched " + localStorage.getItem('token'));
   if (token) {
     jwt.verify(token, jwtOptions.secretOrKey, function(err, decoded) {
       if (err) {
         return res.json({
-          success: false,
+          error: true,
           message: 'Failed to authenticate token.'
         });
       } else {
@@ -110,7 +100,7 @@ function isLoggedInHandler(req, res, next) {
   }
   else {
     return res.status(403).send({
-      success: false,
+      error: true,
       message: 'No token provided.'
     });
   }
@@ -119,9 +109,5 @@ function isLoggedInHandler(req, res, next) {
 function logoutHandler(req, res, next) {
   var token = req.body.token || req.query.token || req.headers.authentication;
   console.log("token fetched " + token);
-  //jwtOptions.secretOrKey = makeid();
-  //token = 0;
-  console.log(localStorage.removeItem('myFirstKey'));
   req.logout();
-  // res.redirect('/');
 }

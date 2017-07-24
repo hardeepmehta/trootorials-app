@@ -2,12 +2,12 @@ const apiService = require('services/apiService'),
     apiConfig = require('config/apiConfig'),
     logger = require('services/loggerService');
 
-module.exports = function(app,passport) {
-    require('controllers/authController')(app, passport);
-    require('controllers/courseController')(app, passport);
-    require('controllers/userController')(app, passport);
-    require('controllers/videoController')(app, passport);
-    require('controllers/feedbackController')(app, passport);
-    require('controllers/startTutorialController')(app, passport);
-    require('controllers/summaryController')(app, passport);
+module.exports = function(app) {
+    require('controllers/authController')(app);
+    require('controllers/courseController')(app);
+    require('controllers/userController')(app);
+    require('controllers/videoController')(app);
+    require('controllers/feedbackController')(app);
+    require('controllers/startTutorialController')(app);
+    require('controllers/summaryController')(app);
 };

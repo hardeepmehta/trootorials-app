@@ -5,7 +5,7 @@ var encryptService = require('services/encryptionService');
 var authenticate = require('services/authService');
 
 
-module.exports = function(app, passport) {
+module.exports = function(app) {
 
   //Add a new user
   app.post('/api/add-user', addUserHandler); //checked
@@ -105,7 +105,6 @@ function addUserHandler(req, res) {
       email: req.body.email
     }
     sql.findOne(sql.users, whereObj, function(obj) {
-
       if (obj.data.id) {
         res.send({
           error: 'true',
