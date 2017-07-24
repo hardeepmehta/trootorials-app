@@ -192,8 +192,7 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
 ])
 
 
-angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function ($scope, $uibModalInstance,$http,bool,id,$timeout) {
-  var $scope = this;
+angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', function ($scope, $uibModalInstance,$http,bool,id,$timeout) {
   $scope.form = {};
 
   console.log("id value "+id)
@@ -204,26 +203,12 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function
        $http.get("/api/get-user/"+id).then(function(response) {
          console.log(response);
         //  console.log(response.data.data);
-      console.log(response.data.response.data);
-      $timeout(function(){
+        console.log(response.data.response.data);
         $scope.form = response.data.response.data;
-      },2000)
-      console.log("form");
-      console.log($scope.form);
-      console.log($scope.form.name);
-      // $state.go('^')
-      // $scope.gotUser = response.data.response.data;
-      // console.log($scope.gotUser.name);
-      //
-      // $scope.form.name = $scope.gotUser.name;  //set to fields
-      // $scope.form.mobile = $scope.gotUser.mobile;
-      // $scope.form.email = $scope.gotUser.email;
-      // $scope.form.password = $scope.gotUser.password;
-      // $scope.form.level = $scope.gotUser.level ;
     });
   }
 
-  // }
+  
 
   $scope.createPost = function(named, mobiled, emailid, passwordv ,levelid) {
     levelid = 1
@@ -256,4 +241,4 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', function
         console.log("not hit " + JSON.stringify(error));
       });
   }
-});
+}]);
