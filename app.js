@@ -6,8 +6,8 @@ const bodyParser = require('body-parser'),
     mime = require('mime-types'),
     path = require('path'),
     flash = require('connect-flash'),
-    passport = require('passport'),
-    passportLocal = require('passport-local'),
+    // passport = require('passport'),
+    // passportLocal = require('passport-local'),
     serveStatic = require('serve-static'),
     expressSession = require('express-session');
     var _ = require("lodash");
@@ -52,8 +52,8 @@ if (NODE_ENV && typeof NODE_ENV !== "undefined" && (NODE_ENV == 'PROD' || NODE_E
     logger.info('Directory set to /public for env ' + NODE_ENV);
 }
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'ejs');
 
 // Middlewares
 app.use(function(req, res, next) {
@@ -64,19 +64,19 @@ app.use(function(req, res, next) {
     next();
 })
     .use(bodyParser.urlencoded({
-        limit: '20mb',
+        limit: '100mb',
         extended: true
     }))
     .use(bodyParser.json({ limit: '100mb' }))
-    .use(cookieParser())
-    .use(expressSession({
-        secret: 'comely-troofal',
-        resave: false,
-        saveUninitialized: false
-    }))
+    // .use(cookieParser())
+    // .use(expressSession({
+    //     secret: 'comely-troofal',
+    //     resave: false,
+    //     saveUninitialized: false
+    // }))
     .use(flash())
-    .use(passport.initialize())
-    .use(passport.session());
+    // .use(passport.initialize())
+    // .use(passport.session());
 
 
 // Logging response time
@@ -91,7 +91,7 @@ app.use(function(req, res, next) {
 });
 
 // Setup api routes
-require('services/routeService')(app,passport);
+require('services/routeService')(app);
 
 // Error handler
 app.use(function(err, req, res, next) {
@@ -99,10 +99,6 @@ app.use(function(err, req, res, next) {
     next(err);
 });
 
-//passport.use(new passportLocal.Strategy( require('services/strategyService') ));
-
-passport.use(require('services/strategyService'));
-app.use(passport.initialize());
 
 var server = http.createServer(app).listen(PORT, function() {
     logger.log('info', 'Express server listening on port ' + PORT);
