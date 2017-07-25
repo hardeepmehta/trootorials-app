@@ -9,7 +9,7 @@ module.exports = function(app, passport) {
 };
 
 function getStartTutorialHandler(req, res, next) {
-  sql.findAll(sql.courses,{}, function(obj) {
+  sql.findAll(sql.courses, {}, function(obj) {
     if (obj.error == true || obj.data.length == 0)
       res.send({
         error: true,

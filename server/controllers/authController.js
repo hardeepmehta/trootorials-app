@@ -1,5 +1,5 @@
 const apiService = require('services/apiService'),
- apiConfig = require('config/apiConfig');
+  apiConfig = require('config/apiConfig');
 // var _ = require("lodash");
 var jwt = require('jsonwebtoken');
 var passportJWT = require("passport-jwt");
@@ -50,7 +50,7 @@ function loginHandler(req, res, next) {
           res.json({
             message: "ok",
             token: token,
-            level:obj.data.level
+            level: obj.data.level
           });
         } else {
           res.status(401).json({
@@ -97,8 +97,7 @@ function isLoggedInHandler(req, res, next) {
         });
       }
     });
-  }
-  else {
+  } else {
     return res.status(403).send({
       error: true,
       message: 'No token provided.'

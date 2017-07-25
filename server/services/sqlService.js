@@ -1,12 +1,12 @@
 const Sequelize = require('sequelize'),
-  util = require('util'),
-  path = require('path'),
-  sequelize = new Sequelize(process.env['MYSQL_DB'], process.env['MYSQL_USERNAME'], process.env['MYSQL_PASSWORD'], {
-    host: process.env['MYSQL_HOST'],
-    port: process.env['MYSQL_PORT'],
-    logging: false
-  }),
-  moment = require('moment');
+util = require('util'),
+path = require('path'),
+sequelize = new Sequelize(process.env['MYSQL_DB'], process.env['MYSQL_USERNAME'], process.env['MYSQL_PASSWORD'], {
+  host: process.env['MYSQL_HOST'],
+  port: process.env['MYSQL_PORT'],
+  logging: false
+}),
+moment = require('moment');
 
 
 var Course = sequelize.define('Course', {
@@ -58,7 +58,7 @@ var User = sequelize.define('User', {
 var Video = sequelize.define('Video', {
   id: {
     type: Sequelize.INTEGER,
-     autoIncrement: true,
+    autoIncrement: true,
     primaryKey: true
   },
   title: {
@@ -193,21 +193,21 @@ var sendExports = {
   },
   findOrCreate: function(table, whereObj, defaultsObj, callback) {
     table
-      .findOrCreate({
-        where: whereObj,
-        defaults: defaultsObj
+    .findOrCreate({
+      where: whereObj,
+      defaults: defaultsObj
+    })
+    .then(function(data) {
+      callback({
+        error: false,
+        data: data
       })
-      .then(function(data) {
-        callback({
-          error: false,
-          data: data
-        })
-      }, function(err) {
-        callback({
-          error: true,
-          data: err
-        })
-      });
+    }, function(err) {
+      callback({
+        error: true,
+        data: err
+      })
+    });
   },
   findAll: function(table, whereObj, callback) {
     var order;
