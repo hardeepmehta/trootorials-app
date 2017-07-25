@@ -1,18 +1,18 @@
 const bodyParser = require('body-parser'),
-    cookieParser = require('cookie-parser'),
-    express = require('express'),
-    fs = require('fs'),
-    http = require('http'),
-    mime = require('mime-types'),
-    path = require('path'),
-    flash = require('connect-flash'),
-    // passport = require('passport'),
-    // passportLocal = require('passport-local'),
-    serveStatic = require('serve-static'),
-    expressSession = require('express-session');
-    var _ = require("lodash");
-    var jwt = require('jsonwebtoken');
-    var passportJWT = require("passport-jwt");
+cookieParser = require('cookie-parser'),
+express = require('express'),
+fs = require('fs'),
+http = require('http'),
+mime = require('mime-types'),
+path = require('path'),
+flash = require('connect-flash'),
+// passport = require('passport'),
+// passportLocal = require('passport-local'),
+serveStatic = require('serve-static'),
+expressSession = require('express-session');
+var _ = require("lodash");
+var jwt = require('jsonwebtoken');
+var passportJWT = require("passport-jwt");
 
 // Load environment variables
 require('dotenv').config({
@@ -63,20 +63,20 @@ app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Credentials', true);
     next();
 })
-    .use(bodyParser.urlencoded({
-        limit: '100mb',
-        extended: true
-    }))
-    .use(bodyParser.json({ limit: '100mb' }))
-    // .use(cookieParser())
-    // .use(expressSession({
-    //     secret: 'comely-troofal',
-    //     resave: false,
-    //     saveUninitialized: false
-    // }))
-    .use(flash())
-    // .use(passport.initialize())
-    // .use(passport.session());
+.use(bodyParser.urlencoded({
+    limit: '100mb',
+    extended: true
+}))
+.use(bodyParser.json({ limit: '100mb' }))
+// .use(cookieParser())
+// .use(expressSession({
+//     secret: 'comely-troofal',
+//     resave: false,
+//     saveUninitialized: false
+// }))
+.use(flash())
+// .use(passport.initialize())
+// .use(passport.session());
 
 
 // Logging response time
