@@ -11,7 +11,7 @@ function generateUUID() {
 const uuidv4 = require('uuid/v4');
 var formidable = require('formidable');
 var util = require('util');
-
+var fs = require('fs');
 
 const apiService = require('services/apiService'),
   sql = require('services/sqlService'),
@@ -32,12 +32,14 @@ module.exports = function(app, passport) {
     });
     form.on('file', function(name, file) {
       console.log('Uploaded ' + file.name);
+
     });
     form.on('end', function() {
-        res.send({error:false})
+      res.send({error:false})
+
 
 });
-    console.log('successfully uploaded')
+
   })
 
 
@@ -157,7 +159,7 @@ function videoUpdateHandler(req, res, next) {
     description: req.body.description,
     author: req.body.author,
     duration: req.body.duration,
-    file: req.body.file,
+    // file: req.body.file,
     //uploadedat: req.body.uploadedat,
     ispublic: req.body.ispublic
   }
@@ -166,7 +168,7 @@ function videoUpdateHandler(req, res, next) {
     id: req.params.id
   }
 
-  if (!(data.title && data.description && data.author && data.file && data.ispublic)){
+  if (!(data.title && data.description && data.author  && data.ispublic)){
     res.send({
       error: true,
       reason: "All fields not filled"
@@ -205,6 +207,9 @@ function videoDeleteHandler(req, res, next) {
     })
   }
   else{
+
+var filePath = 'uploads/'+obj.data.file;
+fs.unlinkSync(filePath);
   sql.delete(sql.video, whereobj, function response(obj) {
       res.send({
         error: false,
