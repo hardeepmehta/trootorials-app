@@ -1,0 +1,50 @@
+<div class="panel panel-default">
+  <div class="panel-heading">Add Videos</div>
+  <div class="panel-body">
+    <div ng-controller="addCtrl" style="margin:10px;">
+      <form name="addVideos" class="" method="post">
+        <div class="alert alert-success" ng-show="success" style="background-color:black;">
+                <strong>successfully updated!!</strong> Redirecting to all videos page.
+              </div>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" class="form-control" ng-model="form.title" required name="title" placeholder="Enter Title">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control" ng-model="form.description" required name="description" rows="5" id="comment" placeholder="Enter Description"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Author</label>
+          <input type="text" class="form-control" required ng-model="form.author" name="author" id="exampleInputPassword1" placeholder="Enter Author Name">
+        </div>
+        <div class="form-group">
+          <label>duration</label>
+          <input type="text" class="form-control" required ng-model="form.duration" name="duration" id="exampleInputPassword1" placeholder="Enter Author Name">
+        </div>
+        <div class="form-group">
+          <label>ispublic</label>
+          <input type="text" class="form-control" required ng-model="form.public" name="public" id="exampleInputPassword1" placeholder="Enter Author Name">
+        </div>
+        <div class="row" ng-hide="display">
+          <div class="col-md-2" style="margin-top: 19px;">
+            <input type="file" accept="video/*" file-model="myFile" required/>
+          </div>
+          <div class="col-md-8" style="margin-left:29px;">
+            <button ng-click="uploadFile(form)" class="btn btn-danger"  ng-disabled="addVideos.$invalid" style="margin:10px;">Submit</button>
+          </div>
+        </div>
+
+        <progress value="{{progressBar}}" max="100" ng-show="view">
+        </progress>
+        <div class="progress" ng-show="view" style="width:40%;">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{progressBar}}" aria-valuemin="0" aria-valuemax="100" style="width:{{progressBar}}%">
+            {{progressBar}}% Complete (success)
+          </div>
+        </div>
+
+
+      </form>
+    </div>
+  </div>
+</div>

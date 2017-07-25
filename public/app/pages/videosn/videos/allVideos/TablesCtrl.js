@@ -10,6 +10,14 @@ localstorageApp.controller('TablesCtrl',['$scope', '$filter','$http', 'editableO
     if(token == null){
       $window.location.href = '/index.html';
     }
+    token = token.substring(1, token.length - 1);
+    $http.get("/api/loggedin/"+token).then(function(response) {
+    console.log("response"+JSON.stringify(response.data.error))
+    if(response.data.error == true){
+      localStorageService.remove('TOKEN')
+      $window.location.href = '/index.html';
+    }
+    });
     $scope.display=true;
     $http.get("/api/all-videos").then(function(response) {
                 // console.log("hit");
@@ -17,7 +25,6 @@ localstorageApp.controller('TablesCtrl',['$scope', '$filter','$http', 'editableO
                 // // console.log("respomse data "+JSON.stringify(response.data));
 
                $scope.users = response.data.data;
-               console.log(response.data.data);
             });
 
             $scope.redirect = function () {
@@ -39,14 +46,14 @@ localstorageApp.controller('TablesCtrl',['$scope', '$filter','$http', 'editableO
 
     $scope.open = function(e,id,page, size, addOrEdit) {
       $scope.id = id;
-      // $scope.display=true;
+      $scope.display=true;
       console.log(id);
       $uibModal.open({
         animation: true,
         templateUrl: page,
         size: size,
         controller: ['$scope', '$http', 'id', function( $scope, $http, id ) {
-          // $scope.add = true ;
+          $scope.add = true ;
 
           $scope.form = {};
 
@@ -70,7 +77,7 @@ localstorageApp.controller('TablesCtrl',['$scope', '$filter','$http', 'editableO
         $scope.updateVideo = function() {
         console.log("Update called");
           $scope.id = id;
-          // $scope.display=true;
+
           console.log('working');
           var m = parseInt(id);
           console.log($scope.form);
@@ -97,13 +104,13 @@ localstorageApp.controller('TablesCtrl',['$scope', '$filter','$http', 'editableO
         }
         if(addOrEdit == 1){
           $scope.getVideo(id);
-          //$scope.updateVideo();
+          $scope.updateVideo();
           $scope.add = false;
           $scope.display=true;
           //$scope.updateCourse();
         }
         else{
-          // $scope.add = true;
+          $scope.add = true;
 
         }
 

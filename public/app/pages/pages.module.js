@@ -14,7 +14,8 @@
     // 'BlurAdmin.pages.tables',
     // 'BlurAdmin.pages.profile',
     // 'BlurAdmin.pages.signin',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'ui.bootstrap',
   ])
       .config(routeConfig);
 

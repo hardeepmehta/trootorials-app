@@ -72,7 +72,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $win
         // alert('successfully updated');
         t.success = true;
         t.f ={};
-
+      
         $timeout(function() {
         $window.location.href = "#/videos/allVideos"
       },3000);
@@ -94,12 +94,8 @@ myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageSer
   var k = "";
   $scope.view= false;
   $scope.success= false;
-  $scope.add = true;
-  // console.log($scope.myFile.name);
   $scope.uploadFile = function(f) {
-    // $scope.add = false;
     var file = $scope.myFile;
-
     console.log(file.name, $scope.myFile.name);
     console.log('file is ');
     console.dir(file);

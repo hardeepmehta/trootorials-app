@@ -13,6 +13,17 @@ var localstorageApp = angular.module('BlurAdmin.pages.dashboard');
           $window.location.href = '/index.html';
         }
 
+      token = token.substring(1, token.length - 1);
+      $http.get("/api/loggedin/"+token).then(function(response) {
+      console.log("response"+JSON.stringify(response.data.error))
+      if(response.data.error == true){
+        localStorageService.remove('TOKEN')
+        $window.location.href = '/index.html';
+      }
+      });
+
+
+
      $http.get("/api/all-summary"). then(function(response) {
        console.log(response.data[0].courses);
        console.log(response.data[1].videos);

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('BlurAdmin.pages.videos.addVideos',['LocalStorageModule','angular-loading-bar','ngAnimate'])
+  angular.module('BlurAdmin.pages.videos.addVideos',['LocalStorageModule'])
       .config(routeConfig);
 
   /** @ngInject */
@@ -9,7 +9,7 @@
     $stateProvider
         .state('videos.addVideos', {
           url: '/addVideos',
-          templateUrl: 'app/pages/videos/addVideos/add3.html',
+          templateUrl: 'app/pages/videos/addVideos/add2.html',
           title: 'Add Videos',
           controller:'addCtrl',
           sidebarMeta: {

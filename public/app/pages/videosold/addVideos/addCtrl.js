@@ -26,8 +26,8 @@ myApp.directive('fileModel', ['$parse', function($parse) {
   };
 }]);
 var q = '';
-myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $window,$timeout) {
-  this.uploadFileToUrl = function(file, uploadUrl,t) {
+myApp.service('fileUpload', ['$http', '$window', function($http, $window) {
+  this.uploadFileToUrl = function(file, uploadUrl) {
     var fd = new FormData();
     var filename = file.name.replace(file.name.substring(file.name.lastIndexOf('/') + 1), ""),
       uuid = generateUUID();
@@ -37,29 +37,18 @@ myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $win
     // file['name'] = filename
     // console.log(file.name);
     fd.append('file', file, filename);
-    return  $http.post(uploadUrl, fd, {
+    $http.post(uploadUrl, fd, {
         transformRequest: angular.identity,
-        uploadEventHandlers: {
-        progress: function (e) {
-                  if (e.lengthComputable) {
-                     t.progressBar = (e.loaded / e.total) * 100;
-                     t.view = true;
-                    //  var progressCounter = $scope.progressBar;
-                     console.log(t.progressBar);
-                  }
-        }
-    },
         headers: {
           'Content-Type': undefined
         }
       })
       .success(function(res) {
-        // alert('successfully uploaded');
-        return res;
+        alert('successfully uploaded')
       })
       .error(function() {});
   }
-  this.submit = function(f, uploadUrl,t) {
+  this.submit = function(f, uploadUrl) {
     $http({
         method: 'POST',
         format: 'json',
@@ -68,14 +57,8 @@ myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $win
       })
       .then(function(success) {
         //console.log("hit " + JSON.stringify(success));
-        console.log(success);
-        // alert('successfully updated');
-        t.success = true;
-        t.f ={};
-
-        $timeout(function() {
+        alert('successfully updated');
         $window.location.href = "#/videos/allVideos"
-      },3000);
         // $window.location.reload()
       }, function(error) {
         //console.log("not hit " + JSON.stringify(error));
@@ -92,41 +75,35 @@ myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageSer
   }
 
   var k = "";
-  $scope.view= false;
-  $scope.success= false;
-  $scope.add = true;
-  // console.log($scope.myFile.name);
-  $scope.uploadFile = function(f) {
-    // $scope.add = false;
+  $scope.uploadFile = function() {
     var file = $scope.myFile;
-
     console.log(file.name, $scope.myFile.name);
     console.log('file is ');
     console.dir(file);
     var uploadUrl = "/upload";
-    var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
-    promise.then(function(res){
-      // $scope.progressBar = m;
-      if(res.data.error = "false"){
-        console.log('working code');
-        $scope.var = {
-           title: f.title,
-           author: f.author,
-           description: f.description,
-           duration: f.duration,
-           ispublic: f.public,
-           file: q,
-         }
-         var uploadUrl = "/api/add-video"
-         fileUpload.submit($scope.var, uploadUrl,$scope);
-
-      }
-      else{
-        console.log('error in  uploading');
-      }
-    })
-
+    fileUpload.uploadFileToUrl(file, uploadUrl);
   };
+  $scope.hello = function(f) {
+    // var filename=$scope.myFile.name.replace($scope.myFile.name.substring($scope.myFile.name.lastIndexOf('/')+1),""),
+    //       uuid = generateUUID();
+    //       filename = filename+uuid;
+    // if(f.length==5){
+    console.log(Object.keys(f).length);
+    $scope.var = {
+      title: f.title,
+      author: f.author,
+      description: f.description,
+      duration: f.duration,
+      ispublic: f.public,
+      file: q,
+    }
+    var uploadUrl = "/api/add-video"
+    fileUpload.submit($scope.var, uploadUrl);
 
+  }
+
+  // else{
+  //   alert('please fill all the values')
+  // }
 
 }]);

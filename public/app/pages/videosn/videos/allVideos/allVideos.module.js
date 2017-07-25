@@ -11,7 +11,7 @@
           url: '/allVideos',
           templateUrl: 'app/pages/videos/allVideos/allVideos.html',
           title: 'All Videos',
-          controller: 'TbleCtrl',
+          controller: 'TablesCtrl',
           sidebarMeta: {
             //icon: 'ion-compose',
             order: 800,

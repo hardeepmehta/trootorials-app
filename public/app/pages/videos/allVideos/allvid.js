@@ -1,6 +1,6 @@
 
-var localstorageApp =  angular.module('BlurAdmin.pages.users');
-  localstorageApp.controller('UserPageCtrl',['$rootScope','$scope', '$filter', 'editableOptions', 'editableThemes', '$window', '$http',
+var localstorageApp =  angular.module('BlurAdmin.pages.videos.allVideos');
+  localstorageApp.controller('TbleCtrl',['$rootScope','$scope', '$filter', 'editableOptions', 'editableThemes', '$window', '$http',
    '$uibModal', 'baProgressModal','localStorageService','$state','$rootScope',
 
   function ($rootScope,$scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal,
@@ -19,23 +19,27 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
     }
     });
     $scope.users = [];
+    $scope.display=true;
     // $scope.form = [];
-    $scope.bool = null;
+    //$scope.bool = null;
     $scope.id = 0;
+    $scope.redirect = function () {
+        $window.location.href = "#/videos/addVideos";
+    }
+    $http.get("/api/all-videos").then(function(response) {
+              $scope.users = response.data.data;
+               console.log(response.data.data);
+            });
 
-    $http.get("/api/all-users").then(function(response) {
-      $scope.users = response.data.data;
-    });
-
-    $scope.open = function (size,bool,id) {
-      $scope.bool = bool
+    $scope.open = function(e,id,page, size, addOrEdit) {
+      // $scope.bool = bool
       $scope.id = id
-
+      $scope.display=true;
       var modalInstance = $uibModal.open({
         // animation: $ctrl.animationsEnabled,
         // ariaLabelledBy: 'modal-title',
         // ariaDescribedBy: 'modal-body',
-        templateUrl: 'app/pages/users/addUser.html',
+        templateUrl: page,
         controller: 'ModalInstanceCtrl',
         controllerAs: '$scope',
         size: size,
@@ -44,9 +48,7 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
           users: function () {
             return $scope.users;
           },
-          bool: function () {
-            return $scope.bool;
-          },
+
           id: function () {
             return $scope.id;
           }
@@ -55,10 +57,10 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
 
       modalInstance.result.then(function (selectedItem) {
         // console.log("selectedItem"+JSON.stringify(selectedItem.data));
-        // $scope.users.push(selectedItem.data)
-        // $scope.$apply();
-        console.log($scope.form);
-        // console.log("updates users"+JSON.stringify($scope.users))
+
+          $scope.users = selectedItem;
+          // $scope.users.push(selectedItem.data)
+
       }, function () {
         $log.info('Modal dismissed at: ' + new Date());
       });
@@ -87,12 +89,13 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
     //     });
     // };
 
-    $scope.removeCourse = function(id, $index) {
+    $scope.removeVideo = function(id, $index) {
       var m = parseInt(id);
       if ($window.confirm("Are you sure you want to delete?") == true) {
-        $http.post("/api/delete-user/" + m).then(function(response) {
+        $http.post("/api/delete-video/" + m).then(function(response) {
           $scope.users.splice( $index, 1 );
         });
+        // $window.location.reload()
       } else {
       }
     }
@@ -185,60 +188,73 @@ var localstorageApp =  angular.module('BlurAdmin.pages.users');
     // };
 
     $scope.openProgressDialog = baProgressModal.open;
-    editableOptions.theme = 'bs3';
-    editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
-    editableThemes['bs3'].cancelTpl = '<button type="button" ng-click="$form.$cancel()" class="btn btn-default btn-with-icon"><i class="ion-close-round"></i></button>';
+    // editableOptions.theme = 'bs3';
+    // editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
+    // editableThemes['bs3'].cancelTpl = '<button type="button" ng-click="$form.$cancel()" class="btn btn-default btn-with-icon"><i class="ion-close-round"></i></button>';
   }
 ])
 
 
-angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', function ($scope, $uibModalInstance,$http,bool,id,$timeout) {
+angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$http',  'id', '$timeout', function ($scope, $uibModalInstance,$http,id,$timeout) {
   $scope.form = {};
-
+  $scope.test = '';
+  // $scope.b = bool;
+  console.log($scope.b);
+$scope.display=true;
+  //console.log("---" + $scope.bool);
+  // $scope.levels = [{
+  //            level: 1
+  //          },{
+  //            level: 2
+  //          }];
+//   $scope.public = [0,1];
+// $scope.form.public = $scope.public[0];
   console.log("id value "+id)
 
-  console.log("Bool value "+bool)
-  if(bool == 0) {
+  // console.log("Bool value "+bool)
+
       //  $scope.gotUser = {};
-       $http.get("/api/get-user/"+id).then(function(response) {
+       $http.get("/api/get-video/"+id).then(function(response) {
          console.log(response);
         //  console.log(response.data.data);
         console.log(response.data.response.data);
         $scope.form = response.data.response.data;
+        // $scope.form.public = response.data.response.data.ispublic;
+        $scope.test = response.data.response.data.ispublic;
+        // console.log($scope.form.level);
+        // $scope.form.level = $scope.levels[response.data.response.data.level - 1];
+        // console.log($scope.form.level);
     });
-  }
 
-  
+  $scope.updateVideo = function() {
+        console.log("Update called");
 
-  $scope.createPost = function(named, mobiled, emailid, passwordv ,levelid) {
-    levelid = 1
-    console.log(levelid);
-    var data = {
-      name: named,
-      mobile: mobiled,
-      email: emailid,
-      password: passwordv,
-      level: levelid
-    }
-    $http({
-        method: 'POST',
-        format: 'json',
-        url: '/api/add-user',
-        data: JSON.stringify({
-          name: named,
-          mobile: mobiled,
-          email: emailid,
-          password: passwordv,
-          level: levelid
-        })
-      })
-      .then(function(success) {
-        console.log(success)
-        console.log("success data"+JSON.stringify(success));
-//        console.log($scope.users);
-        $uibModalInstance.close(success.data.data);
-      }, function(error) {
-        console.log("not hit " + JSON.stringify(error));
-      });
-  }
+          var m = parseInt(id);
+          console.log($scope.form);
+          // console.log("level "+$scope.form.level);
+          $http({
+              method: 'POST',
+              format: 'json',
+              url: '/api/edit-video/'+m,
+              data:JSON.stringify({
+                title: $scope.form.title,
+                description: $scope.form.description,
+                author: $scope.form.author,
+                duration: $scope.form.duration,
+                ispublic: $scope.form.public == undefined?$scope.test:$scope.form.public
+              })
+            })
+            .then(function(success) {
+              console.log("api");
+              console.log("hit " + JSON.stringify(success));
+              $http.get("/api/all-videos").then(function(response) {
+              //  $scope.usersupdated = response.data.data;
+                $uibModalInstance.close(response.data.data);
+              });
+
+              // $window.location.reload()
+            }, function(error) {
+              console.log("not hit " + JSON.stringify(error));
+            });
+        }
 }]);

@@ -1,4 +1,4 @@
-var _ = require("lodash");
+// var _ = require("lodash");
 var jwt = require('jsonwebtoken');
 var passportJWT = require("passport-jwt");
 var encryptService = require('services/encryptionService');
@@ -41,4 +41,3 @@ exports.auth = function( req, res, cb ) {
     cb(0,null);
   }
 }
-// };
