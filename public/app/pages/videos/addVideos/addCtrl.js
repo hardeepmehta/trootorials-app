@@ -26,8 +26,8 @@ myApp.directive('fileModel', ['$parse', function($parse) {
   };
 }]);
 var q = '';
-myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $window,$timeout) {
-  this.uploadFileToUrl = function(file, uploadUrl,t) {
+myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $window, $timeout) {
+  this.uploadFileToUrl = function(file, uploadUrl, t) {
     var fd = new FormData();
     var filename = file.name.replace(file.name.substring(file.name.lastIndexOf('/') + 1), ""),
       uuid = generateUUID();
@@ -37,18 +37,18 @@ myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $win
     // file['name'] = filename
     // console.log(file.name);
     fd.append('file', file, filename);
-    return  $http.post(uploadUrl, fd, {
+    return $http.post(uploadUrl, fd, {
         transformRequest: angular.identity,
         uploadEventHandlers: {
-        progress: function (e) {
-                  if (e.lengthComputable) {
-                     t.progressBar = (e.loaded / e.total) * 100;
-                     t.view = true;
-                    //  var progressCounter = $scope.progressBar;
-                     console.log(t.progressBar);
-                  }
-        }
-    },
+          progress: function(e) {
+            if (e.lengthComputable) {
+              t.progressBar = (e.loaded / e.total) * 100;
+              t.view = true;
+              //  var progressCounter = $scope.progressBar;
+              console.log(t.progressBar);
+            }
+          }
+        },
         headers: {
           'Content-Type': undefined
         }
@@ -59,7 +59,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $win
       })
       .error(function() {});
   }
-  this.submit = function(f, uploadUrl,t) {
+  this.submit = function(f, uploadUrl, t) {
     $http({
         method: 'POST',
         format: 'json',
@@ -71,11 +71,11 @@ myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $win
         console.log(success);
         // alert('successfully updated');
         t.success = true;
-        t.f ={};
-      
+        t.f = {};
+
         $timeout(function() {
-        $window.location.href = "#/videos/allVideos"
-      },3000);
+          $window.location.href = "#/videos/allVideos"
+        }, 3000);
         // $window.location.reload()
       }, function(error) {
         //console.log("not hit " + JSON.stringify(error));
@@ -90,39 +90,40 @@ myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageSer
   if (token == null) {
     $window.location.href = '/index.html';
   }
-
+  token = token.substring(1, token.length - 1);
+ 
   var k = "";
-  $scope.view= false;
-  $scope.success= false;
+  $scope.view = false;
+  $scope.success = false;
+  $scope.add = true;
   $scope.uploadFile = function(f) {
+    // $scope.add = false;
     var file = $scope.myFile;
     console.log(file.name, $scope.myFile.name);
     console.log('file is ');
     console.dir(file);
-    var uploadUrl = "/upload";
-    var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
-    promise.then(function(res){
+    var uploadUrl = "/upload?token=" + token;
+    var promise = fileUpload.uploadFileToUrl(file, uploadUrl, $scope);
+    promise.then(function(res) {
       // $scope.progressBar = m;
-      if(res.data.error = "false"){
+      if (res.data.error = "false") {
         console.log('working code');
         $scope.var = {
-           title: f.title,
-           author: f.author,
-           description: f.description,
-           duration: f.duration,
-           ispublic: f.public,
-           file: q,
-         }
-         var uploadUrl = "/api/add-video"
-         fileUpload.submit($scope.var, uploadUrl,$scope);
+          title: f.title,
+          author: f.author,
+          description: f.description,
+          duration: f.duration,
+          ispublic: f.public,
+          file: q,
+        }
+        var uploadUrl = "/api/add-video?token=" + token
+        fileUpload.submit($scope.var, uploadUrl, $scope);
 
-      }
-      else{
+      } else {
         console.log('error in  uploading');
       }
     })
 
   };
-
 
 }]);

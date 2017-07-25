@@ -1,145 +1,184 @@
-
-/** @ngInject */
 var localstorageApp = angular.module('BlurAdmin.pages.courses.addCourses');
-    localstorageApp.controller('TablesPageCtrl',['$scope', '$filter', 'editableOptions', 'editableThemes','$window', '$http', '$uibModal','baProgressModal','localStorageService',
+localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter', 'editableOptions', 'editableThemes', '$window', '$http',
+  '$uibModal', 'baProgressModal', 'localStorageService', '$state', '$rootScope',
 
-  function ($scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal, baProgressModal,localStorageService) {
-
-    console.log("retrieve" + localStorageService.get('TOKEN'))
-    var token = localStorageService.get('TOKEN')
-    if(token == null){
+  function($rootScope, $scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal,
+    baProgressModal, localStorageService, $state, $rootScope) {
+    var token = null
+    // console.log("retrieve" + localStorageService.get('TOKEN'))
+    token = localStorageService.get('TOKEN')
+    if (token == null) {
       $window.location.href = '/index.html';
     }
-    
-    $http.get("/api/all-courses").then(function(response) {
-      $scope.users = response.data.data;
+    token = token.substring(1, token.length - 1);
+
+    $scope.courses = [];
+    $scope.id = 0;
+
+    $http.get("/api/all-courses?token=" + token).then(function(response) {
+      //   console.log(response.data.data);
+      if (response.data.error === 0) {
+        // console.log("got 0");
+        localStorageService.remove('TOKEN')
+        $window.location.href = '/index.html';
+      }
+      $scope.loading = true;
+      setTimeout(function() {
+        $scope.loading = false;
+        $scope.$apply();
+      }, 2000);
+      $scope.courses = response.data.data;
     });
 
+    $scope.open = function(size, bool, id) {
+      $scope.bool = bool
+      $scope.id = id
 
-    $scope.createPost = function(titled, descriptiond, durationd) {
-      $http({
-          method: 'POST',
-          format: 'json',
-          url: '/api/add-course',
-          data: JSON.stringify({
-            title: titled,
-            description: descriptiond,
-            duration: durationd
-          })
-        })
-        .then(function(success) {
-          $window.location.reload()
-        }, function(error) {
-        });
-    }
-
-    $scope.removeCourse = function(id) {
-      var m = parseInt(id);
-      if (confirm("Are you sure you want to delete?") == true) {
-        $http.post("http://localhost:7800/api/delete-course/" + m).then(function(response) {
-        });
-        $window.location.reload()
-      } else {
-      }
-    };
-
-
-
-    // $scope.addUser = function() {
-    //   // $http.post("http://localhost:7800/api/addCourse").then(function(response) {
-    //   //         console.log("hit");
-    //   //         console.log("response"+JSON.stringify(response.data.data));
-    //   //         // console.log("respomse data "+JSON.stringify(response.data));
-    //   //
-    //   //       //  $scope.users = response.data.data;
-    //   //     });
-    //   $scope.inserted = {
-    //     // id: $scope.users.length+1,
-    //     title: '',
-    //     description: null,
-    //     duration: null
-    //   };
-    //   $scope.users.push($scope.inserted);
-    // }
-    $scope.open = function(e,id,page, size, addOrEdit) {
-      $scope.id = id;
-      $uibModal.open({
-        animation: true,
-        templateUrl: page,
+      var modalInstance = $uibModal.open({
+        // animation: $ctrl.animationsEnabled,
+        // ariaLabelledBy: 'modal-title',
+        // ariaDescribedBy: 'modal-body',
+        templateUrl: 'app/pages/courses/addCourses/add.html',
+        controller: 'ModalInstanceCtrlCourse',
+        controllerAs: '$scope',
         size: size,
-        controller: ['$scope', '$http', 'id', function( $scope, $http, id ) {
-          $scope.add = true ;
-          $scope.form = {};
-
-          $scope.getCourse = function(id){
-             $scope.gotCourse = {};
-             $http.get("/api/get-course/"+id).then(function(response) {
-             $scope.gotCourse = response.data.response.data;
-            console.log($scope.gotCourse);
-            $scope.form.title = $scope.gotCourse.title;  //set to fields
-            $scope.form.description = $scope.gotCourse.description;
-            $scope.form.duration = $scope.gotCourse.duration;
-
-
-
-          });
-      }
-
-
-
-          $scope.updateCourse = function() {
-          console.log("Update called");
-            $scope.id = id;
-
-            var m = parseInt(id);
-            console.log($scope.form);
-            $http({
-                method: 'POST',
-                format: 'json',
-                url: '/api/edit-course/'+m,
-                data:JSON.stringify({
-                  title: $scope.form.title,
-                  description: $scope.form.description,
-                  duration: $scope.form.duration
-                })
-              })
-              .then(function(success) {
-                console.log("api");
-                console.log("hit " + JSON.stringify(success));
-                //$window.location.reload()
-              }, function(error) {
-                console.log("not hit " + JSON.stringify(error));
-              });
-          }
-          if(addOrEdit == 1){
-            $scope.getCourse(id);
-            $scope.add = false;
-            //$scope.updateCourse();
-          }
-          else{
-            $scope.add = true;
-
-          }
-
-
-        }],
+        // appendTo: parentElem,
         resolve: {
-          items: function() {
-            return $scope.items;
+          courses: function() {
+            return $scope.courses;
+          },
+          bool: function() {
+            return $scope.bool;
           },
           id: function() {
             return $scope.id;
+          },
+          token: function() {
+            return token;
           }
+
         }
       });
-    };
-    $scope.openProgressDialog = baProgressModal.open;
 
+      modalInstance.result.then(function(selectedItem) {
+          // console.log("selectedItem"+JSON.stringify(selectedItem.data));
+          $scope.loading = true;
+          setTimeout(function() {
+            $scope.loading = false;
+            $scope.$apply();
+          }, 2000);
+          if (bool == 0) {
+            $scope.courses = selectedItem;
+          } else if (bool == 1) {
+            $scope.courses.push(selectedItem.data)
+          }
+          // $scope.$apply();
+          //  console.log($scope.form);
+          // console.log("updates users"+JSON.stringify($scope.users))
+        },
+        //    function () {
+        //     $log.info('Modal dismissed at: ' + new Date());
+        //   }
+      );
+    };
+
+
+
+    $scope.removeCourse = function(id, $index) {
+      var m = parseInt(id);
+      // console.log($index);
+      if ($window.confirm("Are you sure you want to delete?") == true) {
+        $http.post("/api/delete-course/" + m + "?token=" + token).then(function(response) {
+          $scope.loading = true;
+          setTimeout(function() {
+            $scope.loading = false;
+            $scope.$apply();
+          }, 2000);
+          $scope.courses.splice($index, 1);
+        });
+      } else {}
+    }
+
+
+
+    $scope.openProgressDialog = baProgressModal.open;
     editableOptions.theme = 'bs3';
     editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
     editableThemes['bs3'].cancelTpl = '<button type="button" ng-click="$form.$cancel()" class="btn btn-default btn-with-icon"><i class="ion-close-round"></i></button>';
+  }
+])
 
 
+angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCtrlCourse', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', 'token', function($scope, $uibModalInstance, $http, bool, id, $timeout, token) {
+  $scope.form = {};
+  $scope.b = bool;
+  $scope.error = ""
+  // console.log($scope.b);
+
+  // console.log("id value " + id)
+
+  // console.log("Bool value " + bool)
+  if (bool == 0) {
+    $http.get("/api/get-course/" + id + "?token=" + token).then(function(response) {
+      // console.log(response);
+      // console.log(response.data.response.data);
+      $scope.form = response.data.response.data;
+    });
+  }
+  $scope.updateCourse = function() {
+    // console.log("Update called");
+
+    var m = parseInt(id);
+    // console.log($scope.form);
+    $http({
+        method: 'POST',
+        format: 'json',
+        url: '/api/edit-course/' + m + "?token=" + token,
+        data: JSON.stringify({
+          title: $scope.form.title,
+          description: $scope.form.description,
+          duration: $scope.form.duration
+        })
+      })
+      .then(function(success) {
+        // console.log("api");
+        // console.log("hit " + JSON.stringify(success));
+        $http.get("/api/all-courses?token=" + token).then(function(response) {
+          //  $scope.usersupdated = response.data.data;
+          $uibModalInstance.close(response.data.data);
+        });
+
+        // $window.location.reload()
+      }, function(error) {
+        // console.log("not hit " + JSON.stringify(error));
+      });
   }
 
-]);
+  $scope.createPost = function(title, description, duration) {
+    var data = {
+      title: title,
+      description: description,
+      duration: duration
+    }
+    $http({
+        method: 'POST',
+        format: 'json',
+        url: '/api/add-course?token=' + token,
+        data: JSON.stringify({
+          title: title,
+          description: description,
+          duration: duration
+        })
+      })
+      .then(function(success) {
+        // console.log(success)
+        // console.log("success data" + JSON.stringify(success));
+        if (success.data.error == true) {
+          $scope.error = "Title already exists. Please enter new a title"
+        } else
+          $uibModalInstance.close(success.data.data);
+      }, function(error) {
+        // console.log("not hit " + JSON.stringify(error));
+      });
+  }
+}]);

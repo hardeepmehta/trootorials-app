@@ -1,29 +1,12 @@
 <div class="row" ng-controller="displayAllCourses">
-  <div ng-repeat="gotCourse in reciCourse" class="col-md-4">
+  <div class="" ng-show="loading == true" style="text-align:center;padding-top:40px;padding-bottom:40px">
+    <img style = "height:20%; width:20%" src="../../../assets/img/app/profile/loading.gif" alt="">
+  </div>
+  <div ng-show="loading == false" ng-repeat="gotCourse in reciCourse" class="col-md-4">
     <div class="panel panel-primary">
       <div class="panel-heading">{{gotCourse.title}}</div>
         <img src="assets/img/app/thumbnail.jpg" alt="" width="100%">
       <div class="panel-body">{{gotCourse.description}}</div>
       <div class="panel-footer">Duration:{{gotCourse.duration}}</div>
     </div>
-
-  <!-- </div>
-  <div class="col-md-4">
-    <div class="panel panel-primary">
-      <div class="panel-heading">MEAN Stack Ninja</div>
-
-      <img src="assets/img/app/thumbnail.jpg" alt="" width="100%">
-      <div class="panel-body">This course is primarily designed for individuals who want to learn how to develop high performance, real-time and scalable networking and web applications. You will learn to create full stack web apps with MongoDB, Express and Angular.js, and Node.js.</div>
-      <div class="panel-footer"><a href="#">View More</a></div>
-    </div>
-
-  </div>
-  <div class="col-md-4">
-    <div class="panel panel-primary">
-      <div class="panel-heading">Full Stack Web App Ninja</div>
-      <img src="assets/img/app/thumbnail.jpg" alt="" width="100%">
-      <div class="panel-body">In this course you will learn AngularJS and ionicJS. AngularJS Training provides you the skills needed to create dynamic web applications. IonicJS helps you build native-looking Mobile apps using web technologies like HTML, CSS, and JavaScript.</div>
-      <div class="panel-footer"><a href="#">View More</a></div>
-    </div>
-  </div> -->
 </div>
