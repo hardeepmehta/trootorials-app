@@ -242,7 +242,7 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
           description: $scope.form.description,
           author: $scope.form.author,
           duration: $scope.form.duration,
-          ispublic: $scope.form.public == undefined ? $scope.test : 0
+          ispublic: $scope.form.public == undefined ? $scope.test : $scope.form.public
         })
       })
       .then(function(success) {
