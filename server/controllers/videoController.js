@@ -194,7 +194,7 @@ function videoUpdateHandler(req, res, next) {
         description: req.body.description,
         author: req.body.author,
         duration: req.body.duration,
-        file: req.body.file,
+        // file: req.body.file,
         //uploadedat: req.body.uploadedat,
         ispublic: req.body.ispublic
       }
@@ -203,7 +203,7 @@ function videoUpdateHandler(req, res, next) {
         id: req.params.id
       }
       console.log("data.ispublic"+data.ispublic)
-      if ((data.title && data.description && data.author && data.file && data.ispublic)) {
+      if (!(data.title && data.description && data.author&& data.duration )) {
         res.send({
           error: true,
           reason: "All fields not filled"
