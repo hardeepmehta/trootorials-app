@@ -4,6 +4,7 @@
   "description": "The complete chess platform",
   "main": "app.js",
   "dependencies": {
+    "angular-loading-bar": "^0.9.0",
     "angular-local-storage": "^0.6.0",
     "app-module-path": "^1.0.5",
     "archiver": "^1.1.0",
