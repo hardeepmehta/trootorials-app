@@ -106,9 +106,8 @@ myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageSer
     var promise = fileUpload.uploadFileToUrl(file, uploadUrl, $scope);
     promise.then(function(res) {
       // $scope.progressBar = m;
-      //console.log("res"+JSON.stringify(res))
-      if (res.data.error == false) {
-        // //console.log('working code');
+      if (res.data.error = "false") {
+        //console.log('working code');
         $scope.var = {
           title: f.title,
           author: f.author,
@@ -119,12 +118,12 @@ myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageSer
         }
         var uploadUrl = "/api/add-video?token=" + token
         fileUpload.submit($scope.var, uploadUrl, $scope);
-      }
 
-      else {
-        //console.log("e"+res.data.error);
-        // $scope.error = "Video with same title already exists. Please enter a new title"
+      } else {
+        //console.log('error in  uploading');
       }
     })
+
   };
+
 }]);

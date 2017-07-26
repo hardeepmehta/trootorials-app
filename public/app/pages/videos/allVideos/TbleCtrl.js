@@ -13,7 +13,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
   function($rootScope, $scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal,
     baProgressModal, localStorageService, $state, $rootScope) {
-    //console.log(localStorageService.get('TOKEN'));
+    ////console.log(localStorageService.get('TOKEN'));
 
     var token = localStorageService.get('TOKEN')
     if (token == null) {
@@ -31,7 +31,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
     }
     $http.get("/api/all-videos?token=" + token).then(function(response) {
       if (response.data.error === 0) {
-        //console.log("got 0");
+        ////console.log("got 0");
         localStorageService.remove('TOKEN')
         $window.location.href = '/index.html';
       }
@@ -41,7 +41,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
         $scope.$apply();
       }, 2000);
       $scope.users = response.data.data;
-      //console.log(response.data.data);
+      ////console.log(response.data.data);
     });
 
     $scope.open = function(e, id, page, size, addOrEdit) {
@@ -50,7 +50,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
       $scope.display = true;
       var modalInstance = $uibModal.open({
 
-        templateUrl: "app/pages/videos/addVideos/add3.html",
+        templateUrl: 'app/pages/videos/addVideos/add3.html',
         controller: 'ModalInstanceCtrl1',
         controllerAs: '$scope',
         size: size,
@@ -71,21 +71,19 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
       });
 
       modalInstance.result.then(function(selectedItem) {
-          // //console.log("selectedItem"+JSON.stringify(selectedItem.data));
-          $scope.loading = true;
-          setTimeout(function() {
-            $scope.loading = false;
-            $scope.$apply();
-          }, 2000);
+        // ////console.log("selectedItem"+JSON.stringify(selectedItem.data));
+        $scope.loading = true;
+        setTimeout(function() {
+          $scope.loading = false;
+          $scope.$apply();
+        }, 2000);
 
-          $scope.users = selectedItem;
-          // $scope.users.push(selectedItem.data)
+        $scope.users = selectedItem;
+        // $scope.users.push(selectedItem.data)
 
-        },
-        //  function() {
+      }, function() {
         // $log.info('Modal dismissed at: ' + new Date());
-        // }
-      );
+      });
     };
 
 
@@ -125,7 +123,7 @@ myApp.directive('fileModel', ['$parse', function($parse) {
       element.bind('change', function() {
         scope.$apply(function() {
           modelSetter(scope, element[0].files[0]);
-          //console.log(element[0].files[0].name);
+          ////console.log(element[0].files[0].name);
         });
       });
     }
@@ -133,29 +131,30 @@ myApp.directive('fileModel', ['$parse', function($parse) {
 }]);
 var u = 0;
 var q = 0;
-myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $window, $timeout) {
-  this.uploadFileToUrl = function(file, uploadUrl, t) {
+var k = 0;
+myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $window,$timeout) {
+  this.uploadFileToUrl = function(file, uploadUrl,t) {
     var fd = new FormData();
     var filename = file.name.replace(file.name.substring(file.name.lastIndexOf('/') + 1), ""),
       uuid = generateUUID();
     filename = filename + uuid;
     q = filename;
-    //      //console.log(filename,file);
+    //      ////console.log(filename,file);
     // file['name'] = filename
-    // //console.log(file.name);
+    // ////console.log(file.name);
     fd.append('file', file, filename);
-    return $http.post(uploadUrl, fd, {
+    return  $http.post(uploadUrl, fd, {
         transformRequest: angular.identity,
         uploadEventHandlers: {
-          progress: function(e) {
-            if (e.lengthComputable) {
-              t.progressBar = (e.loaded / e.total) * 100;
-              t.view = true;
-              //  var progressCounter = $scope.progressBar;
-              //console.log(t.progressBar);
-            }
-          }
-        },
+        progress: function (e) {
+                  if (e.lengthComputable) {
+                     t.progressBar = (e.loaded / e.total) * 100;
+                     t.view = true;
+                    //  var progressCounter = $scope.progressBar;
+                     ////console.log(t.progressBar);
+                  }
+        }
+    },
         headers: {
           'Content-Type': undefined
         }
@@ -166,109 +165,116 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
       })
       .error(function() {});
   }
-  this.submit = function(f, uploadUrl, t) {
+  this.submit = function(f, uploadUrl,t) {
+    t.error = ""
     $http({
         method: 'POST',
         format: 'json',
         url: uploadUrl,
         data: JSON.stringify(f)
       })
-      .then(function(success) {
-        ////console.log("hit " + JSON.stringify(success));
-
-        //console.log(success);
+      .then(function(res) {
+        //////console.log("hit " + JSON.stringify(success));
+        ////console.log(success);
         // alert('successfully updated');
+        // console.log(res.data)
+
+        if(res.data.error == true){
+          // console.log(res.data.error)
+          t.error=res.data.reason;
+        }
+        else{
         t.success = true;
-        t.f = {};
+        t.f ={};
 
         $timeout(function() {
-          $window.location.href = "#/videos/allVideos"
-        }, 3000);
+        $window.location.href = "#/videos/allVideos"
+      },3000);
+    }
         // $window.location.reload()
-      }, function(error) {
-        ////console.log("not hit " + JSON.stringify(error));
-      });
+      }
+      // , function(error) {
+        //////console.log("not hit " + JSON.stringify(error));
+      // }
+    );
   }
-  this.getVideo = function(id, m, token) {
+  this.getVideo = function(id,m,token){
     $http.get("/api/get-video/" + id + "?token=" + token).then(function(response) {
-      //console.log(response);
-      //console.log(response.data.response.data);
+         ////console.log(response);
+        ////console.log(response.data.response.data);
       m.form = response.data.response.data;
       m.u = response.data.response.data.ispublic;
+      m.k = response.data.response.data.file;
+      ////console.log(response.data.response.data.file);
+
     })
   }
-  this.all = function(token) {
+  this.all = function(token){
     return $http.get("/api/all-videos?token=" + token);
-    //console.log(token);
+    ////console.log(token);
   }
+
 }]);
 
-myApp.controller('ModalInstanceCtrl1', ['$scope', '$uibModalInstance', 'id', '$timeout', 'fileUpload', 'token', function($scope, $uibModalInstance, id, $timeout, fileUpload, token) {
+myApp.controller('ModalInstanceCtrl1', ['$scope', '$uibModalInstance',   'id', '$timeout', 'fileUpload','token',function ($scope, $uibModalInstance,id,$timeout,fileUpload,token) {
   $scope.form = {};
   $scope.test = '';
   // $scope.b = bool;
-  // //console.log($scope.b);
+  // ////console.log($scope.b);
   // $scope.display = true;
 
-  //console.log("id value " + id)
-  //console.log($scope.myFile);
-
-  fileUpload.getVideo(id, $scope, token);
-
+  ////console.log("id value " + id)
+  ////console.log($scope.k);
+  ////console.log(k);
+  ////console.log($scope.myFile);
+  fileUpload.getVideo(id,$scope,token);
   $scope.updateVideo = function() {
-    //console.log("scope of file"+$scope.myFile);
+    ////console.log($scope.myFile);
+    if($scope.myFile!=undefined){
 
-    if ($scope.myFile != undefined) {
       var file = $scope.myFile;
-      var uploadUrl = "/upload?token=" + token;
-      var promise = fileUpload.uploadFileToUrl(file, uploadUrl, $scope);
-      promise.then(function(res) {
-
-        if (res.data.error = "false") {
-          //console.log('working code');
-          $scope.var = {
-            title: $scope.form.title,
-            description: $scope.form.description,
-            author: $scope.form.author,
-            duration: $scope.form.duration,
-            ispublic: $scope.form.public ,
-            file: q
-          }
-          //console.log($scope.var);
-          //console.log("u" + u)
-          //console.log("form.public" + $scope.form.public);
-
-          var uploadUrl = "/api/edit-video/" + id + "?token=" + token;
-          var k = fileUpload.submit($scope.var, uploadUrl, $scope);
-          fileUpload.all(token).then(function(response) {
-            //  $scope.usersupdated = response.data.data;
-            $uibModalInstance.close(response.data.data);
-          });
-        }
-        else {
-          //console.log('error in  uploading');
+    var uploadUrl = "/upload?token=" + token;
+    var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
+    promise.then(function(res){
+      if(res.data.error = "false"){
+        ////console.log('working code');
+        $scope.var = {
+          title: $scope.form.title,
+          description: $scope.form.description,
+          author: $scope.form.author,
+          duration: $scope.form.duration,
+          ispublic: $scope.form.public == undefined ? $scope.test : $scope.form.public,
+           file: q
+         }
+        //  console.log($scope.form.public);
+         ////console.log(u);
+         var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
+        var k = fileUpload.submit($scope.var, uploadUrl,$scope);
+        fileUpload.all(token).then(function(response) {
+              //  $scope.usersupdated = response.data.data;
+                $uibModalInstance.close(response.data.data);
+              });
+            }
+            else{
+        ////console.log('error in  uploading');
         }
       })
     }
-    else {
-      
-      //console.log("u" + u)
-      //console.log("form.public" + $scope.form.public);
-      $scope.var = {
-        title: $scope.form.title,
-        description: $scope.form.description,
-        author: $scope.form.author,
-        duration: $scope.form.duration,
-        ispublic: $scope.form.public
-      }
-      //console.log("scope var " + JSON.stringify($scope.var))
-      var uploadUrl = "/api/edit-video/" + id + "?token=" + token;
-      var i = fileUpload.submit($scope.var, uploadUrl, $scope);
-      fileUpload.all(token).then(function(response) {
-        //console.log("response" + JSON.stringify(response))
-        // $scope.usersupdated = response.data.data;
-        $uibModalInstance.close(response.data.data);
-      });
-    }
+    else{
+    // alert('working');
+    $scope.var = {
+      title: $scope.form.title,
+      description: $scope.form.description,
+      author: $scope.form.author,
+      duration: $scope.form.duration,
+      ispublic: $scope.form.public 
+     }
+    var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
+   var i = fileUpload.submit($scope.var, uploadUrl,$scope);
+   fileUpload.all(token).then(function(response) {
+     //  $scope.usersupdated = response.data.data;
+       $uibModalInstance.close(response.data.data);
+     });
   }
+}
 }]);

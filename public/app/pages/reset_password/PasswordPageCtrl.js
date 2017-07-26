@@ -2,6 +2,7 @@ var localstorageApp = angular.module('BlurAdmin.pages.reset_password');
 localstorageApp.controller('PasswordPageCtrl', ['$scope', '$window', '$http', 'localStorageService',
   function($scope, $window, $http, localStorageService) {
     $scope.error = ""
+    $scope.success = ""
 
     var token = localStorageService.get('TOKEN')
     if (token == null) {
@@ -46,7 +47,8 @@ localstorageApp.controller('PasswordPageCtrl', ['$scope', '$window', '$http', 'l
           })
           .then(function(success) {
               // console.log("Successs" + success)
-              $scope.error = "Password changed successfully"
+              $scope.success = "Password changed successfully"
+              $scope.form = {}
             },
             function(error) {
               //console.log("not hit " + JSON.stringify(error));

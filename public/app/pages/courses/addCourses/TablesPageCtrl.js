@@ -56,7 +56,6 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
           token: function() {
             return token;
           }
-
         }
       });
 
@@ -109,10 +108,13 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
 ])
 
 
-angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCtrlCourse', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', 'token', function($scope, $uibModalInstance, $http, bool, id, $timeout, token) {
+angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCtrlCourse', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', 'token','courses',
+ function($scope, $uibModalInstance, $http, bool, id, $timeout, token,courses) {
   $scope.form = {};
   $scope.b = bool;
   $scope.error = ""
+  // console.log(JSON.stringify(courses))
+
   // console.log($scope.b);
 
   // console.log("id value " + id)
@@ -125,33 +127,45 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
       $scope.form = response.data.response.data;
     });
   }
+
   $scope.updateCourse = function() {
     // console.log("Update called");
+    var count=1
+    courses.forEach(function(el){
+      if(el.title == $scope.form.title)
+      count++
+      // console.log($scope.form.title)
+      // console.log(count);
+    })
+    if(count > 1 )
+    $scope.error = "Title already exists"
 
-    var m = parseInt(id);
-    // console.log($scope.form);
-    $http({
-        method: 'POST',
-        format: 'json',
-        url: '/api/edit-course/' + m + "?token=" + token,
-        data: JSON.stringify({
-          title: $scope.form.title,
-          description: $scope.form.description,
-          duration: $scope.form.duration
+    else {
+      var m = parseInt(id);
+      // console.log($scope.form);
+      $http({
+          method: 'POST',
+          format: 'json',
+          url: '/api/edit-course/' + m + "?token=" + token,
+          data: JSON.stringify({
+            title: $scope.form.title,
+            description: $scope.form.description,
+            duration: $scope.form.duration
+          })
         })
-      })
-      .then(function(success) {
-        // console.log("api");
-        // console.log("hit " + JSON.stringify(success));
-        $http.get("/api/all-courses?token=" + token).then(function(response) {
-          //  $scope.usersupdated = response.data.data;
-          $uibModalInstance.close(response.data.data);
-        });
+        .then(function(success) {
+          // console.log("api");
+          // console.log("hit " + JSON.stringify(success));
+          $http.get("/api/all-courses?token=" + token).then(function(response) {
+            //  $scope.usersupdated = response.data.data;
+            $uibModalInstance.close(response.data.data);
+          });
 
-        // $window.location.reload()
-      }, function(error) {
-        // console.log("not hit " + JSON.stringify(error));
-      });
+          // $window.location.reload()
+        }, function(error) {
+          // console.log("not hit " + JSON.stringify(error));
+        });
+    }
   }
 
   $scope.createPost = function(title, description, duration) {

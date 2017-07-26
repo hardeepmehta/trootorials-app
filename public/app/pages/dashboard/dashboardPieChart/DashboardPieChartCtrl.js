@@ -54,6 +54,7 @@ localstorageApp.controller('DashboardPieChartCtrl', ['$scope', '$timeout', '$htt
     }
 
     function loadPieCharts() {
+
       $('.chart').each(function() {
         var chart = $(this);
         chart.easyPieChart({

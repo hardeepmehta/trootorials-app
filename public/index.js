@@ -27,7 +27,7 @@ localstorageApp.controller('LoginCtrl', ['$scope', 'localStorageService', '$http
           // console.log(JSON.stringify(success.data.message))
 
           if( success.data.message == "password did not match")
-            $scope.error = "password did not match"
+            $scope.error = "Incorrect email or password"
           else
             $scope.error = "User doesnot exist"
         }

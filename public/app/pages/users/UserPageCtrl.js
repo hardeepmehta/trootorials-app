@@ -17,7 +17,7 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
 
     $http.get("/api/all-users?token=" + token).then(function(response) {
       if (response.data.error === 0) {
-        // console.log("got 0");
+        // //console.log("got 0");
         localStorageService.remove('TOKEN')
         $window.location.href = '/index.html';
       }
@@ -68,7 +68,7 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
 
           }
 
-          // console.log("updates users" + JSON.stringify($scope.users))
+          // //console.log("updates users" + JSON.stringify($scope.users))
         }
         // , function () {
         //   $log.info('Modal dismissed at: ' + new Date());
@@ -100,13 +100,14 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
 ])
 
 
-angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', 'token', function($scope, $uibModalInstance, $http, bool, id, $timeout, token) {
+angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', 'token','users',
+ function($scope, $uibModalInstance, $http, bool, id, $timeout, token, users) {
 
   $scope.error = ""
   $scope.form = {};
   $scope.b = bool;
-  // console.log($scope.b);
-  // console.log("token" + token)
+  // //console.log($scope.b);
+  // //console.log("token" + token)
   $scope.levels = [{
     level: 1
   }, {
@@ -117,24 +118,32 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
 
   }
 
-  console.log("id value " + id)
+  //console.log("id value " + id)
 
-  console.log("Bool value " + bool)
+  //console.log("Bool value " + bool)
   if (bool == 0) {
     $http.get("/api/get-user/" + id + "/" + "?token=" + token).then(function(response) {
-      // console.log(response);
-      // console.log(response.data.response.data);
+      // //console.log(response);
+      // //console.log(response.data.response.data);
       $scope.form = response.data.response.data;
       $scope.form.level = $scope.levels[response.data.response.data.level - 1];
-      // console.log($scope.form.level);
+      // //console.log($scope.form.level);
     });
   }
   $scope.updatedCourse = function() {
-    // console.log("Update called");
+    // //console.log("Update called");
+    var count=0
+    users.forEach(function(el){
+      if(el.email == $scope.form.email)
+      count++
+    })
+    if(count > 1 )
+    $scope.error = "Title already exists"
 
+    else {
     var m = parseInt(id);
-    // console.log($scope.form);
-    // console.log("level " + $scope.form.level);
+    // //console.log($scope.form);
+    // //console.log("level " + $scope.form.level);
     $http({
         method: 'POST',
         format: 'json',
@@ -143,30 +152,30 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
           name: $scope.form.name,
           mobile: $scope.form.mobile,
           email: $scope.form.email,
-          password: $scope.form.password,
+          // password: $scope.form.password,
           level: $scope.form.level.level
         })
       })
       .then(function(success) {
-        // console.log("api");
-        // console.log("hit " + JSON.stringify(success));
+        // //console.log("api");
+        // //console.log("hit " + JSON.stringify(success));
         $http.get("/api/all-users/?token=" + token).then(function(response) {
           $uibModalInstance.close(response.data.data);
         });
 
       }, function(error) {
-        // console.log("not hit " + JSON.stringify(error));
+        // //console.log("not hit " + JSON.stringify(error));
       });
   }
+}
 
-
-  $scope.createPost = function(named, mobiled, emailid, passwordv, levelid) {
-    // console.log(levelid);
+  $scope.createPost = function(named, mobiled, emailid, levelid) {
+    // //console.log(levelid);
     var data = {
       name: named,
       mobile: mobiled,
       email: emailid,
-      password: passwordv,
+      password: emailid,
       level: parseInt(levelid)
     }
     $http({
@@ -177,14 +186,14 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
           name: named,
           mobile: mobiled,
           email: emailid,
-          password: passwordv,
+          password: emailid,
           level: parseInt(levelid)
         })
       })
       .then(function(success) {
-        // console.log(success)
-        // console.log("success data" + JSON.stringify(success));
-        // console.log("success data" + JSON.stringify(success.data.error));
+        // //console.log(success)
+        // //console.log("success data" + JSON.stringify(success));
+        // //console.log("success data" + JSON.stringify(success.data.error));
 
         if (success.data.error == true)
           $scope.error = "User already exists. Please enter a new email id"
@@ -193,7 +202,7 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
           $uibModalInstance.close(success.data.data);
         }
       }, function(error) {
-        // console.log("not hit " + JSON.stringify(error));
+        // //console.log("not hit " + JSON.stringify(error));
       });
   }
 }]);
