@@ -1,10 +1,19 @@
+function generateUUID() {
+  var d = new Date().getTime();
+  var uuid = 'xxxxxxx.mp4'.replace(/[xy]/g, function(c) {
+    var r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+  return uuid;
+};
 var localstorageApp = angular.module('BlurAdmin.pages.videos.allVideos');
 localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'editableOptions', 'editableThemes', '$window', '$http',
   '$uibModal', 'baProgressModal', 'localStorageService', '$state', '$rootScope',
 
   function($rootScope, $scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal,
     baProgressModal, localStorageService, $state, $rootScope) {
-    console.log(localStorageService.get('TOKEN'));
+    //console.log(localStorageService.get('TOKEN'));
 
     var token = localStorageService.get('TOKEN')
     if (token == null) {
@@ -22,12 +31,12 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
     }
     $http.get("/api/all-videos?token=" + token).then(function(response) {
       if (response.data.error === 0) {
-        console.log("got 0");
+        //console.log("got 0");
         localStorageService.remove('TOKEN')
         $window.location.href = '/index.html';
       }
       $scope.users = response.data.data;
-      console.log(response.data.data);
+      //console.log(response.data.data);
     });
 
     $scope.open = function(e, id, page, size, addOrEdit) {
@@ -36,8 +45,8 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
       $scope.display = true;
       var modalInstance = $uibModal.open({
 
-        templateUrl: page,
-        controller: 'ModalInstanceCtrl',
+        templateUrl: "app/pages/videos/addVideos/add3.html",
+        controller: 'ModalInstanceCtrl1',
         controllerAs: '$scope',
         size: size,
         // appendTo: parentElem,
@@ -57,38 +66,18 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
       });
 
       modalInstance.result.then(function(selectedItem) {
-        // console.log("selectedItem"+JSON.stringify(selectedItem.data));
+          // //console.log("selectedItem"+JSON.stringify(selectedItem.data));
 
-        $scope.users = selectedItem;
-        // $scope.users.push(selectedItem.data)
+          $scope.users = selectedItem;
+          // $scope.users.push(selectedItem.data)
 
-      }, function() {
-        $log.info('Modal dismissed at: ' + new Date());
-      });
+        },
+        //  function() {
+        // $log.info('Modal dismissed at: ' + new Date());
+        // }
+      );
     };
 
-    // $scope.modalPopup = function(){
-    //   return $scope.modalInstance = $uibModal.open({
-    //           templateUrl: 'app/pages/users/addUser.html',
-    //           scope: $scope
-    //         });
-    // }
-    //
-    // $scope.openModalPopup = function () {
-    //   $scope.modalPopup().result
-    //     .then(function (data) {
-    //       console.log("success data in promise"+JSON.stringify(data));
-    //       $scope.users = JSON.stringify(data)
-    //       //console.log($scope.users);
-    //       //$scope.users.push(success.data.data);
-    //
-    //       console.log($scope.users);
-    //     })
-    //     .then(null, function (reason) {
-    //       console.log("failure data" + reason);
-    //       //$scope.handleDismiss(reason);
-    //     });
-    // };
 
     $scope.removeVideo = function(id, $index) {
       var m = parseInt(id);
@@ -102,91 +91,6 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
 
 
-    // $scope.open = function(e,id,page, size, addOrEdit) {
-    //   $scope.id = id;
-    //   $uibModal.open({
-    //     animation: true,
-    //     templateUrl: page,
-    //     size: size,
-    //     controller: ['$scope', '$http', 'id', function( $scope, $http, id ) {
-    //       $scope.add = true ;
-    //       $scope.form = {};
-    //       $scope.levels = [{
-    //          level: '1'
-    //        },{
-    //          level: '2'
-    //        }];
-    //
-    //     $scope.getUser = function(id){
-    //
-    //        $scope.gotUser = {};
-    //        $http.get("/api/get-user/"+id).then(function(response) {
-    //       //console.log(response.data.response.data);
-    //       $scope.gotUser = response.data.response.data;
-    //       console.log($scope.gotUser.name);
-    //       $scope.form.name = $scope.gotUser.name;  //set to fields
-    //       $scope.form.mobile = $scope.gotUser.mobile;
-    //       $scope.form.email = $scope.gotUser.email;
-    //       $scope.form.password = $scope.gotUser.password;
-    //     //  $scope.form.level = $scope.gotUser.level;
-    //       $scope.form.level = $scope.levels[$scope.gotUser.level - 1];
-    //     });
-    // }
-
-
-
-    //       $scope.updateCourse = function() {
-    //       console.log("Update called");
-    //         $scope.id = id;
-    //
-    //
-    //         var m = parseInt(id);
-    //         console.log($scope.form);
-    //         console.log("level "+$scope.form.level.level);
-    //         $http({
-    //             method: 'POST',
-    //             format: 'json',
-    //             url: '/api/edit-user/'+m,
-    //             data:JSON.stringify({
-    //               name: $scope.form.name,
-    //               mobile: $scope.form.mobile,
-    //               email: $scope.form.email,
-    //               password: $scope.form.password,
-    //               level: $scope.form.level.level
-    //             })
-    //           })
-    //           .then(function(success) {
-    //             console.log("api");
-    //             console.log("hit " + JSON.stringify(success));
-    //             // $window.location.reload()
-    //           }, function(error) {
-    //             console.log("not hit " + JSON.stringify(error));
-    //           });
-    //       }
-    //       if(addOrEdit == 1){
-    //         $scope.getUser(id);
-    //         $scope.add = false;
-    //         //$scope.updateCourse();
-    //       }
-    //       else{
-    //         $scope.add = true;
-    //
-    //       }
-    //
-    //
-    //     }],
-    //     resolve: {
-    //       items: function() {
-    //         return $scope.items;
-    //       },
-    //       id: function() {
-    //         return $scope.id;
-    //       }
-    //     }
-    //   });
-    //
-    // };
-
     $scope.openProgressDialog = baProgressModal.open;
     // editableOptions.theme = 'bs3';
     // editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
@@ -195,69 +99,161 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 ])
 
 
-angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$http', 'id', '$timeout', 'token', function($scope, $uibModalInstance, $http, id, $timeout, token) {
-  $scope.form = {};
-  $scope.test = '';
-  // $scope.b = bool;
-  console.log($scope.b);
-  $scope.display = true;
-  //console.log("---" + $scope.bool);
-  // $scope.levels = [{
-  //            level: 1
-  //          },{
-  //            level: 2
-  //          }];
-  //   $scope.public = [0,1];
-  // $scope.form.public = $scope.public[0];
-  console.log("id value " + id)
+var myApp = angular.module('BlurAdmin.pages.users');
+myApp.directive('fileModel', ['$parse', function($parse) {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      var model = $parse(attrs.fileModel);
+      var modelSetter = model.assign;
 
-  // console.log("Bool value "+bool)
-
-  //  $scope.gotUser = {};
-  $http.get("/api/get-video/" + id + "?token=" + token).then(function(response) {
-    console.log(response);
-    //  console.log(response.data.data);
-    console.log(response.data.response.data);
-    $scope.form = response.data.response.data;
-    // $scope.form.public = response.data.response.data.ispublic;
-    $scope.test = response.data.response.data.ispublic;
-    // console.log($scope.form.level);
-    // $scope.form.level = $scope.levels[response.data.response.data.level - 1];
-    // console.log($scope.form.level);
-  });
-
-  $scope.updateVideo = function() {
-    console.log("Update called");
-    console.log("public value"+$scope.form.public);
-    console.log("test value "+$scope.test);
-    var m = parseInt(id);
-    console.log("scope form "+JSON.stringify($scope.form));
-    // console.log("level "+$scope.form.level);
+      element.bind('change', function() {
+        scope.$apply(function() {
+          modelSetter(scope, element[0].files[0]);
+          //console.log(element[0].files[0].name);
+        });
+      });
+    }
+  };
+}]);
+var u = 0;
+var q = 0;
+myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $window, $timeout) {
+  this.uploadFileToUrl = function(file, uploadUrl, t) {
+    var fd = new FormData();
+    var filename = file.name.replace(file.name.substring(file.name.lastIndexOf('/') + 1), ""),
+      uuid = generateUUID();
+    filename = filename + uuid;
+    q = filename;
+    //      //console.log(filename,file);
+    // file['name'] = filename
+    // //console.log(file.name);
+    fd.append('file', file, filename);
+    return $http.post(uploadUrl, fd, {
+        transformRequest: angular.identity,
+        uploadEventHandlers: {
+          progress: function(e) {
+            if (e.lengthComputable) {
+              t.progressBar = (e.loaded / e.total) * 100;
+              t.view = true;
+              //  var progressCounter = $scope.progressBar;
+              //console.log(t.progressBar);
+            }
+          }
+        },
+        headers: {
+          'Content-Type': undefined
+        }
+      })
+      .success(function(res) {
+        // alert('successfully uploaded');
+        return res;
+      })
+      .error(function() {});
+  }
+  this.submit = function(f, uploadUrl, t) {
     $http({
         method: 'POST',
         format: 'json',
-        url: '/api/edit-video/' + m + "?token=" + token,
-        data: JSON.stringify({
-          title: $scope.form.title,
-          description: $scope.form.description,
-          author: $scope.form.author,
-          duration: $scope.form.duration,
-          ispublic: $scope.form.public == undefined ? $scope.test : $scope.form.public
-        })
+        url: uploadUrl,
+        data: JSON.stringify(f)
       })
       .then(function(success) {
-        console.log("******api");
-        console.log("scope form "+JSON.stringify($scope.form));
+        ////console.log("hit " + JSON.stringify(success));
 
-        console.log("hit " + JSON.stringify(success));
-        $http.get("/api/all-videos?token=" + token).then(function(response) {
-          //  $scope.usersupdated = response.data.data;
-          $uibModalInstance.close(response.data.data);
-        });
+        //console.log(success);
+        // alert('successfully updated');
+        t.success = true;
+        t.f = {};
 
+        $timeout(function() {
+          $window.location.href = "#/videos/allVideos"
+        }, 3000);
         // $window.location.reload()
       }, function(error) {
-        console.log("not hit " + JSON.stringify(error));
+        ////console.log("not hit " + JSON.stringify(error));
       });
+  }
+  this.getVideo = function(id, m, token) {
+    $http.get("/api/get-video/" + id + "?token=" + token).then(function(response) {
+      //console.log(response);
+      //console.log(response.data.response.data);
+      m.form = response.data.response.data;
+      m.u = response.data.response.data.ispublic;
+    })
+  }
+  this.all = function(token) {
+    return $http.get("/api/all-videos?token=" + token);
+    //console.log(token);
+  }
+}]);
+
+myApp.controller('ModalInstanceCtrl1', ['$scope', '$uibModalInstance', 'id', '$timeout', 'fileUpload', 'token', function($scope, $uibModalInstance, id, $timeout, fileUpload, token) {
+  $scope.form = {};
+  $scope.test = '';
+  // $scope.b = bool;
+  // //console.log($scope.b);
+  // $scope.display = true;
+
+  //console.log("id value " + id)
+  //console.log($scope.myFile);
+
+  fileUpload.getVideo(id, $scope, token);
+
+  $scope.updateVideo = function() {
+    //console.log("scope of file"+$scope.myFile);
+
+    if ($scope.myFile != undefined) {
+      var file = $scope.myFile;
+      var uploadUrl = "/upload?token=" + token;
+      var promise = fileUpload.uploadFileToUrl(file, uploadUrl, $scope);
+      promise.then(function(res) {
+
+        if (res.data.error = "false") {
+          //console.log('working code');
+          $scope.var = {
+            title: $scope.form.title,
+            description: $scope.form.description,
+            author: $scope.form.author,
+            duration: $scope.form.duration,
+            ispublic: $scope.form.public ,
+            file: q
+          }
+          //console.log($scope.var);
+          //console.log("u" + u)
+          //console.log("form.public" + $scope.form.public);
+
+          var uploadUrl = "/api/edit-video/" + id + "?token=" + token;
+          var k = fileUpload.submit($scope.var, uploadUrl, $scope);
+          fileUpload.all(token).then(function(response) {
+            //  $scope.usersupdated = response.data.data;
+            $uibModalInstance.close(response.data.data);
+          });
+        }
+        else {
+          //console.log('error in  uploading');
+        }
+      })
+    }
+    else {
+      alert('working');
+      //console.log("u" + u)
+      //console.log("form.public" + $scope.form.public);
+      $scope.var = {
+        title: $scope.form.title,
+        description: $scope.form.description,
+        author: $scope.form.author,
+        duration: $scope.form.duration,
+        ispublic: $scope.form.public
+      }
+      //console.log("scope var " + JSON.stringify($scope.var))
+      var uploadUrl = "/api/edit-video/" + id + "?token=" + token;
+      var i = fileUpload.submit($scope.var, uploadUrl, $scope);
+      fileUpload.all(token).then(function(response) {
+        //console.log("response" + JSON.stringify(response))
+        // $scope.usersupdated = response.data.data;
+        $uibModalInstance.close(response.data.data);
+      });
+    }
   }
 }]);

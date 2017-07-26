@@ -117,9 +117,9 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
 
   }
 
-  // console.log("id value " + id)
+  console.log("id value " + id)
 
-  // console.log("Bool value " + bool)
+  console.log("Bool value " + bool)
   if (bool == 0) {
     $http.get("/api/get-user/" + id + "/" + "?token=" + token).then(function(response) {
       // console.log(response);
@@ -129,7 +129,7 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
       // console.log($scope.form.level);
     });
   }
-  $scope.updateCourse = function() {
+  $scope.updatedCourse = function() {
     // console.log("Update called");
 
     var m = parseInt(id);
