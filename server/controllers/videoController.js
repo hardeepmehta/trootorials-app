@@ -43,16 +43,16 @@ module.exports = function(app, passport) {
 
 function uploadVideoHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    // //console.log("status" + status);
     if (status) {
       var form = new formidable.IncomingForm();
       form.parse(req);
       form.on('fileBegin', function(name, file) {
         file.path = 'uploads/' + file.name;
-        console.log(__dirname);
+        // //console.log(__dirname);
       });
       form.on('file', function(name, file) {
-        console.log('Uploaded ' + file.name);
+        // //console.log('Uploaded ' + file.name);
       });
       form.on('end', function() {
         res.send({
@@ -60,7 +60,7 @@ function uploadVideoHandler(req, res) {
         })
 
       });
-      console.log('successfully uploaded')
+      // //console.log('successfully uploaded')
     } else {
       res.send({
         error: 0
@@ -71,8 +71,9 @@ function uploadVideoHandler(req, res) {
 
 
 function addVideoHandler(req, res) {
+  // //console.log("Update called")
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    // //console.log("status" + status);
     if (status) {
       var data = {
         title: req.body.title,
@@ -82,9 +83,11 @@ function addVideoHandler(req, res) {
         file: req.body.file,
         ispublic: req.body.ispublic
       }
-      console.log(req.body);
+      //console.log(req.body);
       if (!(data.title && data.description && data.author && data.duration && data.file && data.ispublic)) {
-        console.log(data);
+        //console.log(data);
+        // //console.log("****Insufficient")
+
         res.send({
           error: true,
           reason: "Insufficient parameters"
@@ -95,15 +98,16 @@ function addVideoHandler(req, res) {
           title: req.body.title
         }
         sql.findOne(sql.video, whereObj, function(obj) {
+          // //console.log("*****8already exists")
 
           if (obj.data.id) {
             res.send({
-              error: 'true',
+              error: true,
               reason: 'Video already exists'
             })
           } else {
+            // //console.log("****successfully")
             sql.insert(sql.video, data, function(obj) {
-
               res.send({
                 error: false,
                 response: "Video created successfully"
@@ -123,10 +127,10 @@ function addVideoHandler(req, res) {
 
 function allVideosHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    // //console.log("status" + status);
     if (status) {
       sql.findAll(sql.video, {}, function(obj) {
-        //console.log(obj);
+        ////console.log(obj);
         if (obj.error == true || obj.data.length == 0)
           res.send({
             error: true,
@@ -151,7 +155,7 @@ function allVideosHandler(req, res, next) {
 
 function particularVideoHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    // //console.log("status" + status);
     if (status) {
       var whereObj = {
         id: req.params.id
@@ -187,14 +191,14 @@ function particularVideoHandler(req, res) {
 
 function videoUpdateHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    // //console.log("status" + status);
     if (status) {
       var data = {
         title: req.body.title,
         description: req.body.description,
         author: req.body.author,
         duration: req.body.duration,
-        // file: req.body.file,
+        file: req.body.file,
         //uploadedat: req.body.uploadedat,
         ispublic: req.body.ispublic
       }
@@ -202,7 +206,9 @@ function videoUpdateHandler(req, res, next) {
       var whereObj = {
         id: req.params.id
       }
-      console.log("data.ispublic"+data.ispublic)
+      // //console.log("data.ispublic"+data.ispublic)
+      // //console.log("data.ispublic"+req.body.ispublic)
+
       if (!(data.title && data.description && data.author&& data.duration )) {
         res.send({
           error: true,
@@ -236,7 +242,7 @@ function videoUpdateHandler(req, res, next) {
 
 function videoDeleteHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    // //console.log("status" + status);
     if (status) {
       var whereobj = {
         id: req.params.id

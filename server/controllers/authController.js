@@ -22,13 +22,13 @@ module.exports = function(app, passport) {
 };
 
 function loginHandler(req, res, next) {
-  console.log("req.body" + req.body);
+  // console.log("req.body" + req.body);
 
 
   var whereObj = {
     email: req.body.email
   }
-  console.log("whereObj email" + whereObj.email);
+  // console.log("whereObj email" + whereObj.email);
   if (!req.body.email) {
     res.send({
       error: true,
@@ -48,13 +48,15 @@ function loginHandler(req, res, next) {
           };
           var token = jwt.sign(payload, jwtOptions.secretOrKey);
           res.json({
+            error: false,
             message: "ok",
             token: token,
             level: obj.data.level
           });
         } else {
-          res.status(401).json({
-            message: "passwords did not match"
+          res.json({
+            error: true,
+            message: "password did not match"
           });
         }
       }
@@ -107,6 +109,6 @@ function isLoggedInHandler(req, res, next) {
 
 function logoutHandler(req, res, next) {
   var token = req.body.token || req.query.token || req.headers.authentication;
-  console.log("token fetched " + token);
+  // console.log("token fetched " + token);
   req.logout();
 }

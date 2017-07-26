@@ -23,7 +23,7 @@ module.exports = function(app, passport) {
 
 function getCourseHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
       sql.findAll(sql.courses, {}, function(obj) {
         if (obj.error == true || obj.data.length == 0)
@@ -51,7 +51,7 @@ function getCourseHandler(req, res, next) {
 
 function addCourseHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
       var data = {
         title: req.body.title,
@@ -94,7 +94,7 @@ function addCourseHandler(req, res, next) {
 
 function CourseUpdateHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
 
       var data = {
@@ -147,7 +147,7 @@ function CourseUpdateHandler(req, res, next) {
 
 function CourseDeleteHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
 
       var whereobj = {
@@ -184,7 +184,7 @@ function CourseDeleteHandler(req, res, next) {
 
 function getCourseUpdateHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
       var whereObj = {
         id: req.params.id

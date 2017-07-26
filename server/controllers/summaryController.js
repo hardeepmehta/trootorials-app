@@ -14,7 +14,7 @@ module.exports = function(app, passport) {
 
 function allSummaryHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
 
       var object = [];
@@ -27,7 +27,7 @@ function allSummaryHandler(req, res, next) {
           object.push({
             courses: obj.data.rows.length
           });
-          console.log(object);
+          //console.log(object);
         }
       });
 
@@ -40,7 +40,7 @@ function allSummaryHandler(req, res, next) {
           object.push({
             videos: obj.data.rows.length
           });
-          console.log(object);
+          //console.log(object);
         }
       });
 

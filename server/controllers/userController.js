@@ -31,10 +31,10 @@ module.exports = function(app) {
 
 function allUsersHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
       sql.findAll(sql.users, {}, function(obj) {
-        //console.log(obj);
+        ////console.log(obj);
         if (obj.error == true || obj.data.length == 0) {
           res.send({
             error: true,
@@ -60,7 +60,7 @@ function allUsersHandler(req, res) {
 
 function particularUserHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
       var whereObj = {
         id: req.params.id
@@ -96,7 +96,7 @@ function particularUserHandler(req, res) {
 
 function addUserHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
       var data = {
         name: req.body.name,
@@ -142,7 +142,7 @@ function addUserHandler(req, res) {
 
 function deleteHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
 
       var whereObj = {
@@ -180,7 +180,7 @@ function deleteHandler(req, res) {
 
 function updateHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
       var newdata = {
         name: req.body.name,
@@ -190,7 +190,7 @@ function updateHandler(req, res) {
         level: req.body.level
       }
 
-      console.log("level:" + JSON.stringify(req.body.level))
+      //console.log("level:" + JSON.stringify(req.body.level))
 
       var whereObj = {
         id: parseInt(req.params.id)
@@ -218,7 +218,7 @@ function updateHandler(req, res) {
             })
           } else {
             sql.update(sql.users, newdata, whereObj, function(obj) {
-              console.log(whereObj);
+              //console.log(whereObj);
               res.send({
                 error: false,
                 response: "Updated successfully"
@@ -237,15 +237,15 @@ function updateHandler(req, res) {
 
 function resetPasswordHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    console.log("status" + status);
+    //console.log("status" + status);
     if (status) {
       var token = req.query.token;
       var uid = 0;
       var data = {};
       whereObj = {}
       authenticate.auth(req, res, function(status, id) {
-        console.log("status" + status);
-        console.log("id" + id);
+        //console.log("status" + status);
+        //console.log("id" + id);
         uid = id
         whereObj = {
           id: uid
@@ -259,8 +259,8 @@ function resetPasswordHandler(req, res) {
         });
         var newPwd = req.body.new_password
         data.password = encryptService.encrypt(newPwd);
-        console.log("data" + JSON.stringify(data));
-        console.log("whereObj" + JSON.stringify(whereObj));
+        //console.log("data" + JSON.stringify(data));
+        //console.log("whereObj" + JSON.stringify(whereObj));
 
         sql.update(sql.users, data, whereObj, function(obj) {
           res.send({
@@ -279,20 +279,20 @@ function resetPasswordHandler(req, res) {
 
 function showPasswordHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    console.log("status in handler" + status);
+    //console.log("status in handler" + status);
     if (status) {
       var token = req.query.token;
       var uid = 0;
       authenticate.auth(req, res, function(status, id) {
-        console.log("status" + status);
-        console.log("id" + id);
+        //console.log("status" + status);
+        //console.log("id" + id);
         uid = id
-        //    console.log("id"+typeof uid);
+        //    //console.log("id"+typeof uid);
         var whereObj = {
           id: uid
         }
         sql.findOne(sql.users, whereObj, function(obj) {
-          console.log(obj)
+          //console.log(obj)
           if (obj.data.id) {
             res.send({
               error: false,
