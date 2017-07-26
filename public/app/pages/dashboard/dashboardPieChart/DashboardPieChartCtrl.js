@@ -1,46 +1,51 @@
-
-// (function () {
-//   'use strict';
-
 var localstorageApp = angular.module('BlurAdmin.pages.dashboard');
 
-  localstorageApp.controller('DashboardPieChartCtrl',['$scope', '$timeout', '$http', '$window', 'baConfig', 'baUtil','localStorageService',
-      function($scope, $timeout, $http, $window, baConfig, baUtil,localStorageService) {
+localstorageApp.controller('DashboardPieChartCtrl', ['$scope', '$timeout', '$http', '$window', 'baConfig', 'baUtil', 'localStorageService',
+  function($scope, $timeout, $http, $window, baConfig, baUtil, localStorageService) {
 
-      console.log("retrieve" + localStorageService.get('TOKEN'))
-        var token = localStorageService.get('TOKEN')
-        if(token == null){
-          $window.location.href = '/index.html';
-        }
+    // console.log("retrieve" + localStorageService.get('TOKEN'))
+    var token = localStorageService.get('TOKEN')
+    if (token == null) {
+      $window.location.href = '/index.html';
+    }
 
-     $http.get("/api/all-summary"). then(function(response) {
-       console.log(response.data[0].courses);
-       console.log(response.data[1].videos);
-       console.log(response.data[2].users);
-       $scope.charts = [{
-         color: pieColor,
-         description: 'All Courses',
-         stats: response.data[0].courses,
-        //  icon: 'book',
-         link: '#/courses/allCourses'
-       },
-       {
-         color: pieColor,
-         description: 'All Videos',
-         stats: response.data[1].videos,
-        //  icon: 'video-camera',
-         link: '#/videos/allVideos'
+    token = token.substring(1, token.length - 1);
 
-       }, {
-         color: pieColor,
-         description: 'Total Users',
-         stats: response.data[2].users,
-        //  icon: 'user',
-         link: '#/users'
-       }
-       ];
 
-        });
+    $http.get("/api/all-summary?token=" + token).then(function(response) {
+      if (response.data.error === 0) {
+        //  console.log("got 0");
+        localStorageService.remove('TOKEN')
+        $window.location.href = '/index.html';
+      } else {
+        //  console.log(response.data[0].courses);
+        //  console.log(response.data[1].videos);
+        //  console.log(response.data[2].users);
+        $scope.charts = [{
+            color: pieColor,
+            description: 'All Courses',
+            stats: response.data[0].courses,
+            //  icon: 'book',
+            link: '#/courses/allCourses'
+          },
+          {
+            color: pieColor,
+            description: 'All Videos',
+            stats: response.data[1].videos,
+            //  icon: 'video-camera',
+            link: '#/videos/allVideos'
+
+          }, {
+            color: pieColor,
+            description: 'Total Users',
+            stats: response.data[2].users,
+            //  icon: 'user',
+            link: '#/users'
+          }
+        ];
+
+      }
+    });
 
     var pieColor = baUtil.hexToRGB(baConfig.colors.defaultText, 0.2);
 
@@ -49,11 +54,12 @@ var localstorageApp = angular.module('BlurAdmin.pages.dashboard');
     }
 
     function loadPieCharts() {
-      $('.chart').each(function () {
+
+      $('.chart').each(function() {
         var chart = $(this);
         chart.easyPieChart({
           easing: 'easeOutBounce',
-          onStep: function (from, to, percent) {
+          onStep: function(from, to, percent) {
             $(this.el).find('.percent').text(Math.round(percent));
           },
           barColor: chart.attr('rel'),
@@ -66,7 +72,7 @@ var localstorageApp = angular.module('BlurAdmin.pages.dashboard');
         });
       });
 
-      $('.refresh-data').on('click', function () {
+      $('.refresh-data').on('click', function() {
         updatePieCharts();
       });
     }
@@ -77,7 +83,7 @@ var localstorageApp = angular.module('BlurAdmin.pages.dashboard');
       });
     }
 
-    $timeout(function () {
+    $timeout(function() {
       loadPieCharts();
       updatePieCharts();
     }, 1000);

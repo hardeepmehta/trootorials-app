@@ -19,36 +19,47 @@ myApp.directive('fileModel', ['$parse', function($parse) {
       element.bind('change', function() {
         scope.$apply(function() {
           modelSetter(scope, element[0].files[0]);
-          console.log(element[0].files[0].name);
+          //console.log(element[0].files[0].name);
         });
       });
     }
   };
 }]);
 var q = '';
-myApp.service('fileUpload', ['$http', '$window', function($http, $window) {
-  this.uploadFileToUrl = function(file, uploadUrl) {
+myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $window, $timeout) {
+  this.uploadFileToUrl = function(file, uploadUrl, t) {
     var fd = new FormData();
     var filename = file.name.replace(file.name.substring(file.name.lastIndexOf('/') + 1), ""),
       uuid = generateUUID();
     filename = filename + uuid;
     q = filename;
-    //      console.log(filename,file);
+    //      //console.log(filename,file);
     // file['name'] = filename
-    // console.log(file.name);
+    // //console.log(file.name);
     fd.append('file', file, filename);
-    $http.post(uploadUrl, fd, {
+    return $http.post(uploadUrl, fd, {
         transformRequest: angular.identity,
+        uploadEventHandlers: {
+          progress: function(e) {
+            if (e.lengthComputable) {
+              t.progressBar = (e.loaded / e.total) * 100;
+              t.view = true;
+              //  var progressCounter = $scope.progressBar;
+              //console.log(t.progressBar);
+            }
+          }
+        },
         headers: {
           'Content-Type': undefined
         }
       })
       .success(function(res) {
-        alert('successfully uploaded')
+        // alert('successfully uploaded');
+        return res;
       })
       .error(function() {});
   }
-  this.submit = function(f, uploadUrl) {
+  this.submit = function(f, uploadUrl, t) {
     $http({
         method: 'POST',
         format: 'json',
@@ -56,54 +67,63 @@ myApp.service('fileUpload', ['$http', '$window', function($http, $window) {
         data: JSON.stringify(f)
       })
       .then(function(success) {
-        //console.log("hit " + JSON.stringify(success));
-        alert('successfully updated');
-        $window.location.href = "#/videos/allVideos"
+        ////console.log("hit " + JSON.stringify(success));
+        //console.log(success);
+        // alert('successfully updated');
+        t.success = true;
+        t.f = {};
+
+        $timeout(function() {
+          $window.location.href = "#/videos/allVideos"
+        }, 3000);
         // $window.location.reload()
       }, function(error) {
-        //console.log("not hit " + JSON.stringify(error));
+        ////console.log("not hit " + JSON.stringify(error));
       });
   }
 }]);
 
 myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageService', function($scope, fileUpload, $window, localStorageService) {
-  console.log(localStorageService.get('TOKEN'));
+  //console.log(localStorageService.get('TOKEN'));
 
   var token = localStorageService.get('TOKEN')
   if (token == null) {
     $window.location.href = '/index.html';
   }
+  token = token.substring(1, token.length - 1);
 
   var k = "";
-  $scope.uploadFile = function() {
+  $scope.view = false;
+  $scope.success = false;
+  $scope.add = true;
+  $scope.uploadFile = function(f) {
+    // $scope.add = false;
     var file = $scope.myFile;
-    console.log(file.name, $scope.myFile.name);
-    console.log('file is ');
+    //console.log(file.name, $scope.myFile.name);
+    //console.log('file is ');
     console.dir(file);
-    var uploadUrl = "/upload";
-    fileUpload.uploadFileToUrl(file, uploadUrl);
+    var uploadUrl = "/upload?token=" + token;
+    var promise = fileUpload.uploadFileToUrl(file, uploadUrl, $scope);
+    promise.then(function(res) {
+      // $scope.progressBar = m;
+      if (res.data.error = "false") {
+        //console.log('working code');
+        $scope.var = {
+          title: f.title,
+          author: f.author,
+          description: f.description,
+          duration: f.duration,
+          ispublic: f.public,
+          file: q,
+        }
+        var uploadUrl = "/api/add-video?token=" + token
+        fileUpload.submit($scope.var, uploadUrl, $scope);
+
+      } else {
+        //console.log('error in  uploading');
+      }
+    })
+
   };
-  $scope.hello = function(f) {
-    // var filename=$scope.myFile.name.replace($scope.myFile.name.substring($scope.myFile.name.lastIndexOf('/')+1),""),
-    //       uuid = generateUUID();
-    //       filename = filename+uuid;
-    // if(f.length==5){
-    console.log(Object.keys(f).length);
-    $scope.var = {
-      title: f.title,
-      author: f.author,
-      description: f.description,
-      duration: f.duration,
-      ispublic: f.public,
-      file: q,
-    }
-    var uploadUrl = "/api/add-video"
-    fileUpload.submit($scope.var, uploadUrl);
-
-  }
-
-  // else{
-  //   alert('please fill all the values')
-  // }
 
 }]);
