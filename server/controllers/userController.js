@@ -186,7 +186,7 @@ function updateHandler(req, res) {
         name: req.body.name,
         mobile: req.body.mobile,
         email: req.body.email,
-        password: encryptService.encrypt(req.body.password),
+        // password: encryptService.encrypt(req.body.password),
         level: req.body.level
       }
 
@@ -203,7 +203,7 @@ function updateHandler(req, res) {
         });
       }
 
-      if (!(newdata.name && newdata.mobile && newdata.email && newdata.password && newdata.level))
+      if (!(newdata.name && newdata.mobile && newdata.email  && newdata.level))
         res.send({
           error: true,
           reason: "All data not filled"
