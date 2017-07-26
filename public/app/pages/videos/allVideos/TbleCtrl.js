@@ -35,6 +35,11 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
         localStorageService.remove('TOKEN')
         $window.location.href = '/index.html';
       }
+      $scope.loading = true;
+      setTimeout(function() {
+        $scope.loading = false;
+        $scope.$apply();
+      }, 2000);
       $scope.users = response.data.data;
       //console.log(response.data.data);
     });
@@ -67,6 +72,11 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
       modalInstance.result.then(function(selectedItem) {
           // //console.log("selectedItem"+JSON.stringify(selectedItem.data));
+          $scope.loading = true;
+          setTimeout(function() {
+            $scope.loading = false;
+            $scope.$apply();
+          }, 2000);
 
           $scope.users = selectedItem;
           // $scope.users.push(selectedItem.data)
@@ -83,6 +93,11 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
       var m = parseInt(id);
       if ($window.confirm("Are you sure you want to delete?") == true) {
         $http.post("/api/delete-video/" + m + "?token=" + token).then(function(response) {
+          $scope.loading = true;
+          setTimeout(function() {
+            $scope.loading = false;
+            $scope.$apply();
+          }, 2000);
           $scope.users.splice($index, 1);
         });
         // $window.location.reload()
@@ -236,7 +251,7 @@ myApp.controller('ModalInstanceCtrl1', ['$scope', '$uibModalInstance', 'id', '$t
       })
     }
     else {
-      alert('working');
+      
       //console.log("u" + u)
       //console.log("form.public" + $scope.form.public);
       $scope.var = {
