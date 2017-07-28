@@ -2,6 +2,7 @@ var sql = require('services/sqlService');
 const apiService = require('services/apiService'),
 apiConfig = require('config/apiConfig');
 var encryptService = require('services/encryptionService');
+var authenticate = require('services/authService');
 
 
 module.exports = function(app) {
@@ -10,6 +11,8 @@ module.exports = function(app) {
 
   //Get
   app.get('/api/get-mapping/:id', particularMappingHandler);
+
+  app.get('/api/videos/:courseId', courseMappingHandler)
 }
 
 
@@ -33,6 +36,9 @@ function particularMappingHandler(req, res) {
 }
 
 function addMappingHandler(req, res) {
+  authenticate.auth(req, res, function(status) {
+    //console.log("status" + status);
+    if (status) {
       var data = {
         courseid: req.body.courseid,
         videoid: req.body.videoid
@@ -52,4 +58,26 @@ function addMappingHandler(req, res) {
 
         })
       }
+}
+else {
+  res.send({
+    error: 0
+  });
+}
+})
+}
+
+function courseMappingHandler( req, res ) {
+  authenticate.auth(req, res, function(status) {
+    //console.log("status" + status);
+    if (status) {
+  sql.queryOutlets('select * from MapVideo join Video where MapVideo.courseid = '+ req.params.courseId +' AND Video.id = MapVideo.videoid;', function( response ) {
+    res.send( response );
+  })}
+  else {
+    res.send({
+      error: 0
+    });
+  }
+})
 }

@@ -86,6 +86,7 @@ function uploadVideoHandler(req, res) {
       form.parse(req);
       form.on('fileBegin', function(name, file) {
         file.path = 'uploads/' + file.name;
+        console.log("add path"+file.path)
         //console.log(__dirname);
       });
       form.on('file', function(name, file) {
@@ -116,8 +117,8 @@ function addVideoHandler(req, res) {
         description: req.body.description,
         author: req.body.author,
         duration: req.body.duration,
-        file: req.body.file,
-        imageUrl: req.body.imageUrl,
+        file: process.env['USER_CDN_ADDRESS']+"/"+'uploads/'+req.body.file,
+        imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
         ispublic: req.body.ispublic
       }
       //console.log(req.body);
@@ -234,7 +235,7 @@ function videoUpdateHandler(req, res, next) {
         description: req.body.description,
         author: req.body.author,
         duration: req.body.duration,
-        file: req.body.file,
+        file: process.env['USER_CDN_ADDRESS']+"/"+req.body.file,
         //uploadedat: req.body.uploadedat,
         ispublic: req.body.ispublic
       }
@@ -306,10 +307,11 @@ function videoDeleteHandler(req, res, next) {
           })
         } else {
           //console.log(obj.data.file);
-          var filePath = 'uploads/'+obj.data.file;
-          //console.log(filePath);
+          var filePath = 'uploads/'+obj.data.file.substring(obj.data.file.lastIndexOf('/')+1);
+          console.log(filePath);
           fs.unlinkSync(filePath);
-          var thumbPath = obj.data.imageUrl;
+          var thumbPath = 'videoUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);;
+;
           fs.unlinkSync(thumbPath);
           sql.delete(sql.video, whereobj, function response(obj) {
 

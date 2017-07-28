@@ -176,13 +176,13 @@ function CourseUpdateHandler(req, res, next) {
             })
           } else {
             if(req.body.imageUrl != null){
-              var filePath = obj.data.imageUrl;
+              var filePath = 'courseUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);
               fs.unlinkSync(filePath);
               data = {
                 title: req.body.title,
                 description: req.body.description,
                 duration: req.body.duration,
-                imageUrl: req.body.imageUrl
+                imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl
               }
             }
             sql.update(sql.courses, data, whereObj, function(obj) {
