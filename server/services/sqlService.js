@@ -82,6 +82,9 @@ var Video = sequelize.define('Video', {
   file: {
     type: Sequelize.STRING
   },
+  imageUrl: {
+    type: Sequelize.STRING
+  },
   ispublic: {
     type: Sequelize.BOOLEAN
   }

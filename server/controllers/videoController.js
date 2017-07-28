@@ -39,10 +39,44 @@ module.exports = function(app, passport) {
 
   //Delete
   app.post('/api/delete-video/:id/?', videoDeleteHandler);
+
+  //upload thumbnail
+  app.post('/api/video/upload', uploadHandler);
 };
 
 
+function uploadHandler ( req , res ) {
+  var form = new formidable.IncomingForm(),
+      files = [],
+      fields = [];
+  // console.log("OS" + JSON.stringify(os))
+  form.parse(req);
 
+  form.uploadDir ='videoUploads/'
+  // os.tmpdir();
+
+  form
+    .on('field', function(field, value) {
+      console.log(field, value);
+      // if(field == 'path')
+      // console.log("My fielssssssss"+field)
+      fields.push([field, value]);
+    })
+    .on('file', function(field, file) {
+      console.log(field, file);
+      files.push([field, file]);
+    })
+    .on('end', function() {
+      console.log('-> upload done');
+      // res.writeHead(200, {'content-type': 'text/plain'});
+      // res.write('received fields:\n\n '+util.inspect(fields));
+      // res.write('\n\n');
+      // console.log("filess "+file)
+      // res.end('received files:\n\n '+util.inspect(files.data));
+      res.end(JSON.stringify(files));
+
+    });
+}
 
 function uploadVideoHandler(req, res) {
   authenticate.auth(req, res, function(status) {
@@ -83,6 +117,7 @@ function addVideoHandler(req, res) {
         author: req.body.author,
         duration: req.body.duration,
         file: req.body.file,
+        imageUrl: req.body.imageUrl,
         ispublic: req.body.ispublic
       }
       //console.log(req.body);
@@ -109,7 +144,8 @@ function addVideoHandler(req, res) {
 
               res.send({
                 error: false,
-                response: "Video created successfully"
+                response: "Video created successfully",
+                data:obj
               });
             })
           }
@@ -222,6 +258,20 @@ function videoUpdateHandler(req, res, next) {
           } else {
             // var filePath = 'uploads/'+obj.data.file;
             // fs.unlinkSync(filePath);
+            if(obj.data.imageUrl != null){
+              var filePath = obj.data.imageUrl;
+              fs.unlinkSync(filePath);
+              data = {
+                title: req.body.title,
+                description: req.body.description,
+                author: req.body.author,
+                duration: req.body.duration,
+                file: req.body.file,
+                imageUrl:req.body.imageUrl,
+                //uploadedat: req.body.uploadedat,
+                ispublic: req.body.ispublic
+              }
+            }
             sql.update(sql.video, data, whereObj, function(obj) {
               res.send({
                 error: false,
@@ -259,6 +309,8 @@ function videoDeleteHandler(req, res, next) {
           var filePath = 'uploads/'+obj.data.file;
           //console.log(filePath);
           fs.unlinkSync(filePath);
+          var thumbPath = obj.data.imageUrl;
+          fs.unlinkSync(thumbPath);
           sql.delete(sql.video, whereobj, function response(obj) {
 
             res.send({
