@@ -240,7 +240,7 @@ function updateHandler(req, res) {
         });
       }
 
-      if (!(newdata.name && newdata.mobile && newdata.email  && newdata.level))
+      if (!(newdata.name && newdata.mobile))
         res.send({
           error: true,
           reason: "All data not filled"
