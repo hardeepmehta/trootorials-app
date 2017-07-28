@@ -132,7 +132,7 @@ myApp.directive('fileModel', ['$parse', function($parse) {
 var u = 0;
 var q = 0;
 var k = 0;
-myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $window,$timeout) {
+myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService', function($http, $window,$timeout,localStorageService) {
 
   this.uploadFileToUrl = function(file, uploadUrl,t) {
     var fd = new FormData();
@@ -167,6 +167,11 @@ myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $win
 
   this.submit = function(f, uploadUrl,t,courseid) {
     //console.log(courseid);
+    var token = localStorageService.get('TOKEN')
+    token = token.substring(1, token.length - 1);
+    
+    console.log("token"+token)
+
     t.error = ""
     $http({
         method: 'POST',
@@ -189,7 +194,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout', function($http, $win
           $http({
               method: 'POST',
               format: 'json',
-              url: '/api/add-mapping',
+              url: '/api/add-mapping?token='+token,
               data: JSON.stringify({
                 courseid: parseInt(courseid),
                 videoid : res.data.data.data.id

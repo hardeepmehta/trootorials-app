@@ -10,9 +10,9 @@ module.exports = function(app) {
   app.post('/api/add-mapping', addMappingHandler);
 
   //Get
-  app.get('/api/get-mapping/:id', particularMappingHandler);
+  app.get('/api/get-mapping/:id/?', particularMappingHandler);
 
-  app.get('/api/videos/:courseId', courseMappingHandler)
+  app.get('/api/videos/:courseId/?', courseMappingHandler)
 }
 
 
