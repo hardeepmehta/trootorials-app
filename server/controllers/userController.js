@@ -285,15 +285,13 @@ function updateHandler(req, res) {
 
 function resetPasswordHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    //console.log("status" + status);
     if (status) {
       var token = req.query.token;
       var uid = 0;
       var data = {};
       whereObj = {}
+
       authenticate.auth(req, res, function(status, id) {
-        //console.log("status" + status);
-        //console.log("id" + id);
         uid = id
         whereObj = {
           id: uid
@@ -303,19 +301,36 @@ function resetPasswordHandler(req, res) {
             data.name = obj.data.name,
             data.mobile = obj.data.mobile,
             data.email = obj.data.email,
-            data.level = obj.data.level
-        });
-        var newPwd = req.body.new_password
-        data.password = encryptService.encrypt(newPwd);
-        //console.log("data" + JSON.stringify(data));
-        //console.log("whereObj" + JSON.stringify(whereObj));
+            data.level = obj.data.level,
+            data.password = encryptService.decrypt(obj.data.password)
 
-        sql.update(sql.users, data, whereObj, function(obj) {
-          res.send({
-            error: false,
-            response: "Updated successfully"
-          });
+            var newPwd = req.body.npassword
+            var curPwd = req.body.cpassword
+
+            console.log("current sent "+curPwd)
+            console.log("current in db "+ data.password)
+            console.log("data "+JSON.stringify(data))
+
+            if(curPwd != data.password)
+            res.send({
+              error: true,
+              response: "Current password does not match"
+            });
+
+            else{
+              data.password = encryptService.encrypt(newPwd);
+              //console.log("data" + JSON.stringify(data));
+              //console.log("whereObj" + JSON.stringify(whereObj));
+
+              sql.update(sql.users, data, whereObj, function(obj) {
+                res.send({
+                  error: false,
+                  response: "Updated successfully"
+                });
+              });
+            }
         });
+
       })
     } else {
       res.send({
