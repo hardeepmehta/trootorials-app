@@ -105,7 +105,7 @@ function addCourseHandler(req, res, next) {
         title: req.body.title,
         description: req.body.description,
         duration: req.body.duration,
-        imageUrl: req.body.imageUrl,
+        imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
         level: level
       }
       if (!(data.title && data.description && data.duration )) {
@@ -207,7 +207,6 @@ function CourseDeleteHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
     //console.log("status" + status);
     if (status) {
-
       var whereobj = {
         id: req.params.id
       }
@@ -224,7 +223,8 @@ function CourseDeleteHandler(req, res, next) {
           })
         } else {
           // console.log("obj"+JSON.stringify(obj))
-          var filePath = obj.data.imageUrl;
+          var filePath = 'courseUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);;
+          console.log(filePath)
           fs.unlinkSync(filePath);
           sql.delete(sql.courses, whereobj, function(obj) {
             res.send({
