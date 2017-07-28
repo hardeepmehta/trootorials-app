@@ -53,7 +53,7 @@ localstorageApp.controller('displayAllCourses', ['$scope', '$filter', 'editableO
     // //console.log(response);
     // //console.log(response.data.response.data);
 
-    
+
   });
 }
 }

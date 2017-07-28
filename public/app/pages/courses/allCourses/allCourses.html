@@ -3,7 +3,7 @@
     <img style = "height:20%; width:20%" src="../../../assets/img/app/profile/loading.gif" alt="">
   </div>
   <div ng-show="loading == false && clicked == false" ng-repeat="gotCourse in reciCourse" class="col-md-4">
-    <div class="panel panel-primary"  ng-click="courseClicked(gotCourse.id)>
+    <div class="panel panel-primary"  ng-click="courseClicked(gotCourse.id)">
       <div class="panel-heading">{{gotCourse.title}}</div>
         <img src="{{gotCourse.imageUrl}}" alt="" width="100%">
       <div class="panel-body">{{gotCourse.description}}</div>

@@ -139,9 +139,7 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
     })
     if(count > 1 )
     $scope.error = "Title already exists"
-
     else {
-
 if($scope.form.file){
   console.log($scope.form.file)
    $scope.upload($scope.form.file,function(url){
@@ -160,15 +158,11 @@ if($scope.form.file){
       })
     })
     .then(function(success) {
-      // //console.log("api");
-      // //console.log("hit " + JSON.stringify(success));
       $http.get("/api/all-users/?token=" + token).then(function(response) {
         $uibModalInstance.close(response.data.data);
       });
-
-    }, function(error) {
-      // //console.log("not hit " + JSON.stringify(error));
-    });
+    }
+  );
 })
 }
 else{

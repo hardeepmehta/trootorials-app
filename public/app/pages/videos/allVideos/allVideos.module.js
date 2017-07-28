@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  angular.module('BlurAdmin.pages.videos.allVideos', ['LocalStorageModule'])
+  angular.module('BlurAdmin.pages.videos.allVideos', ['LocalStorageModule','ngFileUpload'])
       .config(routeConfig);
 
   /** @ngInject */

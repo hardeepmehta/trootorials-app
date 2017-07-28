@@ -4,7 +4,8 @@
   angular.module('BlurAdmin.pages.videos', [
     'BlurAdmin.pages.videos.allVideos',
     'BlurAdmin.pages.videos.addVideos',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'ngFileUpload'
   ])
       .config(routeConfig);
 
