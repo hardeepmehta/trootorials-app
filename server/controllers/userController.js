@@ -1,6 +1,6 @@
 var sql = require('services/sqlService');
 const apiService = require('services/apiService'),
-  apiConfig = require('config/apiConfig');
+apiConfig = require('config/apiConfig');
 var encryptService = require('services/encryptionService');
 var authenticate = require('services/authService');
 var fs = require('fs');
@@ -142,10 +142,10 @@ function addUserHandler(req, res) {
         mobile: req.body.mobile,
         email: req.body.email,
         password: encryptService.encrypt(req.body.password),
-        imageUrl:req.body.imageUrl,
+        imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
         level: req.body.level,
       }
-      if (!(data.name && data.mobile && data.email && data.password && data.level && data.imageUrl)) {
+      if (!(data.name && data.mobile && data.email && data.password && data.level)) {
         res.send({
           error: true,
           reason: "Insufficient parameters"
@@ -201,7 +201,7 @@ function deleteHandler(req, res) {
           })
         } else {
           sql.delete(sql.users, whereObj, function(obj) {
-            var filePath = obj.data.imageUrl;
+            var filePath = 'userUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);
             fs.unlinkSync(filePath);
             res.send({
               error: false,
@@ -255,13 +255,13 @@ function updateHandler(req, res) {
             })
           } else {
             if(obj.data.imageUrl != null){
-              var filePath = obj.data.imageUrl;
+              var filePath = 'userUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);
               fs.unlinkSync(filePath);
               newdata = {
                 name: req.body.name,
                 mobile: req.body.mobile,
                 email: req.body.email,
-                imageUrl: req.body.imageUrl,
+                imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
                 level: req.body.level
               }
             }
