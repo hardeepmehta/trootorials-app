@@ -4,7 +4,8 @@
   angular.module('BlurAdmin.pages.courses', [
     'BlurAdmin.pages.courses.allCourses',
     'BlurAdmin.pages.courses.addCourses',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'ngFileUpload'
   ])
       .config(routeConfig);
 

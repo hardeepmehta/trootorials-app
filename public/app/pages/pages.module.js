@@ -16,6 +16,7 @@
     // 'BlurAdmin.pages.signin',
     'LocalStorageModule',
     'ui.bootstrap',
+    'ngFileUpload'
   ])
       .config(routeConfig);
 

@@ -1,9 +1,9 @@
 var localstorageApp = angular.module('BlurAdmin.pages.courses.addCourses');
 localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter', 'editableOptions', 'editableThemes', '$window', '$http',
-  '$uibModal', 'baProgressModal', 'localStorageService', '$state', '$rootScope',
+  '$uibModal', 'baProgressModal', 'localStorageService', '$state', '$rootScope','Upload',
 
   function($rootScope, $scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal,
-    baProgressModal, localStorageService, $state, $rootScope) {
+    baProgressModal, localStorageService, $state, $rootScope,Upload) {
     var token = null
     // console.log("retrieve" + localStorageService.get('TOKEN'))
     token = localStorageService.get('TOKEN')
@@ -60,7 +60,7 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
       });
 
       modalInstance.result.then(function(selectedItem) {
-          // console.log("selectedItem"+JSON.stringify(selectedItem.data));
+          console.log("selectedItem"+JSON.stringify(selectedItem.data));
           $scope.loading = true;
           setTimeout(function() {
             $scope.loading = false;
@@ -69,7 +69,12 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
           if (bool == 0) {
             $scope.courses = selectedItem;
           } else if (bool == 1) {
-            $scope.courses.push(selectedItem.data)
+            console.log($scope.courses)
+            if($scope.courses != undefined)
+              $scope.courses.push(selectedItem.data)
+            else {
+              $scope.courses=selectedItem.data
+            }
           }
           // $scope.$apply();
           //  console.log($scope.form);
@@ -108,8 +113,8 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
 ])
 
 
-angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCtrlCourse', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', 'token','courses',
- function($scope, $uibModalInstance, $http, bool, id, $timeout, token,courses) {
+angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCtrlCourse', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', 'token','courses','Upload',
+ function($scope, $uibModalInstance, $http, bool, id, $timeout, token,courses,Upload) {
   $scope.form = {};
   $scope.b = bool;
   $scope.error = ""
@@ -123,23 +128,49 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
   if (bool == 0) {
     $http.get("/api/get-course/" + id + "?token=" + token).then(function(response) {
       // console.log(response);
-      // console.log(response.data.response.data);
+      console.log(response.data.response.data);
       $scope.form = response.data.response.data;
     });
   }
 
+
   $scope.updateCourse = function() {
     // console.log("Update called");
-    var count=1
+    var count=0
     courses.forEach(function(el){
       if(el.title == $scope.form.title)
       count++
-      // console.log($scope.form.title)
-      // console.log(count);
     })
     if(count > 1 )
     $scope.error = "Title already exists"
 
+    else {
+      if ($scope.form.file) { //check if from is valid
+          console.log($scope.form.file)
+           $scope.upload($scope.form.file,function(url){
+            console.log("URL "+url)
+
+      var m = parseInt(id);
+      // console.log($scope.form);
+      $http({
+          method: 'POST',
+          format: 'json',
+          url: '/api/edit-course/' + m + "?token=" + token,
+          data: JSON.stringify({
+            title: $scope.form.title,
+            description: $scope.form.description,
+            duration: $scope.form.duration,
+            imageUrl: url
+          })
+        })
+        .then(function(success) {
+          $http.get("/api/all-courses?token=" + token).then(function(response) {
+            $uibModalInstance.close(response.data.data);
+          });
+
+        });
+    })
+  }
     else {
       var m = parseInt(id);
       // console.log($scope.form);
@@ -154,45 +185,75 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
           })
         })
         .then(function(success) {
-          // console.log("api");
-          // console.log("hit " + JSON.stringify(success));
           $http.get("/api/all-courses?token=" + token).then(function(response) {
-            //  $scope.usersupdated = response.data.data;
             $uibModalInstance.close(response.data.data);
           });
 
-          // $window.location.reload()
-        }, function(error) {
-          // console.log("not hit " + JSON.stringify(error));
-        });
+        }
+      );
+    }
+  }
+}
+
+  $scope.createPost = function(title, description, duration,file) {
+    if (file) { //check if from is valid
+        console.log(file)
+         $scope.upload(file,function(url){
+          console.log("URL "+url)
+          var data = {
+            title: title,
+            description: description,
+            duration: duration,
+            imageUrl: url
+          }
+          $http({
+              method: 'POST',
+              format: 'json',
+              url: '/api/add-course?token=' + token,
+              data: JSON.stringify({
+                title: title,
+                description: description,
+                duration: duration,
+                imageUrl: url
+              })
+            })
+            .then(function(success) {
+              console.log(success)
+              // console.log("success data" + JSON.stringify(success));
+              if (success.data.error == true) {
+                $scope.error = "Title already exists. Please enter new a title"
+              } else
+                $uibModalInstance.close(success.data.data);
+            }, function(error) {
+              // console.log("not hit " + JSON.stringify(error));
+            });
+        })
+    }
+    else {
+      $scope.error = "Upload a file"
+    }
+
+    // console.log("fileURL "+$scope.fileUrl)
+  }
+
+  $scope.upload = function(file,cb) {
+    console.log(file)
+    Upload.upload({
+        url: '/api/course/upload', //webAPI exposed to upload the file
+        data:{file:file} //pass file as data, should be user ng-model
+    }).then(function (resp) {
+            if(resp.data[0][1]['path']){
+            // return resp.data[0][1]['path']
+            $scope.fileUrl = resp.data[0][1]['path']
+            console.log($scope.fileUrl)
+            cb($scope.fileUrl);
+          }
+            else {
+              $scope.error = "Error uploading files"
+            }
+        })
     }
   }
 
-  $scope.createPost = function(title, description, duration) {
-    var data = {
-      title: title,
-      description: description,
-      duration: duration
-    }
-    $http({
-        method: 'POST',
-        format: 'json',
-        url: '/api/add-course?token=' + token,
-        data: JSON.stringify({
-          title: title,
-          description: description,
-          duration: duration
-        })
-      })
-      .then(function(success) {
-        // console.log(success)
-        // console.log("success data" + JSON.stringify(success));
-        if (success.data.error == true) {
-          $scope.error = "Title already exists. Please enter new a title"
-        } else
-          $uibModalInstance.close(success.data.data);
-      }, function(error) {
-        // console.log("not hit " + JSON.stringify(error));
-      });
-  }
-}]);
+// }
+]);

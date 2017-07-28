@@ -13,6 +13,8 @@
     <td>Mobile</td>
     <td>Email</td>
     <!-- <td>Password</td> -->
+    <td>Image URL</td>
+
     <td>Level</td>
     <td align="center">Premium</td>
     <td>Action</td>
@@ -44,6 +46,11 @@
           {{ user.password }}
         </span>
     </td> -->
+    <td>
+      <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
+          {{ user.imageUrl || 'empty' }}
+      </span>
+    </td>
 
     <td>
       <span editable-text="user.level" e-name="name" e-form="rowform">

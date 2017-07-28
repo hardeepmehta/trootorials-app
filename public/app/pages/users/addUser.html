@@ -24,6 +24,19 @@
       <div class="form-group">
         <label class="checkbox-inline"><input type="checkbox" value="">Make Premium</label>
       </div>
+
+      <div class="form-group">
+        <input
+            type="file"
+            ngf-select
+            ng-model="form.file"
+            name="file"
+            ngf-pattern="'image/*'"
+            accept="image/*"
+            ngf-max-size="20MB"
+            />
+      </div>
+
       <div class="form-group">
         <label>Level</label>
         <select ng-model="form.level" ng-options="c as c.level for c in levels" required>
@@ -34,7 +47,7 @@
         <div class="error" style="color:red" ng-model="error">{{error}}</div>
       </div>
 
-      <input type="submit" name="submit" ng-click=" b == 1 ? createPost(form.name,form.mobile,form.email,form.level.level) : updatedCourse() " class="btn btn-default"></input>
+      <input type="submit" name="submit" ng-click=" b == 1 ? createPost(form.name,form.mobile,form.email,form.level.level,form.file) : updatedCourse() " class="btn btn-default"></input>
     </form>
   </div>
   <div class="col-md-2">
