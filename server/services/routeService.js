@@ -10,4 +10,5 @@ module.exports = function(app) {
   require('controllers/feedbackController')(app);
   require('controllers/startTutorialController')(app);
   require('controllers/summaryController')(app);
+  require('controllers/mappingController')(app);
 };

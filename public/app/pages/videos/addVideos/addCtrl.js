@@ -83,7 +83,8 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
   }
 }]);
 
-myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageService', function($scope, fileUpload, $window, localStorageService) {
+myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageService','Upload',
+function($scope, fileUpload, $window, localStorageService ,Upload) {
   //console.log(localStorageService.get('TOKEN'));
 
   var token = localStorageService.get('TOKEN')
@@ -96,34 +97,57 @@ myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageSer
   $scope.view = false;
   $scope.success = false;
   $scope.add = true;
+
   $scope.uploadFile = function(f) {
     // $scope.add = false;
     var file = $scope.myFile;
     //console.log(file.name, $scope.myFile.name);
     //console.log('file is ');
-    console.dir(file);
+    var thumbnail = $scope.form.file
+    // console.dir(file);
     var uploadUrl = "/upload?token=" + token;
     var promise = fileUpload.uploadFileToUrl(file, uploadUrl, $scope);
     promise.then(function(res) {
       // $scope.progressBar = m;
       if (res.data.error = "false") {
         //console.log('working code');
+        if (thumbnail) { //check if from is valid
+            console.log(thumbnail)
+             $scope.upload(thumbnail,function(url){
+              console.log("URL "+url)
+
         $scope.var = {
           title: f.title,
           author: f.author,
           description: f.description,
           duration: f.duration,
           ispublic: f.public,
+          imageUrl: url,
           file: q,
         }
         var uploadUrl = "/api/add-video?token=" + token
-        fileUpload.submit($scope.var, uploadUrl, $scope);
-
-      } else {
-        //console.log('error in  uploading');
-      }
+        fileUpload.submit($scope.var, uploadUrl, $scope,f.course);
     })
+  }
+  }
+})}
 
-  };
+  $scope.upload = function(file,cb) {
+    console.log(file)
+    Upload.upload({
+        url: '/api/video/upload', //webAPI exposed to upload the file
+        data:{file:file} //pass file as data, should be user ng-model
+    }).then(function (resp) {
+            if(resp.data[0][1]['path']){
+            // return resp.data[0][1]['path']
+            $scope.fileUrl = resp.data[0][1]['path']
+            console.log($scope.fileUrl)
+            cb($scope.fileUrl);
+          }
+            else {
+              $scope.error = "Error uploading files"
+            }
+        })
+    }
 
 }]);

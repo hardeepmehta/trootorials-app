@@ -11,6 +11,9 @@ jwtOptions.jwtFromRequest = passportJWT.ExtractJwt.fromAuthHeader();
 jwtOptions.secretOrKey = 'Troofal'
 
 module.exports = function(app, passport) {
+  //Signup user
+  app.post('/api/signup-user', signupUserHandler); //checked
+
   // Login User
   app.post('/api/login', loginHandler);
 
@@ -20,6 +23,52 @@ module.exports = function(app, passport) {
   // Logout
   app.get('/api/logout', logoutHandler)
 };
+
+
+function signupUserHandler(req, res) {
+      var data = {
+        name: req.body.name,
+        mobile: req.body.mobile,
+        email: req.body.email,
+        password: encryptService.encrypt(req.body.password),
+        level: 0
+      }
+
+      if (!(data.name && data.mobile && data.email && data.password)) {
+        res.send({
+          error: true,
+          reason: "Insufficient parameters"
+        });
+      }
+      else {
+        var whereObj = {
+          email: req.body.email
+        }
+        sql.findOne(sql.users, whereObj, function(obj) {
+          if (obj.data.id) {
+            res.send({
+              error: true,
+              reason: 'User already created'
+            })
+          }
+           else {
+            sql.insert(sql.users, data, function(obj) {
+              var payload = {
+                id: obj.data.id
+              };
+              var token = jwt.sign(payload, jwtOptions.secretOrKey);
+              res.send({
+                error: false,
+                response: "User created successfully",
+                data: obj,
+                token: token
+              });
+            })
+          }
+        })
+      }
+}
+
 
 function loginHandler(req, res, next) {
   // console.log("req.body" + req.body);

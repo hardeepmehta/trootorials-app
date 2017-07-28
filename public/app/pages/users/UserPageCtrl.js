@@ -100,8 +100,8 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
 ])
 
 
-angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', 'token','users',
- function($scope, $uibModalInstance, $http, bool, id, $timeout, token, users) {
+angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', '$http', 'bool', 'id', '$timeout', 'token','users','Upload',
+ function($scope, $uibModalInstance, $http, bool, id, $timeout, token, users, Upload) {
 
   $scope.error = ""
   $scope.form = {};
@@ -130,8 +130,8 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
       // //console.log($scope.form.level);
     });
   }
+
   $scope.updatedCourse = function() {
-    // //console.log("Update called");
     var count=0
     users.forEach(function(el){
       if(el.email == $scope.form.email)
@@ -139,43 +139,72 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
     })
     if(count > 1 )
     $scope.error = "Title already exists"
-
     else {
-    var m = parseInt(id);
-    // //console.log($scope.form);
-    // //console.log("level " + $scope.form.level);
-    $http({
-        method: 'POST',
-        format: 'json',
-        url: '/api/edit-user/' + m + '/' + '?token=' + token,
-        data: JSON.stringify({
-          name: $scope.form.name,
-          mobile: $scope.form.mobile,
-          email: $scope.form.email,
-          // password: $scope.form.password,
-          level: $scope.form.level.level
-        })
+if($scope.form.file){
+  console.log($scope.form.file)
+   $scope.upload($scope.form.file,function(url){
+    console.log("URL "+url)
+  var m = parseInt(id);
+  $http({
+      method: 'POST',
+      format: 'json',
+      url: '/api/edit-user/' + m + '/' + '?token=' + token,
+      data: JSON.stringify({
+        name: $scope.form.name,
+        mobile: $scope.form.mobile,
+        email: $scope.form.email,
+        imageUrl: url,
+        level: $scope.form.level.level
       })
-      .then(function(success) {
-        // //console.log("api");
-        // //console.log("hit " + JSON.stringify(success));
-        $http.get("/api/all-users/?token=" + token).then(function(response) {
-          $uibModalInstance.close(response.data.data);
-        });
-
-      }, function(error) {
-        // //console.log("not hit " + JSON.stringify(error));
+    })
+    .then(function(success) {
+      $http.get("/api/all-users/?token=" + token).then(function(response) {
+        $uibModalInstance.close(response.data.data);
       });
+    }
+  );
+})
+}
+else{
+  var m = parseInt(id);
+  $http({
+      method: 'POST',
+      format: 'json',
+      url: '/api/edit-user/' + m + '/' + '?token=' + token,
+      data: JSON.stringify({
+        name: $scope.form.name,
+        mobile: $scope.form.mobile,
+        email: $scope.form.email,
+        // password: $scope.form.password,
+        level: $scope.form.level.level
+      })
+    })
+    .then(function(success) {
+      // //console.log("api");
+      // //console.log("hit " + JSON.stringify(success));
+      $http.get("/api/all-users/?token=" + token).then(function(response) {
+        $uibModalInstance.close(response.data.data);
+      });
+
+    }, function(error) {
+      // //console.log("not hit " + JSON.stringify(error));
+    });
+}
   }
 }
 
-  $scope.createPost = function(named, mobiled, emailid, levelid) {
+  $scope.createPost = function(named, mobiled, emailid, levelid, file) {
     // //console.log(levelid);
+    if (file) { //check if from is valid
+        console.log(file)
+         $scope.upload(file,function(url){
+          console.log("URL "+url)
     var data = {
       name: named,
       mobile: mobiled,
       email: emailid,
       password: emailid,
+      imageUrl: url,
       level: parseInt(levelid)
     }
     $http({
@@ -187,14 +216,12 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
           mobile: mobiled,
           email: emailid,
           password: emailid,
+          imageUrl: url,
           level: parseInt(levelid)
         })
       })
       .then(function(success) {
-        // //console.log(success)
-        // //console.log("success data" + JSON.stringify(success));
-        // //console.log("success data" + JSON.stringify(success.data.error));
-
+        console.log(success)
         if (success.data.error == true)
           $scope.error = "User already exists. Please enter a new email id"
 
@@ -204,5 +231,29 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
       }, function(error) {
         // //console.log("not hit " + JSON.stringify(error));
       });
+    })
   }
+  else{
+    $scope.error = "Upload a file"
+  }
+  }
+
+  $scope.upload = function(file,cb) {
+    console.log(file)
+    Upload.upload({
+        url: '/api/user/upload', //webAPI exposed to upload the file
+        data:{file:file} //pass file as data, should be user ng-model
+    }).then(function (resp) {
+            if(resp.data[0][1]['path']){
+            // return resp.data[0][1]['path']
+            $scope.fileUrl = resp.data[0][1]['path']
+            console.log($scope.fileUrl)
+            cb($scope.fileUrl);
+          }
+            else {
+              $scope.error = "Error uploading files"
+            }
+        })
+    }
+
 }]);

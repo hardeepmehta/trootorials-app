@@ -3,7 +3,7 @@
 
   </div>
   <div class="col-md-8 ">
-    <form>
+    <form method="post">
       <div class="form-group">
         <label>Title</label>
         <input type="text" class="form-control" ng-model="form.title" name="title" required>
@@ -13,14 +13,28 @@
         <label>Description</label>
         <textarea class="form-control" rows="5" ng-model="form.description" name="description" placeholder="Enter Description" required></textarea>
       </div>
+
       <div class="form-group">
         <label>Duration</label>
         <input type="text" class="form-control" ng-model="form.duration" name="duration" placeholder="Enter duration" required>
       </div>
+
+      <div class="form-group">
+        <input
+            type="file"
+            ngf-select
+            ng-model="form.file"
+            name="file"
+            ngf-pattern="'image/*'"
+            accept="image/*"
+            ngf-max-size="20MB"
+            />
+      </div>
+
       <div class="form-group">
         <div class="error" style="color:red" ng-model="error">{{error}}</div>
       </div>
-      <input type="submit" name="submit" ng-click=" b == 1 ? createPost(form.title,form.description,form.duration) : updateCourse() "></input>
+      <input type="submit" name="submit" ng-click=" b == 1 ? createPost(form.title,form.description,form.duration,form.file) : updateCourse() "></input>
     </form>
   </div>
   <div class="col-md-2">

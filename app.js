@@ -30,6 +30,9 @@ var app = express();
 
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/uploads',  express.static(__dirname + '/uploads'));
+app.use('/courseUploads',  express.static(__dirname + '/courseUploads'));
+app.use('/userUploads',  express.static(__dirname + '/userUploads'));
+app.use('/videoUploads',  express.static(__dirname + '/videoUploads'));
 
 
 // Set path of static assets

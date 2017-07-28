@@ -17,6 +17,7 @@
     <td>Author</td>
     <td>Duration</td>
     <td>File</td>
+    <td>Image Url</td>
     <td>isPublic</td>
     <td>action</td>
 
@@ -51,6 +52,11 @@
       <span editable-text="user.file" e-name="name" e-form="rowform" e-required>
           <a href="uploads/{{ user.file || 'empty' }}">{{ user.file || 'empty' }}</a>
 
+        </span>
+    </td>
+    <td>
+      <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
+          {{ user.imageUrl || 'empty' }}
         </span>
     </td>
     <td>

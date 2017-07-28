@@ -1,7 +1,11 @@
 const apiService = require('services/apiService'),
-  sql = require('services/sqlService'),
-  apiConfig = require('config/apiConfig');
+sql = require('services/sqlService'),
+apiConfig = require('config/apiConfig');
 var authenticate = require('services/authService');
+util = require('util'),
+os = require('os'),
+formidable = require('formidable');
+var fs = require('fs');
 
 module.exports = function(app, passport) {
   // Add course
@@ -18,7 +22,44 @@ module.exports = function(app, passport) {
 
   //Delete
   app.post('/api/delete-course/:id/?', CourseDeleteHandler);
+
+  //upload thumbnail
+  app.post('/api/course/upload', uploadHandler); //checked
 };
+
+
+function uploadHandler ( req , res ) {
+  var form = new formidable.IncomingForm(),
+      files = [],
+      fields = [];
+  // console.log("OS" + JSON.stringify(os))
+  form.parse(req);
+
+  form.uploadDir ='courseUploads/'
+  // os.tmpdir();
+
+  form
+    .on('field', function(field, value) {
+      console.log(field, value);
+      // if(field == 'path')
+      // console.log("My fielssssssss"+field)
+      fields.push([field, value]);
+    })
+    .on('file', function(field, file) {
+      console.log(field, file);
+      files.push([field, file]);
+    })
+    .on('end', function() {
+      console.log('-> upload done');
+      // res.writeHead(200, {'content-type': 'text/plain'});
+      // res.write('received fields:\n\n '+util.inspect(fields));
+      // res.write('\n\n');
+      // console.log("filess "+file)
+      // res.end('received files:\n\n '+util.inspect(files.data));
+      res.end(JSON.stringify(files));
+
+    });
+}
 
 
 function getCourseHandler(req, res, next) {
@@ -56,9 +97,10 @@ function addCourseHandler(req, res, next) {
       var data = {
         title: req.body.title,
         description: req.body.description,
-        duration: req.body.duration
+        duration: req.body.duration,
+        imageUrl: req.body.imageUrl
       }
-      if (!(data.title && data.description && data.duration)) {
+      if (!(data.title && data.description && data.duration && data.imageUrl)) {
         res.send({
           error: true,
           reason: "Insufficient parameters!!"
@@ -126,6 +168,16 @@ function CourseUpdateHandler(req, res, next) {
               response: "Course does not exist"
             })
           } else {
+            if(req.body.imageUrl != null){
+              var filePath = obj.data.imageUrl;
+              fs.unlinkSync(filePath);
+              data = {
+                title: req.body.title,
+                description: req.body.description,
+                duration: req.body.duration,
+                imageUrl: req.body.imageUrl
+              }
+            }
             sql.update(sql.courses, data, whereObj, function(obj) {
               res.send({
                 error: false,
@@ -133,7 +185,6 @@ function CourseUpdateHandler(req, res, next) {
               });
             });
           }
-
         });
       }
     } else {
@@ -165,6 +216,9 @@ function CourseDeleteHandler(req, res, next) {
             response: "Course does not exist"
           })
         } else {
+          // console.log("obj"+JSON.stringify(obj))
+          var filePath = obj.data.imageUrl;
+          fs.unlinkSync(filePath);
           sql.delete(sql.courses, whereobj, function(obj) {
             res.send({
               error: false,
