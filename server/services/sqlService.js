@@ -26,6 +26,9 @@ var Course = sequelize.define('Course', {
   },
   imageUrl: {
     type: Sequelize.STRING
+  },
+  level: {
+    type: Sequelize.STRING
   }
 }, {
   freezeTableName: true
