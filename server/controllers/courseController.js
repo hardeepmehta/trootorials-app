@@ -94,13 +94,21 @@ function addCourseHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
     //console.log("status" + status);
     if (status) {
+      var level = ''
+      if(req.body.level == null){
+        level = "beginner"
+      }
+      else {
+        level = req.body.level
+      }
       var data = {
         title: req.body.title,
         description: req.body.description,
         duration: req.body.duration,
-        imageUrl: req.body.imageUrl
+        imageUrl: req.body.imageUrl,
+        level: level
       }
-      if (!(data.title && data.description && data.duration && data.imageUrl)) {
+      if (!(data.title && data.description && data.duration )) {
         res.send({
           error: true,
           reason: "Insufficient parameters!!"
@@ -138,7 +146,6 @@ function CourseUpdateHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
     //console.log("status" + status);
     if (status) {
-
       var data = {
         title: req.body.title,
         description: req.body.description,
