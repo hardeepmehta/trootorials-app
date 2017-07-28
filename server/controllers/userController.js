@@ -3,6 +3,7 @@ const apiService = require('services/apiService'),
   apiConfig = require('config/apiConfig');
 var encryptService = require('services/encryptionService');
 var authenticate = require('services/authService');
+var fs = require('fs');
 
 
 module.exports = function(app) {
@@ -27,6 +28,43 @@ module.exports = function(app) {
 
   //show password
   app.get('/api/show-password/?', showPasswordHandler);
+
+  //upload thumbnail
+  app.post('/api/user/upload', uploadHandler);
+}
+
+
+function uploadHandler ( req , res ) {
+  var form = new formidable.IncomingForm(),
+      files = [],
+      fields = [];
+  // console.log("OS" + JSON.stringify(os))
+  form.parse(req);
+
+  form.uploadDir ='userUploads/'
+  // os.tmpdir();
+
+  form
+    .on('field', function(field, value) {
+      console.log(field, value);
+      // if(field == 'path')
+      // console.log("My fielssssssss"+field)
+      fields.push([field, value]);
+    })
+    .on('file', function(field, file) {
+      console.log(field, file);
+      files.push([field, file]);
+    })
+    .on('end', function() {
+      console.log('-> upload done');
+      // res.writeHead(200, {'content-type': 'text/plain'});
+      // res.write('received fields:\n\n '+util.inspect(fields));
+      // res.write('\n\n');
+      // console.log("filess "+file)
+      // res.end('received files:\n\n '+util.inspect(files.data));
+      res.end(JSON.stringify(files));
+
+    });
 }
 
 function allUsersHandler(req, res) {
@@ -94,6 +132,7 @@ function particularUserHandler(req, res) {
   });
 }
 
+
 function addUserHandler(req, res) {
   authenticate.auth(req, res, function(status) {
     //console.log("status" + status);
@@ -103,9 +142,10 @@ function addUserHandler(req, res) {
         mobile: req.body.mobile,
         email: req.body.email,
         password: encryptService.encrypt(req.body.password),
+        imageUrl:req.body.imageUrl,
         level: req.body.level,
       }
-      if (!(data.name && data.mobile && data.email && data.password && data.level)) {
+      if (!(data.name && data.mobile && data.email && data.password && data.level && data.imageUrl)) {
         res.send({
           error: true,
           reason: "Insufficient parameters"
@@ -161,6 +201,8 @@ function deleteHandler(req, res) {
           })
         } else {
           sql.delete(sql.users, whereObj, function(obj) {
+            var filePath = obj.data.imageUrl;
+            fs.unlinkSync(filePath);
             res.send({
               error: false,
               response: "User deleted successfully!!"
@@ -180,18 +222,13 @@ function deleteHandler(req, res) {
 
 function updateHandler(req, res) {
   authenticate.auth(req, res, function(status) {
-    //console.log("status" + status);
     if (status) {
       var newdata = {
         name: req.body.name,
         mobile: req.body.mobile,
         email: req.body.email,
-        // password: encryptService.encrypt(req.body.password),
         level: req.body.level
       }
-
-      //console.log("level:" + JSON.stringify(req.body.level))
-
       var whereObj = {
         id: parseInt(req.params.id)
       }
@@ -217,6 +254,17 @@ function updateHandler(req, res) {
               response: "User does not exist"
             })
           } else {
+            if(req.body.imageUrl != null){
+              var filePath = obj.data.imageUrl;
+              fs.unlinkSync(filePath);
+              newdata = {
+                name: req.body.name,
+                mobile: req.body.mobile,
+                email: req.body.email,
+                imageUrl: req.body.imageUrl,
+                level: req.body.level
+              }
+            }
             sql.update(sql.users, newdata, whereObj, function(obj) {
               //console.log(whereObj);
               res.send({

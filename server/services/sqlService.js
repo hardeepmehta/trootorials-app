@@ -23,6 +23,9 @@ var Course = sequelize.define('Course', {
   },
   duration: {
     type: Sequelize.STRING
+  },
+  imageUrl: {
+    type: Sequelize.STRING
   }
 }, {
   freezeTableName: true
@@ -45,6 +48,9 @@ var User = sequelize.define('User', {
     type: Sequelize.STRING
   },
   password: {
+    type: Sequelize.STRING
+  },
+  imageUrl: {
     type: Sequelize.STRING
   },
   level: {
