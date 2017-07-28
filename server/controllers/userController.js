@@ -200,9 +200,12 @@ function deleteHandler(req, res) {
             response: "User does not exist"
           })
         } else {
-          sql.delete(sql.users, whereObj, function(obj) {
+          if(obj.data.imageUrl != null){
+            //console.log("imageUrl "+obj.data)
             var filePath = 'userUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);
             fs.unlinkSync(filePath);
+          }
+          sql.delete(sql.users, whereObj, function(obj) {
             res.send({
               error: false,
               response: "User deleted successfully!!"
