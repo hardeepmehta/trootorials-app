@@ -60,22 +60,24 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
       });
 
       modalInstance.result.then(function(selectedItem) {
-          console.log("selectedItem"+JSON.stringify(selectedItem.data));
+          // console.log("Modal closed ")
+          // console.log("selectedItem"+JSON.stringify(selectedItem));
           $scope.loading = true;
-          setTimeout(function() {
-            $scope.loading = false;
-            $scope.$apply();
-          }, 2000);
+
           if (bool == 0) {
             $scope.courses = selectedItem;
           } else if (bool == 1) {
             console.log($scope.courses)
             if($scope.courses != undefined)
-              $scope.courses.push(selectedItem.data)
+              $scope.courses.push(selectedItem)
             else {
-              $scope.courses=selectedItem.data
+              $scope.courses=selectedItem
             }
           }
+          setTimeout(function() {
+            $scope.loading = false;
+            $scope.$apply();
+          }, 2000);
           // $scope.$apply();
           //  console.log($scope.form);
           // console.log("updates users"+JSON.stringify($scope.users))
@@ -99,6 +101,9 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
             $scope.$apply();
           }, 2000);
           $scope.courses.splice($index, 1);
+          $http.post("/api/deletecourse-mapping/"+m+"?token="+token).then(function(response){
+
+          });
         });
       } else {}
     }
@@ -128,8 +133,8 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
   if (bool == 0) {
     $http.get("/api/get-course/" + id + "?token=" + token).then(function(response) {
       // console.log(response);
-      console.log(response.data.response.data);
-      $scope.form = response.data.response.data;
+      // console.log("Edit response"+JSON.stringify(response.data.response));
+      $scope.form = response.data.response;
     });
   }
 
@@ -146,9 +151,9 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
 
     else {
       if ($scope.form.file) { //check if from is valid
-          console.log($scope.form.file)
+          // console.log($scope.form.file)
            $scope.upload($scope.form.file,function(url){
-            console.log("URL "+url)
+            // console.log("URL "+url)
 
       var m = parseInt(id);
       // console.log($scope.form);
@@ -160,6 +165,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
             title: $scope.form.title,
             description: $scope.form.description,
             duration: $scope.form.duration,
+            level: $scope.form.level,
             imageUrl: url
           })
         })
@@ -195,16 +201,17 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
   }
 }
 
-  $scope.createPost = function(title, description, duration,file) {
+  $scope.createPost = function(title, description, duration,level,file) {
     if (file) { //check if from is valid
-        console.log(file)
+        // console.log(file)
          $scope.upload(file,function(url){
-          console.log("URL "+url)
+          // console.log("URL "+url)
           var data = {
             title: title,
             description: description,
             duration: duration,
-            imageUrl: url
+            imageUrl: url,
+            level: level
           }
           $http({
               method: 'POST',
@@ -214,15 +221,18 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
                 title: title,
                 description: description,
                 duration: duration,
-                imageUrl: url
+                imageUrl: url,
+                level: level
+
               })
             })
             .then(function(success) {
-              console.log(success)
+              // console.log("Add response"+success)
               // console.log("success data" + JSON.stringify(success));
               if (success.data.error == true) {
                 $scope.error = "Title already exists. Please enter new a title"
               } else
+              //  console.log("Closing modal")
                 $uibModalInstance.close(success.data.data);
             }, function(error) {
               // console.log("not hit " + JSON.stringify(error));
@@ -237,7 +247,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
   }
 
   $scope.upload = function(file,cb) {
-    console.log(file)
+    // console.log(file)
     Upload.upload({
         url: '/api/course/upload', //webAPI exposed to upload the file
         data:{file:file} //pass file as data, should be user ng-model
@@ -245,7 +255,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
             if(resp.data[0][1]['path']){
             // return resp.data[0][1]['path']
             $scope.fileUrl = resp.data[0][1]['path']
-            console.log($scope.fileUrl)
+            // console.log($scope.fileUrl)
             cb($scope.fileUrl);
           }
             else {

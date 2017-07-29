@@ -82,14 +82,14 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
       var m = parseInt(id);
       if ($window.confirm("Are you sure you want to delete?") == true) {
         $http.post("/api/delete-user/" + m + "/" + "?token=" + token).then(function(response) {
-          $scope.loading = true;
-          setTimeout(function() {
-            $scope.loading = false;
-            $scope.$apply();
-          }, 2000);
           $scope.users.splice($index, 1);
         });
       } else {}
+      $scope.loading = true;
+      setTimeout(function() {
+        $scope.loading = false;
+        $scope.$apply();
+      }, 2000);
     }
 
     $scope.openProgressDialog = baProgressModal.open;
@@ -140,8 +140,8 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
     if(count > 1 )
     $scope.error = "Title already exists"
     else {
-if($scope.form.file){
-  console.log($scope.form.file)
+      if($scope.form.file){
+          console.log($scope.form.file)
    $scope.upload($scope.form.file,function(url){
     console.log("URL "+url)
   var m = parseInt(id);

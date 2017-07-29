@@ -40,7 +40,8 @@ localstorageApp.controller('PasswordPageCtrl', ['$scope', '$window', '$http', 'l
             format: 'json',
             url: '/api/update-password?token=' + token,
             data: JSON.stringify({
-              new_password: $scope.form.newPassword,
+              cpassword: $scope.form.oldPassword,
+              npassword: $scope.form.newPassword
               // confirm_password: $scope.form.currentPassword,
               //duration: durationd
             })

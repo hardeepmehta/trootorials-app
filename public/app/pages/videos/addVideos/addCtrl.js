@@ -59,6 +59,7 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
       })
       .error(function() {});
   }
+
   this.submit = function(f, uploadUrl, t) {
     $http({
         method: 'POST',
@@ -82,6 +83,7 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
       });
   }
 }]);
+
 
 myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageService','Upload',
 function($scope, fileUpload, $window, localStorageService ,Upload) {
@@ -149,5 +151,4 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
             }
         })
     }
-
 }]);
