@@ -46,17 +46,17 @@ function uploadHandler ( req , res ) {
 
   form
     .on('field', function(field, value) {
-      console.log(field, value);
+      // console.log(field, value);
       // if(field == 'path')
       // console.log("My fielssssssss"+field)
       fields.push([field, value]);
     })
     .on('file', function(field, file) {
-      console.log(field, file);
+      // console.log(field, file);
       files.push([field, file]);
     })
     .on('end', function() {
-      console.log('-> upload done');
+      // console.log('-> upload done');
       // res.writeHead(200, {'content-type': 'text/plain'});
       // res.write('received fields:\n\n '+util.inspect(fields));
       // res.write('\n\n');
@@ -142,7 +142,7 @@ function addUserHandler(req, res) {
         mobile: req.body.mobile,
         email: req.body.email,
         password: encryptService.encrypt(req.body.password),
-        imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
+        imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
         level: req.body.level,
       }
       if (!(data.name && data.mobile && data.email && data.password && data.level)) {
@@ -201,9 +201,14 @@ function deleteHandler(req, res) {
           })
         } else {
           if(obj.data.imageUrl != null){
-            //console.log("imageUrl "+obj.data)
-            var filePath = 'userUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);
-            fs.unlinkSync(filePath);
+            var filePath = "userUploads/"+obj.data.imageUrl;
+            console.log("filepath "+ filePath)
+            fs.unlinkSync(filePath,function(err){
+              res.send({
+                error:true,
+                response:"File cannot be deleted"
+              })
+            });
           }
           sql.delete(sql.users, whereObj, function(obj) {
             res.send({
@@ -258,13 +263,13 @@ function updateHandler(req, res) {
             })
           } else {
             if(obj.data.imageUrl != null){
-              var filePath = 'userUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);
-              fs.unlinkSync(filePath);
+              var filePath = 'userUploads/'+obj.data.imageUrl;
+              // fs.unlinkSync(filePath);
               newdata = {
                 name: req.body.name,
                 mobile: req.body.mobile,
                 email: req.body.email,
-                imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
+                imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
                 level: req.body.level
               }
             }
@@ -310,9 +315,9 @@ function resetPasswordHandler(req, res) {
             var newPwd = req.body.npassword
             var curPwd = req.body.cpassword
 
-            console.log("current sent "+curPwd)
-            console.log("current in db "+ data.password)
-            console.log("data "+JSON.stringify(data))
+            // console.log("current sent "+curPwd)
+            // console.log("current in db "+ data.password)
+            // console.log("data "+JSON.stringify(data))
 
             if(curPwd != data.password)
             res.send({

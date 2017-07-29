@@ -57,17 +57,17 @@ function uploadHandler ( req , res ) {
 
   form
     .on('field', function(field, value) {
-      console.log(field, value);
+      // console.log(field, value);
       // if(field == 'path')
       // console.log("My fielssssssss"+field)
       fields.push([field, value]);
     })
     .on('file', function(field, file) {
-      console.log(field, file);
+      // console.log(field, file);
       files.push([field, file]);
     })
     .on('end', function() {
-      console.log('-> upload done');
+      // console.log('-> upload done');
       // res.writeHead(200, {'content-type': 'text/plain'});
       // res.write('received fields:\n\n '+util.inspect(fields));
       // res.write('\n\n');
@@ -86,7 +86,7 @@ function uploadVideoHandler(req, res) {
       form.parse(req);
       form.on('fileBegin', function(name, file) {
         file.path = 'uploads/' + file.name;
-        console.log("add path"+file.path)
+        // console.log("add path"+file.path)
         //console.log(__dirname);
       });
       form.on('file', function(name, file) {
@@ -117,12 +117,12 @@ function addVideoHandler(req, res) {
         description: req.body.description,
         author: req.body.author,
         duration: req.body.duration,
-        file: process.env['USER_CDN_ADDRESS']+"/"+'uploads/'+req.body.file,
-        imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
+        file: req.body.file,
+        imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
         ispublic: req.body.ispublic
       }
       //console.log(req.body);
-      if (!(data.title && data.description && data.author && data.duration && data.file && data.ispublic)) {
+      if (!(data.title && data.description && data.author && data.duration && data.file )) {
         //console.log(data);
         res.send({
           error: true,
@@ -226,6 +226,70 @@ function particularVideoHandler(req, res) {
 }
 
 
+// function videoUpdateHandler(req, res, next) {
+//   authenticate.auth(req, res, function(status) {
+//     //console.log("status" + status);
+//     if (status) {
+//       var data = {
+//         title: req.body.title,
+//         description: req.body.description,
+//         author: req.body.author,
+//         duration: req.body.duration,
+//         file: process.env['USER_CDN_ADDRESS']+"/"+req.body.file,
+//         //uploadedat: req.body.uploadedat,
+//         ispublic: req.body.ispublic
+//       }
+// //console.log(data);
+//       var whereObj = {
+//         id: req.params.id
+//       }
+//       //console.log("data.ispublic"+data.ispublic)
+//       if (!(data.title && data.description && data.author&& data.duration )) {
+//         res.send({
+//           error: true,
+//           reason: "All fields not filled"
+//         });
+//       } else {
+//         sql.findOne(sql.video, whereObj, function(obj) {
+//           if (!(obj.data.id)) {
+//             res.send({
+//               error: true,
+//               response: "Video does not exist"
+//             })
+//           } else {
+//             // var filePath = 'uploads/'+obj.data.file;
+//             // fs.unlinkSync(filePath);
+//             if(obj.data.imageUrl != null){
+//               var filePath = obj.data.imageUrl;
+//               fs.unlinkSync(filePath);
+//               data = {
+//                 title: req.body.title,
+//                 description: req.body.description,
+//                 author: req.body.author,
+//                 duration: req.body.duration,
+//                 file: req.body.file,
+//                 imageUrl:req.body.imageUrl,
+//                 //uploadedat: req.body.uploadedat,
+//                 ispublic: req.body.ispublic
+//               }
+//             }
+//             sql.update(sql.video, data, whereObj, function(obj) {
+//               res.send({
+//                 error: false,
+//                 response: "Updated successfully"
+//               });
+//             });
+//           }
+//         });
+//       }
+//     } else {
+//       res.send({
+//         error: 0
+//       });
+//     }
+//   })
+// }
+
 function videoUpdateHandler(req, res, next) {
   authenticate.auth(req, res, function(status) {
     //console.log("status" + status);
@@ -235,7 +299,7 @@ function videoUpdateHandler(req, res, next) {
         description: req.body.description,
         author: req.body.author,
         duration: req.body.duration,
-        file: process.env['USER_CDN_ADDRESS']+"/"+req.body.file,
+        file: req.body.file,
         //uploadedat: req.body.uploadedat,
         ispublic: req.body.ispublic
       }
@@ -259,8 +323,8 @@ function videoUpdateHandler(req, res, next) {
           } else {
             // var filePath = 'uploads/'+obj.data.file;
             // fs.unlinkSync(filePath);
-            if(obj.data.imageUrl != null){
-              var filePath = obj.data.imageUrl;
+            if(req.body.imageUrl != null){
+              var filePath = 'videoUploads/'+obj.data.imageUrl;
               fs.unlinkSync(filePath);
               data = {
                 title: req.body.title,
@@ -268,9 +332,9 @@ function videoUpdateHandler(req, res, next) {
                 author: req.body.author,
                 duration: req.body.duration,
                 file: req.body.file,
-                imageUrl:req.body.imageUrl,
                 //uploadedat: req.body.uploadedat,
-                ispublic: req.body.ispublic
+                ispublic: req.body.ispublic,
+                imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
               }
             }
             sql.update(sql.video, data, whereObj, function(obj) {
@@ -307,10 +371,10 @@ function videoDeleteHandler(req, res, next) {
           })
         } else {
           //console.log(obj.data.file);
-          var filePath = 'uploads/'+obj.data.file.substring(obj.data.file.lastIndexOf('/')+1);
+          var filePath = 'uploads/'+obj.data.file;
           console.log(filePath);
           fs.unlinkSync(filePath);
-          var thumbPath = 'videoUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);;
+          var thumbPath = 'videoUploads/'+obj.data.imageUrl;
 ;
           fs.unlinkSync(thumbPath);
           sql.delete(sql.video, whereobj, function response(obj) {

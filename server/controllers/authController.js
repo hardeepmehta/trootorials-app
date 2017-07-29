@@ -31,7 +31,7 @@ function signupUserHandler(req, res) {
         mobile: req.body.mobile,
         email: req.body.email,
         password: encryptService.encrypt(req.body.password),
-        level: 0
+        level: 2
       }
 
       if (!(data.name && data.mobile && data.email && data.password)) {
@@ -72,8 +72,6 @@ function signupUserHandler(req, res) {
 
 function loginHandler(req, res, next) {
   // console.log("req.body" + req.body);
-
-
   var whereObj = {
     email: req.body.email
   }
