@@ -84,14 +84,10 @@ function getCourseHandler(req, res, next) {
             reason: "No data found"
           });
         else {
-        //  arr = obj.data
-        //  console.log("MY CONSOLE" + arr)
-        //  arr.forEach(function(data){
-        //    data.levelText = "Beginner"
-        //    });
-        obj.data.forEach(function(el){
-          el.levelText = "Beginner"
-        })
+            obj.data.forEach(function(el){
+              el.dataValues.levelText = levelText[ el.dataValues.level ];
+            })
+
             res.send({
               error: false,
               data : obj.data   //arr
