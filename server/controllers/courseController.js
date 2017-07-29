@@ -7,6 +7,14 @@ os = require('os'),
 formidable = require('formidable');
 var fs = require('fs');
 
+
+var levelText = {
+  1: 'Beginner',
+  2: 'Average',
+  3: 'Advance',
+  4: 'Super Advance'
+}
+
 module.exports = function(app, passport) {
   // Add course
   app.post('/api/add-course/?', addCourseHandler); //checked
@@ -36,7 +44,6 @@ function uploadHandler ( req , res ) {
   form.parse(req);
 
   form.uploadDir ='courseUploads/'
-  // os.tmpdir();
 
   form
     .on('field', function(field, value) {
@@ -57,7 +64,6 @@ function uploadHandler ( req , res ) {
       // console.log("filess "+file)
       // res.end('received files:\n\n '+util.inspect(files.data));
       res.end(JSON.stringify(files));
-
     });
 }
 
@@ -78,7 +84,18 @@ function getCourseHandler(req, res, next) {
             reason: "No data found"
           });
         else {
-          res.send(obj);
+        //  arr = obj.data
+        //  console.log("MY CONSOLE" + arr)
+        //  arr.forEach(function(data){
+        //    data.levelText = "Beginner"
+        //    });
+        obj.data.forEach(function(el){
+          el.levelText = "Beginner"
+        })
+            res.send({
+              error: false,
+              data : obj.data   //arr
+            });
         }
       });
     } else {
@@ -96,17 +113,20 @@ function addCourseHandler(req, res, next) {
     if (status) {
       var level = ''
       if(req.body.level == null){
-        level = "beginner"
+        level = "1"
+        leveltext = levelText[1]
       }
       else {
         level = req.body.level
+        leveltext = levelText[parseInt(level)]
       }
       var data = {
         title: req.body.title,
         description: req.body.description,
         duration: req.body.duration,
         imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
-        level: level
+        level: level,
+        levelText: levelText[parseInt(level)]
       }
       if (!(data.title && data.description && data.duration )) {
         res.send({
@@ -128,7 +148,17 @@ function addCourseHandler(req, res, next) {
               res.send({
                 error: false,
                 response: "course created successfully",
-                data: obj
+                data:{
+                  id: obj.data.id,
+                  title: obj.data.title,
+                  description:obj.data.description,
+                  duration:obj.data.duration,
+                  imageUrl:obj.data.imageUrl,
+                  level:obj.data.level,
+                  levelText:levelText[parseInt(obj.data.level)],
+                  createdAt:obj.data.createdAt,
+                  updatedAt:obj.data.updatedAt
+                }
               });
             })
           }
@@ -149,13 +179,12 @@ function CourseUpdateHandler(req, res, next) {
       var data = {
         title: req.body.title,
         description: req.body.description,
-        duration: req.body.duration
+        duration: req.body.duration,
+        level: req.body.level
       }
-
       var whereObj = {
         id: req.params.id
       }
-
       if (!req.params.id) {
         res.send({
           error: true,
@@ -182,7 +211,8 @@ function CourseUpdateHandler(req, res, next) {
                 title: req.body.title,
                 description: req.body.description,
                 duration: req.body.duration,
-                imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl
+                imageUrl: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
+                level: req.body.level
               }
             }
             sql.update(sql.courses, data, whereObj, function(obj) {
@@ -223,9 +253,11 @@ function CourseDeleteHandler(req, res, next) {
           })
         } else {
           // console.log("obj"+JSON.stringify(obj))
-          var filePath = 'courseUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);;
-          console.log(filePath)
-          fs.unlinkSync(filePath);
+          if(obj.data.imageUrl != null){
+            var filePath = 'courseUploads/'+obj.data.imageUrl.substring(obj.data.imageUrl.lastIndexOf('/')+1);;
+            console.log(filePath)
+            fs.unlinkSync(filePath);
+          }
           sql.delete(sql.courses, whereobj, function(obj) {
             res.send({
               error: false,
@@ -267,7 +299,17 @@ function getCourseUpdateHandler(req, res, next) {
           } else {
             res.send({
               error: false,
-              response: obj
+              response:{
+                id: obj.data.id,
+                title: obj.data.title,
+                description:obj.data.description,
+                duration:obj.data.duration,
+                imageUrl:obj.data.imageUrl,
+                level:obj.data.level,
+                levelText:levelText[parseInt(obj.data.level)],
+                createdAt:obj.data.createdAt,
+                updatedAt:obj.data.updatedAt
+              }
             });
           }
         });
