@@ -269,7 +269,7 @@ function updateHandler(req, res) {
                 name: req.body.name,
                 mobile: req.body.mobile,
                 email: req.body.email,
-                imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
+                imageUrl: req.body.imageUrl,
                 level: req.body.level
               }
             }

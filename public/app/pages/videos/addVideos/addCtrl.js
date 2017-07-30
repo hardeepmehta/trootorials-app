@@ -106,9 +106,9 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
       if (res.data.error = "false") {
 
         if (thumbnail) { //check if from is valid
-            console.log(thumbnail)
+          //  console.log(thumbnail)
              $scope.upload(thumbnail,function(url){
-              console.log("URL "+url)
+          //    console.log("URL "+url)
 
         $scope.var = {
           title: f.title,
@@ -127,7 +127,7 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
 })}
 
   $scope.upload = function(file,cb) {
-    console.log(file)
+  //  console.log(file)
     Upload.upload({
         url: '/api/video/upload', //webAPI exposed to upload the file
         data:{file:file} //pass file as data, should be user ng-model
@@ -135,7 +135,7 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
             if(resp.data[0][1]['path']){
             // return resp.data[0][1]['path']
             $scope.fileUrl = resp.data[0][1]['path']
-            console.log($scope.fileUrl)
+          //  console.log($scope.fileUrl)
             cb($scope.fileUrl);
           }
             else {

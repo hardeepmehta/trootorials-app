@@ -67,11 +67,14 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
           if (bool == 0) {
             $scope.courses = selectedItem;
           } else if (bool == 1) {
-            console.log($scope.courses)
+            //console.log($scope.courses)
             if($scope.courses != undefined)
               $scope.courses.push(selectedItem)
             else {
-              $scope.courses=selectedItem
+
+              var arr = [];
+              arr[0] = selectedItem;
+              $scope.courses = arr;
             }
           }
           setTimeout(function() {
