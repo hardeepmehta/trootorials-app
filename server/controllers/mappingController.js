@@ -12,13 +12,19 @@ module.exports = function(app) {
   //Get
   app.get('/api/get-mapping/:id/?', particularMappingHandler);
 
-  app.get('/api/videos/:courseId/?', courseMappingHandler)
+  app.get('/api/videos/:courseId/?', courseMappingHandler);
+
+  app.post('/api/deletecourse-mapping/:cid/?', deleteMappingHandler);
+
+  app.post('/api/deletevideo-mapping/:vid/?', deleteMappingHandlerVideo);
+
+  app.post('/api/edit-mapping/:vid/?', editMappingHandler);
 }
 
 
 function particularMappingHandler(req, res) {
       var whereObj = {
-        courseid: req.params.id
+        videoid: req.params.id
       }
       if (!req.params.id) {
         res.send({
@@ -80,4 +86,80 @@ function courseMappingHandler( req, res ) {
     });
   }
 })
+}
+function deleteMappingHandler(req, res) {
+  var whereObj ={
+      courseid: req.params.cid
+  }
+  authenticate.auth(req, res, function(status) {
+    //console.log("status" + status);
+    if(status) {
+      sql.delete(sql.mapvideo, whereObj, function(obj) {
+        res.send({
+          error: false,
+          response: "mapping deleted successfully!!"
+        });
+      })
+    }
+    else {
+      res.send({
+        error: 0
+      });
+
+    }
+  })
+}
+function deleteMappingHandlerVideo(req, res) {
+  var whereObj ={
+      videoid: req.params.vid
+  }
+  authenticate.auth(req, res, function(status) {
+    //console.log("status" + status);
+    if(status) {
+      sql.delete(sql.mapvideo, whereObj, function(obj) {
+        res.send({
+          error: false,
+          response: "mapping deleted successfully!!"
+        });
+      })
+    }
+    else {
+      res.send({
+        error: 0
+      });
+
+    }
+  })
+}
+function editMappingHandler(req, res) {
+  authenticate.auth(req, res, function(status) {
+    if(status) {
+      var whereObj ={
+          videoid: req.params.vid
+      }
+      var newdata = {
+        courseid: req.body.courseid,
+        videoid: req.params.vid
+      }
+      if (!req.params.vid) {
+        res.send({
+          error: true,
+          reason: "Insufficient parameters"
+        });
+      }
+      sql.update(sql.mapvideo, newdata, whereObj, function(obj) {
+        //console.log(whereObj);
+        res.send({
+          error: false,
+          response: "Updated successfully"
+        });
+      });
+    }
+    else {
+        res.send({
+          error: 0
+        });
+      }
+
+  })
 }

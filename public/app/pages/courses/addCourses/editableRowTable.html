@@ -12,9 +12,11 @@
     <td>Title</td>
     <td>Description</td>
     <td>Duration</td>
+    <td>Level</td>
     <td>Image URL</td>
     <td>Actions</td>
   </tr>
+
   <tr ng-repeat="course in courses track by $index" class="editable-row">
     <td>
       {{course.id}}
@@ -34,6 +36,12 @@
     <td>
       <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
           {{ course.duration || 'empty' }}
+      </span>
+    </td>
+
+    <td>
+      <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
+          {{ course.level || 'empty' }}
       </span>
     </td>
 
