@@ -24,15 +24,14 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
     $scope.users = [];
     $scope.display = true;
-    // $scope.form = [];
-    //$scope.bool = null;
+
     $scope.id = 0;
     $scope.redirect = function() {
       $window.location.href = "#/videos/addVideos";
     }
     $http.get("/api/all-videos?token=" + token).then(function(response) {
       if (response.data.error === 0) {
-        ////console.log("got 0");
+
         localStorageService.remove('TOKEN')
         $window.location.href = '/index.html';
       }
@@ -42,11 +41,11 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
         $scope.$apply();
       }, 2000);
       $scope.users = response.data.data;
-      ////console.log(response.data.data);
+
     });
 
     $scope.open = function(e, id, page, size, addOrEdit) {
-      // $scope.bool = bool
+
       $scope.id = id
       $scope.display = true;
       var modalInstance = $uibModal.open({
@@ -55,7 +54,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
         controller: 'ModalInstanceCtrl1',
         controllerAs: '$scope',
         size: size,
-        // appendTo: parentElem,
+
         resolve: {
           users: function() {
             return $scope.users;
@@ -72,7 +71,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
       });
 
       modalInstance.result.then(function(selectedItem) {
-        // ////console.log("selectedItem"+JSON.stringify(selectedItem.data));
+
         $scope.loading = true;
         setTimeout(function() {
           $scope.loading = false;
@@ -80,10 +79,10 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
         }, 2000);
 
         $scope.users = selectedItem;
-        // $scope.users.push(selectedItem.data)
+
 
       }, function() {
-        // $log.info('Modal dismissed at: ' + new Date());
+
       });
     };
 
@@ -102,7 +101,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
           });
         });
-        // $window.location.reload()
+
       } else {}
     }
     $scope.openProgressDialog = baProgressModal.open;
@@ -122,7 +121,7 @@ myApp.directive('fileModel', ['$parse', function($parse) {
       element.bind('change', function() {
         scope.$apply(function() {
           modelSetter(scope, element[0].files[0]);
-          ////console.log(element[0].files[0].name);
+
         });
       });
     }
@@ -147,8 +146,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
                   if (e.lengthComputable) {
                      t.progressBar = (e.loaded / e.total) * 100;
                      t.view = true;
-                    //  var progressCounter = $scope.progressBar;
-                     ////console.log(t.progressBar);
+
                   }
         }
     },
@@ -157,7 +155,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
         }
       })
       .success(function(res) {
-        // alert('successfully uploaded');
+
         return res;
       })
       .error(function() {});
@@ -165,14 +163,12 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
 
 
   this.submit = function(f, uploadUrl,t,courseid) {
-    //console.log(courseid);
+
     var token = localStorageService.get('TOKEN')
     token = token.substring(1, token.length - 1);
 
-    // console.log("token"+token)
-
     t.error = "";
-    // console.log(f);
+
     $http({
         method: 'POST',
         format: 'json',
@@ -180,19 +176,15 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
         data: JSON.stringify(f)
       })
       .then(function(res) {
-        //////console.log("hit " + JSON.stringify(success));
-        ////console.log(success);
-        // alert('successfully updated');
-        // console.log(res.data)
 
         if(res.data.error == true){
-          // console.log(res.data.error)
+
           t.error=res.data.reason;
         }
         else{
           if(t.add == true)
           {
-            // console.log("response for edit"+JSON.stringify(res))
+
           $http({
               method: 'POST',
               format: 'json',
@@ -203,9 +195,9 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
               })
             })
             .then(function(res) {
-            // console.log(res)
+        
           },function(error){
-            // console.log(error)
+
           });}
         t.success = true;
         t.f ={};
@@ -214,50 +206,43 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
         $window.location.href = "#/videos/allVideos"
       },3000);
     }
-        // $window.location.reload()
+
       }
-      // , function(error) {
-        //////console.log("not hit " + JSON.stringify(error));
-      // }
+
     );
   }
   this.getVideo = function(id,m,token){
     $http.get("/api/get-video/" + id + "?token=" + token).then(function(response) {
-        //  console.log("other "+ JSON.stringify(response));
-        ////console.log(response.data.response.data);
+
       m.form = response.data.response.data;
       m.u = response.data.response.data.ispublic;
       m.k = response.data.response.data.file;
-      // m.form.course =
-      ////console.log(response.data.response.data.file);
-      // console.log("form video"+JSON.stringify(m.form))
+
       $http.get("/api/get-mapping/" + id + "?token=" + token).then(function(response) {
-      // console.log("response mapping"+ JSON.stringify(response))
-          // console.log("form before"+JSON.stringify(m.form))
+
           if(response.data.response.data[0] == undefined)
           m.form.course = 0
           else
           m.form.course = response.data.response.data[0].courseid;
-          // console.log("form after"+JSON.stringify(m.form))
+
       })
     })
 
   }
   this.all = function(token){
     return $http.get("/api/all-videos?token=" + token);
-    ////console.log(token);
+
   }
 
 }]);
 
-myApp.controller('ModalInstanceCtrl1', ['$scope', '$uibModalInstance',   'id', '$timeout', 'fileUpload','token','Upload',function ($scope, $uibModalInstance,id,$timeout,fileUpload,token,Upload) {
+myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',   'id', '$timeout', 'fileUpload','token','Upload',function ($http,$scope, $uibModalInstance,id,$timeout,fileUpload,token,Upload) {
   $scope.form = {};
   $scope.test = '';
   fileUpload.getVideo(id,$scope,token);
 
   $scope.updateVideo = function() {
-    // console.log($scope.form.file);
-    // console.log($scope.k);
+
     if ($scope.form.file!=$scope.k) {
          $scope.upload($scope.form.file,function(url){
            if($scope.myFile!=undefined){
@@ -266,7 +251,6 @@ myApp.controller('ModalInstanceCtrl1', ['$scope', '$uibModalInstance',   'id', '
            var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
            promise.then(function(res){
              if(res.data.error = "false"){
-               ////console.log('working code');
 
                $scope.var = {
                  title: $scope.form.title,
@@ -277,12 +261,35 @@ myApp.controller('ModalInstanceCtrl1', ['$scope', '$uibModalInstance',   'id', '
                   file: q,
                   imageUrl:url
                 }
+                $http.get("/api/get-course/" + id + "?token=" + token).then(function(response) {
+
+
+                  if(response.data.response.id)
+                  $http({
+                      method: 'POST',
+                      format: 'json',
+                      url: '/api/edit-mapping/'+ id + '?token='+token,
+                      data: JSON.stringify({
+                        courseid: parseInt($scope.form.course),
+                        videoid : id
+                      })
+                    })
+                    .then(function(res) {
+
+                  },function(error){
+
+                  });
+                });
+
+
+
+
 
 
                 var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
                var k = fileUpload.submit($scope.var, uploadUrl,$scope);
                fileUpload.all(token).then(function(response) {
-                     //  $scope.usersupdated = response.data.data;
+
                        $uibModalInstance.close(response.data.data);
                      });
                    }
@@ -303,7 +310,7 @@ myApp.controller('ModalInstanceCtrl1', ['$scope', '$uibModalInstance',   'id', '
            var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
            var i = fileUpload.submit($scope.var, uploadUrl,$scope);
            fileUpload.all(token).then(function(response) {
-            //  $scope.usersupdated = response.data.data;
+
               $uibModalInstance.close(response.data.data);
             });
            }
@@ -317,7 +324,6 @@ else{
   var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
   promise.then(function(res){
     if(res.data.error = "false"){
-      ////console.log('working code');
 
       $scope.var = {
         title: $scope.form.title,
@@ -326,14 +332,14 @@ else{
         duration: $scope.form.duration,
         ispublic: $scope.form.public == undefined ? $scope.u : $scope.form.public,
          file: q,
-        //  imageUrl:url
+
        }
 
 
        var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
       var k = fileUpload.submit($scope.var, uploadUrl,$scope);
       fileUpload.all(token).then(function(response) {
-            //  $scope.usersupdated = response.data.data;
+
               $uibModalInstance.close(response.data.data);
             });
           }
@@ -353,23 +359,23 @@ else{
   var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
   var i = fileUpload.submit($scope.var, uploadUrl,$scope);
   fileUpload.all(token).then(function(response) {
-   //  $scope.usersupdated = response.data.data;
+
      $uibModalInstance.close(response.data.data);
    });
   }
 }
 }
 $scope.upload = function(file,cb) {
-// console.log(file)
+
 Upload.upload({
   url: '/api/video/upload', //webAPI exposed to upload the file
   data:{file:file} //pass file as data, should be user ng-model
 }).then(function (resp) {
-  // console.log(resp.data);
+
       if(resp.data[0][1]['path']){
-      // return resp.data[0][1]['path']
+
       $scope.fileUrl = resp.data[0][1]['path']
-      // console.log($scope.fileUrl)
+
       cb($scope.fileUrl);
     }
     else {
