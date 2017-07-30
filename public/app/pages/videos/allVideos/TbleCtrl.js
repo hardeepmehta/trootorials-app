@@ -14,7 +14,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
   function($rootScope, $scope, $filter, editableOptions, editableThemes, $window, $http, $uibModal,
     baProgressModal, localStorageService, $state, $rootScope) {
-    ////console.log(localStorageService.get('TOKEN'));
+
 
     var token = localStorageService.get('TOKEN')
     if (token == null) {
@@ -105,13 +105,8 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
         // $window.location.reload()
       } else {}
     }
-
-
-
     $scope.openProgressDialog = baProgressModal.open;
-    // editableOptions.theme = 'bs3';
-    // editableThemes['bs3'].submitTpl = '<button type="submit" class="btn btn-primary btn-with-icon"><i class="ion-checkmark-round"></i></button>';
-    // editableThemes['bs3'].cancelTpl = '<button type="button" ng-click="$form.$cancel()" class="btn btn-default btn-with-icon"><i class="ion-close-round"></i></button>';
+
   }
 ])
 
@@ -174,9 +169,10 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
     var token = localStorageService.get('TOKEN')
     token = token.substring(1, token.length - 1);
 
-    console.log("token"+token)
+    // console.log("token"+token)
 
-    t.error = ""
+    t.error = "";
+    // console.log(f);
     $http({
         method: 'POST',
         format: 'json',
@@ -195,7 +191,8 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
         }
         else{
           if(t.add == true)
-          {console.log("response for edit"+JSON.stringify(res))
+          {
+            // console.log("response for edit"+JSON.stringify(res))
           $http({
               method: 'POST',
               format: 'json',
@@ -206,9 +203,9 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
               })
             })
             .then(function(res) {
-            console.log(res)
+            // console.log(res)
           },function(error){
-            console.log(error)
+            // console.log(error)
           });}
         t.success = true;
         t.f ={};
@@ -233,15 +230,15 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
       m.k = response.data.response.data.file;
       // m.form.course =
       ////console.log(response.data.response.data.file);
-      console.log("form video"+JSON.stringify(m.form))
+      // console.log("form video"+JSON.stringify(m.form))
       $http.get("/api/get-mapping/" + id + "?token=" + token).then(function(response) {
-      console.log("response mapping"+ JSON.stringify(response))
-          console.log("form before"+JSON.stringify(m.form))
+      // console.log("response mapping"+ JSON.stringify(response))
+          // console.log("form before"+JSON.stringify(m.form))
           if(response.data.response.data[0] == undefined)
           m.form.course = 0
           else
           m.form.course = response.data.response.data[0].courseid;
-          console.log("form after"+JSON.stringify(m.form))
+          // console.log("form after"+JSON.stringify(m.form))
       })
     })
 
@@ -256,196 +253,129 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
 myApp.controller('ModalInstanceCtrl1', ['$scope', '$uibModalInstance',   'id', '$timeout', 'fileUpload','token','Upload',function ($scope, $uibModalInstance,id,$timeout,fileUpload,token,Upload) {
   $scope.form = {};
   $scope.test = '';
-  // $scope.b = bool;
-  // ////console.log($scope.b);
-  // $scope.display = true;
-
-  ////console.log("id value " + id)
-  ////console.log($scope.k);
-  ////console.log(k);
-  ////console.log($scope.myFile);
   fileUpload.getVideo(id,$scope,token);
 
-//   $scope.updateVideo = function() {
-//     if($scope.myFile!=undefined){
-//
-//       if($scope.form.file){
-//         console.log($scope.form.file)
-//          $scope.upload($scope.form.file,function(url){
-//           console.log("URL "+url)
-//
-//       var uploadUrl = "/upload?token=" + token;
-//       var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
-//       promise.then(function(res){
-//         if(res.data.error = "false"){
-//           $scope.var = {
-//             title: $scope.form.title,
-//             description: $scope.form.description,
-//             author: $scope.form.author,
-//             duration: $scope.form.duration,
-//             imageUrl:url,
-//             ispublic: $scope.form.public == undefined ? $scope.test : $scope.form.public,
-//              file: q
-//            }
-//            var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
-//           var k = fileUpload.submit($scope.var, uploadUrl,$scope);
-//           fileUpload.all(token).then(function(response) {
-//                   console.log("response of edit "+response)
-//                   $uibModalInstance.close(response.data.data);
-//                 },function(error){
-//                   console.log("Not hit edit "+error)
-//                 });
-//               }
-//         })
-//       })
-//     }
-//       else{
-//         if($scope.form.file){
-//           console.log($scope.form.file)
-//            $scope.upload($scope.form.file,function(url){
-//             console.log("URL "+url)
-//           var file = $scope.myFile;
-//         var uploadUrl = "/upload?token=" + token;
-//         var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
-//         promise.then(function(res){
-//           if(res.data.error = "false"){
-//             $scope.var = {
-//               title: $scope.form.title,
-//               description: $scope.form.description,
-//               author: $scope.form.author,
-//               duration: $scope.form.duration,
-//               imageUrl: url,
-//               ispublic: $scope.form.public == undefined ? $scope.test : $scope.form.public,
-//                file: q
-//              }
-//              var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
-//             var k = fileUpload.submit($scope.var, uploadUrl,$scope);
-//             fileUpload.all(token).then(function(response) {
-//                     $uibModalInstance.close(response.data.data);
-//                   });
-//                 }
-//           })
-//         })
-//       }
-//         else {
-//           var file = $scope.myFile;
-//         var uploadUrl = "/upload?token=" + token;
-//         var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
-//         promise.then(function(res){
-//           if(res.data.error = "false"){
-//             $scope.var = {
-//               title: $scope.form.title,
-//               description: $scope.form.description,
-//               author: $scope.form.author,
-//               duration: $scope.form.duration,
-//               ispublic: $scope.form.public == undefined ? $scope.test : $scope.form.public,
-//                file: q
-//              }
-//              var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
-//             var k = fileUpload.submit($scope.var, uploadUrl,$scope);
-//             fileUpload.all(token).then(function(response) {
-//                     $uibModalInstance.close(response.data.data);
-//                   });
-//                 }
-//           })
-//         }
-//
-//       }
-//     }
-//     else{
-//     $scope.var = {
-//       title: $scope.form.title,
-//       description: $scope.form.description,
-//       author: $scope.form.author,
-//       duration: $scope.form.duration,
-//       ispublic: $scope.form.public
-//      }
-//     var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
-//    var i = fileUpload.submit($scope.var, uploadUrl,$scope);
-//    fileUpload.all(token).then(function(response) {
-//        $uibModalInstance.close(response.data.data);
-//      });
-//   }
-// }
+  $scope.updateVideo = function() {
+    // console.log($scope.form.file);
+    // console.log($scope.k);
+    if ($scope.form.file!=$scope.k) {
+         $scope.upload($scope.form.file,function(url){
+           if($scope.myFile!=undefined){
+             var file = $scope.myFile;
+           var uploadUrl = "/upload?token=" + token;
+           var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
+           promise.then(function(res){
+             if(res.data.error = "false"){
+               ////console.log('working code');
 
-$scope.updateVideo = function() {
-    ////console.log($scope.myFile);
-    if($scope.myFile!=undefined){
-      var file = $scope.myFile;
-    var uploadUrl = "/upload?token=" + token;
-    var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
-    promise.then(function(res){
-      if(res.data.error = "false"){
-        ////console.log('working code');
+               $scope.var = {
+                 title: $scope.form.title,
+                 description: $scope.form.description,
+                 author: $scope.form.author,
+                 duration: $scope.form.duration,
+                 ispublic: $scope.form.public == undefined ? $scope.u : $scope.form.public,
+                  file: q,
+                  imageUrl:url
+                }
 
-        $scope.var = {
-          title: $scope.form.title,
-          description: $scope.form.description,
-          author: $scope.form.author,
-          duration: $scope.form.duration,
-          ispublic: $scope.form.public == undefined ? $scope.test : $scope.form.public,
-           file: q,
-          //  imageUrl:url
-         }
 
-      //  else{
-        //  $scope.var = {
-        //    title: $scope.form.title,
-        //    description: $scope.form.description,
-        //    author: $scope.form.author,
-        //    duration: $scope.form.duration,
-        //    ispublic: $scope.form.public == undefined ? $scope.test : $scope.form.public,
-        //     file: q
-        //   }
-      //  }
-        //  console.log($scope.form.public);
-         ////console.log(u);
-         var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
-        var k = fileUpload.submit($scope.var, uploadUrl,$scope);
-        fileUpload.all(token).then(function(response) {
-              //  $scope.usersupdated = response.data.data;
-                $uibModalInstance.close(response.data.data);
-              });
+                var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
+               var k = fileUpload.submit($scope.var, uploadUrl,$scope);
+               fileUpload.all(token).then(function(response) {
+                     //  $scope.usersupdated = response.data.data;
+                       $uibModalInstance.close(response.data.data);
+                     });
+                   }
+                   else{
+
+               }
+             })
+           }
+           else{
+           $scope.var = {
+             title: $scope.form.title,
+             description: $scope.form.description,
+             author: $scope.form.author,
+             duration: $scope.form.duration,
+             ispublic: $scope.form.public == undefined ? $scope.u : $scope.form.public,
+             imageUrl:url
             }
-            else{
-        ////console.log('error in  uploading');
-        }
-      })
-    }
-    else{
-    // alert('working');
-    $scope.var = {
-      title: $scope.form.title,
-      description: $scope.form.description,
-      author: $scope.form.author,
-      duration: $scope.form.duration,
-      ispublic: $scope.form.public
-     }
-    var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
-   var i = fileUpload.submit($scope.var, uploadUrl,$scope);
-   fileUpload.all(token).then(function(response) {
-     //  $scope.usersupdated = response.data.data;
-       $uibModalInstance.close(response.data.data);
-     });
+           var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
+           var i = fileUpload.submit($scope.var, uploadUrl,$scope);
+           fileUpload.all(token).then(function(response) {
+            //  $scope.usersupdated = response.data.data;
+              $uibModalInstance.close(response.data.data);
+            });
+           }
+  })
+
+}
+else{
+  if($scope.myFile!=undefined){
+    var file = $scope.myFile;
+  var uploadUrl = "/upload?token=" + token;
+  var promise = fileUpload.uploadFileToUrl(file, uploadUrl,$scope);
+  promise.then(function(res){
+    if(res.data.error = "false"){
+      ////console.log('working code');
+
+      $scope.var = {
+        title: $scope.form.title,
+        description: $scope.form.description,
+        author: $scope.form.author,
+        duration: $scope.form.duration,
+        ispublic: $scope.form.public == undefined ? $scope.u : $scope.form.public,
+         file: q,
+        //  imageUrl:url
+       }
+
+
+       var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
+      var k = fileUpload.submit($scope.var, uploadUrl,$scope);
+      fileUpload.all(token).then(function(response) {
+            //  $scope.usersupdated = response.data.data;
+              $uibModalInstance.close(response.data.data);
+            });
+          }
+          else{
+
+      }
+    })
+  }
+  else{
+  $scope.var = {
+    title: $scope.form.title,
+    description: $scope.form.description,
+    author: $scope.form.author,
+    duration: $scope.form.duration,
+    ispublic: $scope.form.public == undefined ? $scope.u : $scope.form.public,
+   }
+  var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
+  var i = fileUpload.submit($scope.var, uploadUrl,$scope);
+  fileUpload.all(token).then(function(response) {
+   //  $scope.usersupdated = response.data.data;
+     $uibModalInstance.close(response.data.data);
+   });
   }
 }
-
+}
 $scope.upload = function(file,cb) {
-  console.log(file)
-  Upload.upload({
-      url: '/api/video/upload', //webAPI exposed to upload the file
-      data:{file:file} //pass file as data, should be user ng-model
-  }).then(function (resp) {
-          if(resp.data[0][1]['path']){
-          // return resp.data[0][1]['path']
-          $scope.fileUrl = resp.data[0][1]['path']
-          console.log($scope.fileUrl)
-          cb($scope.fileUrl);
-        }
-        else {
-            $scope.error = "Error uploading files"
-          }
-      })
-  }
+// console.log(file)
+Upload.upload({
+  url: '/api/video/upload', //webAPI exposed to upload the file
+  data:{file:file} //pass file as data, should be user ng-model
+}).then(function (resp) {
+  // console.log(resp.data);
+      if(resp.data[0][1]['path']){
+      // return resp.data[0][1]['path']
+      $scope.fileUrl = resp.data[0][1]['path']
+      // console.log($scope.fileUrl)
+      cb($scope.fileUrl);
+    }
+    else {
+        $scope.error = "Error uploading files"
+      }
+  })
+}
 
 }]);
