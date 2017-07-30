@@ -19,7 +19,7 @@ myApp.directive('fileModel', ['$parse', function($parse) {
       element.bind('change', function() {
         scope.$apply(function() {
           modelSetter(scope, element[0].files[0]);
-          //console.log(element[0].files[0].name);
+
         });
       });
     }
@@ -33,9 +33,6 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
       uuid = generateUUID();
     filename = filename + uuid;
     q = filename;
-    //      //console.log(filename,file);
-    // file['name'] = filename
-    // //console.log(file.name);
     fd.append('file', file, filename);
     return $http.post(uploadUrl, fd, {
         transformRequest: angular.identity,
@@ -44,8 +41,6 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
             if (e.lengthComputable) {
               t.progressBar = (e.loaded / e.total) * 100;
               t.view = true;
-              //  var progressCounter = $scope.progressBar;
-              //console.log(t.progressBar);
             }
           }
         },
@@ -54,7 +49,7 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
         }
       })
       .success(function(res) {
-        // alert('successfully uploaded');
+
         return res;
       })
       .error(function() {});
@@ -68,18 +63,16 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
         data: JSON.stringify(f)
       })
       .then(function(success) {
-        ////console.log("hit " + JSON.stringify(success));
-        //console.log(success);
-        // alert('successfully updated');
+
         t.success = true;
         t.f = {};
 
         $timeout(function() {
           $window.location.href = "#/videos/allVideos"
         }, 3000);
-        // $window.location.reload()
+
       }, function(error) {
-        ////console.log("not hit " + JSON.stringify(error));
+
       });
   }
 }]);
@@ -87,7 +80,7 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
 
 myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageService','Upload',
 function($scope, fileUpload, $window, localStorageService ,Upload) {
-  //console.log(localStorageService.get('TOKEN'));
+
 
   var token = localStorageService.get('TOKEN')
   if (token == null) {
@@ -103,16 +96,15 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
   $scope.uploadFile = function(f) {
     // $scope.add = false;
     var file = $scope.myFile;
-    //console.log(file.name, $scope.myFile.name);
-    //console.log('file is ');
+
     var thumbnail = $scope.form.file
-    // console.dir(file);
+
     var uploadUrl = "/upload?token=" + token;
     var promise = fileUpload.uploadFileToUrl(file, uploadUrl, $scope);
     promise.then(function(res) {
-      // $scope.progressBar = m;
+
       if (res.data.error = "false") {
-        //console.log('working code');
+
         if (thumbnail) { //check if from is valid
             console.log(thumbnail)
              $scope.upload(thumbnail,function(url){
