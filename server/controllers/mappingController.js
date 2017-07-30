@@ -15,7 +15,10 @@ module.exports = function(app) {
   app.get('/api/videos/:courseId/?', courseMappingHandler);
 
   app.post('/api/deletecourse-mapping/:cid/?', deleteMappingHandler);
+
   app.post('/api/deletevideo-mapping/:vid/?', deleteMappingHandlerVideo);
+
+  app.post('/api/edit-mapping/:vid/?', editMappingHandler);
 }
 
 
@@ -126,5 +129,37 @@ function deleteMappingHandlerVideo(req, res) {
       });
 
     }
+  })
+}
+function editMappingHandler(req, res) {
+  authenticate.auth(req, res, function(status) {
+    if(status) {
+      var whereObj ={
+          videoid: req.params.vid
+      }
+      var newdata = {
+        courseid: req.body.courseid,
+        videoid: req.params.vid
+      }
+      if (!req.params.vid) {
+        res.send({
+          error: true,
+          reason: "Insufficient parameters"
+        });
+      }
+      sql.update(sql.mapvideo, newdata, whereObj, function(obj) {
+        //console.log(whereObj);
+        res.send({
+          error: false,
+          response: "Updated successfully"
+        });
+      });
+    }
+    else {
+        res.send({
+          error: 0
+        });
+      }
+
   })
 }
