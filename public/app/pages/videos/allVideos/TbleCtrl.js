@@ -195,7 +195,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
               })
             })
             .then(function(res) {
-        
+
           },function(error){
 
           });}
@@ -261,29 +261,29 @@ myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',  
                   file: q,
                   imageUrl:url
                 }
-                $http.get("/api/get-course/" + id + "?token=" + token).then(function(response) {
+                $http.get("/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
+                  //console.log(response.data.response.id);
+                  //console.log(parseInt($scope.form.course));
 
-
-                  if(response.data.response.id)
-                  $http({
-                      method: 'POST',
-                      format: 'json',
-                      url: '/api/edit-mapping/'+ id + '?token='+token,
-                      data: JSON.stringify({
-                        courseid: parseInt($scope.form.course),
-                        videoid : id
+                  if(response.data.response.id){
+                    $http({
+                        method: 'POST',
+                        format: 'json',
+                        url: '/api/edit-mapping/'+ id + '?token='+token,
+                        data: JSON.stringify({
+                          courseid: parseInt($scope.form.course),
+                          videoid : id
+                        })
                       })
-                    })
-                    .then(function(res) {
+                      .then(function(res) {
 
-                  },function(error){
+                    },function(error){
 
-                  });
+                    });
+
+                  }
+
                 });
-
-
-
-
 
 
                 var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
@@ -307,6 +307,30 @@ myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',  
              ispublic: $scope.form.public == undefined ? $scope.u : $scope.form.public,
              imageUrl:url
             }
+            $http.get("/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
+              //console.log(response.data.response.id);
+              //console.log(parseInt($scope.form.course));
+
+              if(response.data.response.id){
+                $http({
+                    method: 'POST',
+                    format: 'json',
+                    url: '/api/edit-mapping/'+ id + '?token='+token,
+                    data: JSON.stringify({
+                      courseid: parseInt($scope.form.course),
+                      videoid : id
+                    })
+                  })
+                  .then(function(res) {
+
+                },function(error){
+
+                });
+
+              }
+
+            });
+
            var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
            var i = fileUpload.submit($scope.var, uploadUrl,$scope);
            fileUpload.all(token).then(function(response) {
@@ -334,6 +358,30 @@ else{
          file: q,
 
        }
+       $http.get("/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
+         //console.log(response.data.response.id);
+         //console.log(parseInt($scope.form.course));
+
+         if(response.data.response.id){
+           $http({
+               method: 'POST',
+               format: 'json',
+               url: '/api/edit-mapping/'+ id + '?token='+token,
+               data: JSON.stringify({
+                 courseid: parseInt($scope.form.course),
+                 videoid : id
+               })
+             })
+             .then(function(res) {
+
+           },function(error){
+
+           });
+
+         }
+
+       });
+
 
 
        var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
@@ -356,6 +404,30 @@ else{
     duration: $scope.form.duration,
     ispublic: $scope.form.public == undefined ? $scope.u : $scope.form.public,
    }
+   $http.get("/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
+     //console.log(response.data.response.id);
+     //console.log(parseInt($scope.form.course));
+
+     if(response.data.response.id){
+       $http({
+           method: 'POST',
+           format: 'json',
+           url: '/api/edit-mapping/'+ id + '?token='+token,
+           data: JSON.stringify({
+             courseid: parseInt($scope.form.course),
+             videoid : id
+           })
+         })
+         .then(function(res) {
+
+       },function(error){
+
+       });
+
+     }
+
+   });
+
   var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
   var i = fileUpload.submit($scope.var, uploadUrl,$scope);
   fileUpload.all(token).then(function(response) {
