@@ -68,7 +68,7 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
         t.f = {};
 
         $timeout(function() {
-          $window.location.href = "trootorials-v1/#/videos/allVideos"
+          $window.location.href = "#/videos/allVideos"
         }, 3000);
 
       }, function(error) {
