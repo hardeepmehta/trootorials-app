@@ -15,7 +15,7 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
 
     $scope.id = 0;
 
-    $http.get("/api/all-users?token=" + token).then(function(response) {
+    $http.get("/trootorials-v1/api/all-users?token=" + token).then(function(response) {
       if (response.data.error === 0) {
         // //console.log("got 0");
         localStorageService.remove('TOKEN')
@@ -81,7 +81,7 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
     $scope.removeCourse = function(id, $index) {
       var m = parseInt(id);
       if ($window.confirm("Are you sure you want to delete?") == true) {
-        $http.post("/api/delete-user/" + m + "/" + "?token=" + token).then(function(response) {
+        $http.post("/trootorials-v1/api/delete-user/" + m + "/" + "?token=" + token).then(function(response) {
           $scope.users.splice($index, 1);
         });
       } else {}
@@ -122,7 +122,7 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
 
   //console.log("Bool value " + bool)
   if (bool == 0) {
-    $http.get("/api/get-user/" + id + "/" + "?token=" + token).then(function(response) {
+    $http.get("/trootorials-v1/api/get-user/" + id + "/" + "?token=" + token).then(function(response) {
       // //console.log(response);
       // //console.log(response.data.response.data);
       $scope.form = response.data.response.data;
@@ -148,7 +148,7 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
   $http({
       method: 'POST',
       format: 'json',
-      url: '/api/edit-user/' + m + '/' + '?token=' + token,
+      url: '/trootorials-v1/api/edit-user/' + m + '/' + '?token=' + token,
       data: JSON.stringify({
         name: $scope.form.name,
         mobile: $scope.form.mobile,
@@ -158,7 +158,7 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
       })
     })
     .then(function(success) {
-      $http.get("/api/all-users/?token=" + token).then(function(response) {
+      $http.get("/trootorials-v1/api/all-users/?token=" + token).then(function(response) {
         $uibModalInstance.close(response.data.data);
       });
     }
@@ -170,7 +170,7 @@ else{
   $http({
       method: 'POST',
       format: 'json',
-      url: '/api/edit-user/' + m + '/' + '?token=' + token,
+      url: '/trootorials-v1/api/edit-user/' + m + '/' + '?token=' + token,
       data: JSON.stringify({
         name: $scope.form.name,
         mobile: $scope.form.mobile,
@@ -182,7 +182,7 @@ else{
     .then(function(success) {
       // //console.log("api");
       // //console.log("hit " + JSON.stringify(success));
-      $http.get("/api/all-users/?token=" + token).then(function(response) {
+      $http.get("/trootorials-v1/api/all-users/?token=" + token).then(function(response) {
         $uibModalInstance.close(response.data.data);
       });
 
@@ -210,7 +210,7 @@ else{
     $http({
         method: 'POST',
         format: 'json',
-        url: '/api/add-user/?token=' + token,
+        url: '/trootorials-v1/api/add-user/?token=' + token,
         data: JSON.stringify({
           name: named,
           mobile: mobiled,
@@ -241,7 +241,7 @@ else{
   $scope.upload = function(file,cb) {
     console.log(file)
     Upload.upload({
-        url: '/api/user/upload', //webAPI exposed to upload the file
+        url: '/trootorials-v1/api/user/upload', //webAPI exposed to upload the file
         data:{file:file} //pass file as data, should be user ng-model
     }).then(function (resp) {
             if(resp.data[0][1]['path']){

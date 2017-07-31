@@ -7,18 +7,18 @@ var authenticate = require('services/authService');
 
 module.exports = function(app) {
   //Add a new mapping
-  app.post('/api/add-mapping', addMappingHandler);
+  app.post('/trootorials-v1/api/add-mapping', addMappingHandler);
 
   //Get
-  app.get('/api/get-mapping/:id/?', particularMappingHandler);
+  app.get('/trootorials-v1/api/get-mapping/:id/?', particularMappingHandler);
 
-  app.get('/api/videos/:courseId/?', courseMappingHandler);
+  app.get('/trootorials-v1/api/videos/:courseId/?', courseMappingHandler);
 
-  app.post('/api/deletecourse-mapping/:cid/?', deleteMappingHandler);
+  app.post('/trootorials-v1/api/deletecourse-mapping/:cid/?', deleteMappingHandler);
 
-  app.post('/api/deletevideo-mapping/:vid/?', deleteMappingHandlerVideo);
+  app.post('/trootorials-v1/api/deletevideo-mapping/:vid/?', deleteMappingHandlerVideo);
 
-  app.post('/api/edit-mapping/:vid/?', editMappingHandler);
+  app.post('/trootorials-v1/api/edit-mapping/:vid/?', editMappingHandler);
 }
 
 

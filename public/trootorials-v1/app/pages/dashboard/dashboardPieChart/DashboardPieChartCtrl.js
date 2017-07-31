@@ -12,7 +12,7 @@ localstorageApp.controller('DashboardPieChartCtrl', ['$scope', '$timeout', '$htt
     token = token.substring(1, token.length - 1);
 
 
-    $http.get("/api/all-summary?token=" + token).then(function(response) {
+    $http.get("/trootorials-v1/api/all-summary?token=" + token).then(function(response) {
       if (response.data.error === 0) {
         //  console.log("got 0");
         localStorageService.remove('TOKEN')

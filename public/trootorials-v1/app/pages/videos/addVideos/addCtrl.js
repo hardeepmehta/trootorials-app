@@ -119,7 +119,7 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
           imageUrl: url,
           file: q,
         }
-        var uploadUrl = "/api/add-video?token=" + token
+        var uploadUrl = "/trootorials-v1/api/add-video?token=" + token
         fileUpload.submit($scope.var, uploadUrl, $scope,f.course);
     })
   }
@@ -129,7 +129,7 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
   $scope.upload = function(file,cb) {
   //  console.log(file)
     Upload.upload({
-        url: '/api/video/upload', //webAPI exposed to upload the file
+        url: '/trootorials-v1/api/video/upload', //webAPI exposed to upload the file
         data:{file:file} //pass file as data, should be user ng-model
     }).then(function (resp) {
             if(resp.data[0][1]['path']){

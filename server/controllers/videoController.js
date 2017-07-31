@@ -23,25 +23,25 @@ var fs = require('fs');
 
 module.exports = function(app, passport) {
   //Show all users
-  app.get('/api/all-videos/?', allVideosHandler);
+  app.get('/trootorials-v1/api/all-videos/?', allVideosHandler);
 
   // upload video
   app.post('/upload/?', uploadVideoHandler)
 
   //Get Update
-  app.get('/api/get-video/:id/?', particularVideoHandler);
+  app.get('/trootorials-v1/api/get-video/:id/?', particularVideoHandler);
 
   //Update post
-  app.post('/api/edit-video/:id/?', videoUpdateHandler);
+  app.post('/trootorials-v1/api/edit-video/:id/?', videoUpdateHandler);
 
   //POST Insert
-  app.post('/api/add-video/?', addVideoHandler);
+  app.post('/trootorials-v1/api/add-video/?', addVideoHandler);
 
   //Delete
-  app.post('/api/delete-video/:id/?', videoDeleteHandler);
+  app.post('/trootorials-v1/api/delete-video/:id/?', videoDeleteHandler);
 
   //upload thumbnail
-  app.post('/api/video/upload', uploadHandler);
+  app.post('/trootorials-v1/api/video/upload', uploadHandler);
 };
 
 
@@ -303,7 +303,7 @@ function videoUpdateHandler(req, res, next) {
         duration: req.body.duration,
         file: req.body.file,
         videoPath: process.env['USER_CDN_ADDRESS']+"/"+"uploads/"+req.body.file,
-        
+
         //uploadedat: req.body.uploadedat,
         ispublic: req.body.ispublic
       }

@@ -4,9 +4,9 @@ const apiService = require('services/apiService'),
 
 module.exports = function(app, passport) {
   // Get feedback
-  app.get('/api/get-feedback/:id', getFeedbackHandler);
+  app.get('/trootorials-v1/api/get-feedback/:id', getFeedbackHandler);
   // Add feedback
-  app.post('/api/add-feedback', addFeedbackHandler);
+  app.post('/trootorials-v1/api/add-feedback', addFeedbackHandler);
 };
 
 

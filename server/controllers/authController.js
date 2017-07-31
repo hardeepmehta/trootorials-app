@@ -12,16 +12,16 @@ jwtOptions.secretOrKey = 'Troofal'
 
 module.exports = function(app, passport) {
   //Signup user
-  app.post('/api/signup-user', signupUserHandler); //checked
+  app.post('/trootorials-v1/api/signup-user', signupUserHandler); //checked
 
   // Login User
-  app.post('/api/login', loginHandler);
+  app.post('/trootorials-v1/api/login', loginHandler);
 
   // Check if user is logged in
-  app.get('/api/loggedin/:token', isLoggedInHandler);
+  app.get('/trootorials-v1/api/loggedin/:token', isLoggedInHandler);
 
   // Logout
-  app.get('/api/logout', logoutHandler)
+  app.get('/trootorials-v1/api/logout', logoutHandler)
 };
 
 

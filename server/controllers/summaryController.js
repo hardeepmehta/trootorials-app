@@ -9,7 +9,7 @@ var authenticate = require('services/authService');
 module.exports = function(app, passport) {
 
   //Show summary of courses, users and videos
-  app.get('/api/all-summary/?', allSummaryHandler);
+  app.get('/trootorials-v1/api/all-summary/?', allSummaryHandler);
 }
 
 function allSummaryHandler(req, res, next) {
