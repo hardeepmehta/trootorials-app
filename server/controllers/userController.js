@@ -263,7 +263,7 @@ function updateHandler(req, res) {
               response: "User does not exist"
             })
           } else {
-            if(obj.data.imageUrl != null){
+            if(req.body.imageUrl != null){
               var filePath = 'userUploads/'+obj.data.imageUrl;
               // fs.unlinkSync(filePath);
               newdata = {
