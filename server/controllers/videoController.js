@@ -118,7 +118,9 @@ function addVideoHandler(req, res) {
         author: req.body.author,
         duration: req.body.duration,
         file: req.body.file,
+        videoPath:process.env['USER_CDN_ADDRESS']+"/"+"uploads/"+req.body.file,        
         imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
+        imagePath:process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
         ispublic: req.body.ispublic
       }
       //console.log(req.body);
