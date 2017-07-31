@@ -52,7 +52,7 @@ function uploadHandler ( req , res ) {
   // console.log("OS" + JSON.stringify(os))
   form.parse(req);
 
-  form.uploadDir ='videoUploads/'
+  form.uploadDir ='public/trootorials-v1/videoUploads/'
   // os.tmpdir();
 
   form
@@ -85,7 +85,7 @@ function uploadVideoHandler(req, res) {
       var form = new formidable.IncomingForm();
       form.parse(req);
       form.on('fileBegin', function(name, file) {
-        file.path = 'uploads/' + file.name;
+        file.path = 'public/trootorials-v1/uploads/' + file.name;
         // console.log("add path"+file.path)
         //console.log(__dirname);
       });
@@ -118,7 +118,7 @@ function addVideoHandler(req, res) {
         author: req.body.author,
         duration: req.body.duration,
         file: req.body.file,
-        videoPath:process.env['USER_CDN_ADDRESS']+"/"+"uploads/"+req.body.file,
+        videoPath:process.env['USER_CDN_ADDRESS']+"/"+"public/trootorials-v1/uploads/"+req.body.file,
         imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
         imagePath:process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
         ispublic: req.body.ispublic
@@ -302,7 +302,7 @@ function videoUpdateHandler(req, res, next) {
         author: req.body.author,
         duration: req.body.duration,
         file: req.body.file,
-        videoPath: process.env['USER_CDN_ADDRESS']+"/"+"uploads/"+req.body.file,
+        videoPath: process.env['USER_CDN_ADDRESS']+"/"+"public/trootorials-v1/uploads/"+req.body.file,
 
         //uploadedat: req.body.uploadedat,
         ispublic: req.body.ispublic
@@ -328,7 +328,7 @@ function videoUpdateHandler(req, res, next) {
             // var filePath = 'uploads/'+obj.data.file;
             // fs.unlinkSync(filePath);
             if(req.body.imageUrl != null){
-              var filePath = 'videoUploads/'+obj.data.imageUrl;
+              var filePath = 'public/trootorials-v1/videoUploads/'+obj.data.imageUrl;
               fs.unlinkSync(filePath);
               data = {
                 title: req.body.title,
@@ -336,7 +336,7 @@ function videoUpdateHandler(req, res, next) {
                 author: req.body.author,
                 duration: req.body.duration,
                 file: req.body.file,
-                videoPath: process.env['USER_CDN_ADDRESS']+"/"+"uploads/"+req.body.file,
+                videoPath: process.env['USER_CDN_ADDRESS']+"/"+"public/trootorials-v1/uploads/"+req.body.file,
                 //uploadedat: req.body.uploadedat,
                 ispublic: req.body.ispublic,
                 imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
@@ -377,10 +377,10 @@ function videoDeleteHandler(req, res, next) {
           })
         } else {
           //console.log(obj.data.file);
-          var filePath = 'uploads/'+obj.data.file;
+          var filePath = 'public/trootorials-v1/uploads/'+obj.data.file;
           console.log(filePath);
           fs.unlinkSync(filePath);
-          var thumbPath = 'videoUploads/'+obj.data.imageUrl;
+          var thumbPath = 'public/trootorials-v1/videoUploads/'+obj.data.imageUrl;
 ;
           fs.unlinkSync(thumbPath);
           sql.delete(sql.video, whereobj, function response(obj) {
