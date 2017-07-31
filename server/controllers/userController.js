@@ -143,7 +143,7 @@ function addUserHandler(req, res) {
         email: req.body.email,
         password: encryptService.encrypt(req.body.password),
         imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
-        imagePath:process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
+        imagePath:process.env['USER_CDN_ADDRESS']+'userUploads/'+req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
         level: req.body.level,
       }
       if (!(data.name && data.mobile && data.email && data.password && data.level)) {
@@ -265,13 +265,13 @@ function updateHandler(req, res) {
           } else {
             if(req.body.imageUrl != null){
               var filePath = 'public/trootorials-v1/userUploads/'+obj.data.imageUrl;
-              // fs.unlinkSync(filePath);
+              fs.unlinkSync(filePath);
               newdata = {
                 name: req.body.name,
                 mobile: req.body.mobile,
                 email: req.body.email,
                 imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
-                imagePath: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
+                imagePath:process.env['USER_CDN_ADDRESS']+'userUploads/'+req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
                 level: req.body.level
               }
             }
