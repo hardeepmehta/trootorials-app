@@ -1574,8 +1574,8 @@ a.see-all-icons {
   margin: 5px auto; }
 
 .modal-open .modal {
-  overflow-x: hidden;
-  overflow-y: hidden; }
+  overflow-x: auto;
+  overflow-y: auto; }
 
 .modal-content {
   border-radius: 5px;
