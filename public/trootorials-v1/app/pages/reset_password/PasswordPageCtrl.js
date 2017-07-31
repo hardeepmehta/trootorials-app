@@ -12,7 +12,7 @@ localstorageApp.controller('PasswordPageCtrl', ['$scope', '$window', '$http', 'l
     var currentPassword = ""
 
     token = token.substring(1, token.length - 1);
-    $http.get("/api/show-password?token=" + token).then(function(response) {
+    $http.get("/trootorials-v1/api/show-password?token=" + token).then(function(response) {
       // console.log("response here" + JSON.stringify(response.data.password));
       if (response.data.error === 0) {
         //        console.log("got 0");
@@ -38,7 +38,7 @@ localstorageApp.controller('PasswordPageCtrl', ['$scope', '$window', '$http', 'l
         $http({
             method: 'POST',
             format: 'json',
-            url: '/api/update-password?token=' + token,
+            url: '/trootorials-v1/api/update-password?token=' + token,
             data: JSON.stringify({
               cpassword: $scope.form.oldPassword,
               npassword: $scope.form.newPassword

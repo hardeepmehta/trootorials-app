@@ -15,7 +15,7 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
     $scope.courses = [];
     $scope.id = 0;
 
-    $http.get("/api/all-courses?token=" + token).then(function(response) {
+    $http.get("/trootorials-v1/api/all-courses?token=" + token).then(function(response) {
       //   console.log(response.data.data);
       if (response.data.error === 0) {
         // console.log("got 0");
@@ -97,14 +97,14 @@ localstorageApp.controller('TablesPageCtrl', ['$rootScope', '$scope', '$filter',
       var m = parseInt(id);
       // console.log($index);
       if ($window.confirm("Are you sure you want to delete?") == true) {
-        $http.post("/api/delete-course/" + m + "?token=" + token).then(function(response) {
+        $http.post("/trootorials-v1/api/delete-course/" + m + "?token=" + token).then(function(response) {
           $scope.loading = true;
           setTimeout(function() {
             $scope.loading = false;
             $scope.$apply();
           }, 2000);
           $scope.courses.splice($index, 1);
-          $http.post("/api/deletecourse-mapping/"+m+"?token="+token).then(function(response){
+          $http.post("/trootorials-v1/api/deletecourse-mapping/"+m+"?token="+token).then(function(response){
 
           });
         });
@@ -134,7 +134,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
 
   // console.log("Bool value " + bool)
   if (bool == 0) {
-    $http.get("/api/get-course/" + id + "?token=" + token).then(function(response) {
+    $http.get("/trootorials-v1/api/get-course/" + id + "?token=" + token).then(function(response) {
       // console.log(response);
       // console.log("Edit response"+JSON.stringify(response.data.response));
       $scope.form = response.data.response;
@@ -163,7 +163,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
       $http({
           method: 'POST',
           format: 'json',
-          url: '/api/edit-course/' + m + "?token=" + token,
+          url: '/trootorials-v1/api/edit-course/' + m + "?token=" + token,
           data: JSON.stringify({
             title: $scope.form.title,
             description: $scope.form.description,
@@ -173,7 +173,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
           })
         })
         .then(function(success) {
-          $http.get("/api/all-courses?token=" + token).then(function(response) {
+          $http.get("/trootorials-v1/api/all-courses?token=" + token).then(function(response) {
             $uibModalInstance.close(response.data.data);
           });
 
@@ -186,7 +186,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
       $http({
           method: 'POST',
           format: 'json',
-          url: '/api/edit-course/' + m + "?token=" + token,
+          url: '/trootorials-v1/api/edit-course/' + m + "?token=" + token,
           data: JSON.stringify({
             title: $scope.form.title,
             description: $scope.form.description,
@@ -194,7 +194,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
           })
         })
         .then(function(success) {
-          $http.get("/api/all-courses?token=" + token).then(function(response) {
+          $http.get("/trootorials-v1/api/all-courses?token=" + token).then(function(response) {
             $uibModalInstance.close(response.data.data);
           });
 
@@ -219,7 +219,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
           $http({
               method: 'POST',
               format: 'json',
-              url: '/api/add-course?token=' + token,
+              url: '/trootorials-v1/api/add-course?token=' + token,
               data: JSON.stringify({
                 title: title,
                 description: description,
@@ -252,7 +252,7 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
   $scope.upload = function(file,cb) {
     // console.log(file)
     Upload.upload({
-        url: '/api/course/upload', //webAPI exposed to upload the file
+        url: '/trootorials-v1/api/course/upload', //webAPI exposed to upload the file
         data:{file:file} //pass file as data, should be user ng-model
     }).then(function (resp) {
             if(resp.data[0][1]['path']){

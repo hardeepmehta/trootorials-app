@@ -29,7 +29,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
     $scope.redirect = function() {
       $window.location.href = "trootorials-v1/#/videos/addVideos";
     }
-    $http.get("/api/all-videos?token=" + token).then(function(response) {
+    $http.get("/trootorials-v1/api/all-videos?token=" + token).then(function(response) {
       if (response.data.error === 0) {
 
         localStorageService.remove('TOKEN')
@@ -90,14 +90,14 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
     $scope.removeVideo = function(id, $index) {
       var m = parseInt(id);
       if ($window.confirm("Are you sure you want to delete?") == true) {
-        $http.post("/api/delete-video/" + m + "?token=" + token).then(function(response) {
+        $http.post("/trootorials-v1/api/delete-video/" + m + "?token=" + token).then(function(response) {
           $scope.loading = true;
           setTimeout(function() {
             $scope.loading = false;
             $scope.$apply();
           }, 2000);
           $scope.users.splice($index, 1);
-          $http.post("/api/deletevideo-mapping/"+m+"?token="+token).then(function(response){
+          $http.post("/trootorials-v1/api/deletevideo-mapping/"+m+"?token="+token).then(function(response){
 
           });
         });
@@ -188,7 +188,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
           $http({
               method: 'POST',
               format: 'json',
-              url: '/api/add-mapping?token='+token,
+              url: '/trootorials-v1/api/add-mapping?token='+token,
               data: JSON.stringify({
                 courseid: parseInt(courseid),
                 videoid : res.data.data.data.id
@@ -212,13 +212,13 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
     );
   }
   this.getVideo = function(id,m,token){
-    $http.get("/api/get-video/" + id + "?token=" + token).then(function(response) {
+    $http.get("/trootorials-v1/api/get-video/" + id + "?token=" + token).then(function(response) {
 
       m.form = response.data.response.data;
       m.u = response.data.response.data.ispublic;
       m.k = response.data.response.data.file;
 
-      $http.get("/api/get-mapping/" + id + "?token=" + token).then(function(response) {
+      $http.get("/trootorials-v1/api/get-mapping/" + id + "?token=" + token).then(function(response) {
 
           if(response.data.response.data[0] == undefined)
           m.form.course = 0
@@ -230,7 +230,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
 
   }
   this.all = function(token){
-    return $http.get("/api/all-videos?token=" + token);
+    return $http.get("/trootorials-v1/api/all-videos?token=" + token);
 
   }
 
@@ -261,7 +261,7 @@ myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',  
                   file: q,
                   imageUrl:url
                 }
-                $http.get("/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
+                $http.get("/trootorials-v1/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
                   //console.log(response.data.response.id);
                   //console.log(parseInt($scope.form.course));
 
@@ -269,7 +269,7 @@ myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',  
                     $http({
                         method: 'POST',
                         format: 'json',
-                        url: '/api/edit-mapping/'+ id + '?token='+token,
+                        url: '/trootorials-v1/api/edit-mapping/'+ id + '?token='+token,
                         data: JSON.stringify({
                           courseid: parseInt($scope.form.course),
                           videoid : id
@@ -286,7 +286,7 @@ myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',  
                 });
 
 
-                var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
+                var uploadUrl = "/trootorials-v1/api/edit-video/"+id + "?token=" + token;
                var k = fileUpload.submit($scope.var, uploadUrl,$scope);
                fileUpload.all(token).then(function(response) {
 
@@ -307,7 +307,7 @@ myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',  
              ispublic: $scope.form.public == undefined ? $scope.u : $scope.form.public,
              imageUrl:url
             }
-            $http.get("/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
+            $http.get("/trootorials-v1/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
               //console.log(response.data.response.id);
               //console.log(parseInt($scope.form.course));
 
@@ -315,7 +315,7 @@ myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',  
                 $http({
                     method: 'POST',
                     format: 'json',
-                    url: '/api/edit-mapping/'+ id + '?token='+token,
+                    url: '/trootorials-v1/api/edit-mapping/'+ id + '?token='+token,
                     data: JSON.stringify({
                       courseid: parseInt($scope.form.course),
                       videoid : id
@@ -331,7 +331,7 @@ myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',  
 
             });
 
-           var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
+           var uploadUrl = "/trootorials-v1/api/edit-video/"+id+ "?token=" + token;
            var i = fileUpload.submit($scope.var, uploadUrl,$scope);
            fileUpload.all(token).then(function(response) {
 
@@ -358,7 +358,7 @@ else{
          file: q,
 
        }
-       $http.get("/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
+       $http.get("/trootorials-v1/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
          //console.log(response.data.response.id);
          //console.log(parseInt($scope.form.course));
 
@@ -366,7 +366,7 @@ else{
            $http({
                method: 'POST',
                format: 'json',
-               url: '/api/edit-mapping/'+ id + '?token='+token,
+               url: '/trootorials-v1/api/edit-mapping/'+ id + '?token='+token,
                data: JSON.stringify({
                  courseid: parseInt($scope.form.course),
                  videoid : id
@@ -384,7 +384,7 @@ else{
 
 
 
-       var uploadUrl = "/api/edit-video/"+id + "?token=" + token;
+       var uploadUrl = "/trootorials-v1/api/edit-video/"+id + "?token=" + token;
       var k = fileUpload.submit($scope.var, uploadUrl,$scope);
       fileUpload.all(token).then(function(response) {
 
@@ -404,7 +404,7 @@ else{
     duration: $scope.form.duration,
     ispublic: $scope.form.public == undefined ? $scope.u : $scope.form.public,
    }
-   $http.get("/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
+   $http.get("/trootorials-v1/api/get-course/" + parseInt($scope.form.course) + "?token=" + token).then(function(response) {
      //console.log(response.data.response.id);
      //console.log(parseInt($scope.form.course));
 
@@ -412,7 +412,7 @@ else{
        $http({
            method: 'POST',
            format: 'json',
-           url: '/api/edit-mapping/'+ id + '?token='+token,
+           url: '/trootorials-v1/api/edit-mapping/'+ id + '?token='+token,
            data: JSON.stringify({
              courseid: parseInt($scope.form.course),
              videoid : id
@@ -428,7 +428,7 @@ else{
 
    });
 
-  var uploadUrl = "/api/edit-video/"+id+ "?token=" + token;
+  var uploadUrl = "/trootorials-v1/api/edit-video/"+id+ "?token=" + token;
   var i = fileUpload.submit($scope.var, uploadUrl,$scope);
   fileUpload.all(token).then(function(response) {
 
@@ -440,7 +440,7 @@ else{
 $scope.upload = function(file,cb) {
 
 Upload.upload({
-  url: '/api/video/upload', //webAPI exposed to upload the file
+  url: '/trootorials-v1/api/video/upload', //webAPI exposed to upload the file
   data:{file:file} //pass file as data, should be user ng-model
 }).then(function (resp) {
 

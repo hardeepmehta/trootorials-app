@@ -12,7 +12,7 @@ localstorageApp.controller('displayAllCourses', ['$scope', '$filter', 'editableO
     }
     token = token.substring(1, token.length - 1);
 
-    $http.get("/api/all-courses?token=" + token)
+    $http.get("/trootorials-v1/api/all-courses?token=" + token)
       .then(function(response) {
         //  console.log("hit");
         //  console.log("response"+JSON.stringify(response));
@@ -33,7 +33,7 @@ localstorageApp.controller('displayAllCourses', ['$scope', '$filter', 'editableO
         $scope.clicked = true;
         $scope.videos=[];
 
-        $http.get("/api/videos/" + id +"/"+"?token="+token).then(function(response) {
+        $http.get("/trootorials-v1/api/videos/" + id +"/"+"?token="+token).then(function(response) {
         var arr = response.data.data
         // console.log(JSON.stringify(response.data.response.data));
         // console.log(arr);
