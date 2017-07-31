@@ -1,0 +1,112 @@
+<!doctype html>
+
+<html>
+
+<head>
+ <script src="../trootorials-v1/bower_components/angular/angular.js"></script>
+  <!-- <script src="../trootorials-v1/bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script> -->
+  <script src="../trootorials-v1/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+
+
+  <link href="../trootorials-v1/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style type="text/css" media="screen">
+    body {
+      background: url("assets/img/1.jpg") no-repeat center center fixed;
+
+      -moz-background-size: cover;
+
+      -webkit-background-size: cover;
+
+      -o-background-size: cover;
+
+      background-size: cover;
+    }
+
+    .panel-info {
+      /* border-color: #bce8f1; */
+      border-top: #16191b;
+      border-left: #16191b;
+      border-right: #16191b;
+    }
+
+    .panel-info>.panel-heading {
+      color: white;
+      background-color: #16191b;
+      border-color: #16191b;
+    }
+
+    .main-heading {
+      color: white;
+      margin-top: 20px;
+    }
+  </style>
+
+  <!-- <link rel="stylesheet" href="app/css/404.css"> -->
+
+</head>
+
+<body>
+
+
+  <div class="container" ng-app="LocalLogin" ng-controller="LoginCtrl">
+    <div class="row">
+      <div class="col-md 1">
+        <a href="https://www.troofal.com/"><img src="assets/img/logo.png" alt="" width="100px" height="100px"></a>
+      </div>
+
+
+
+    </div>
+    <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="panel-title">Sign In</div>
+
+        </div>
+
+        <div style="padding-top:30px" class="panel-body">
+
+          <div ng-show="error" ng-model="error" class="alert alert-danger col-sm-12">{{error}}</div>
+
+          <form id="loginform" ng-submit="login()" class="form-horizontal" role="form">
+
+            <div style="margin-bottom: 25px" class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+              <input required type="email" class="form-control" ng-model="uemail" placeholder="Enter email">
+            </div>
+
+            <div style="margin-bottom: 25px" class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+              <input required type="password" class="form-control" ng-model="upasswd" placeholder="Enter password">
+            </div>
+
+            <!-- <div class="input-group">
+              <div class="checkbox">
+                <label>
+                         <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+                </label>
+              </div>
+            </div> -->
+
+            <div style="margin-top:10px" class="form-group">
+              <!-- Button -->
+
+              <div class="col-sm-12 controls">
+                <center> <button type="submit" class="btn btn-primary center">Login  </button></center>
+
+
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+
+</body>
+
+</html>

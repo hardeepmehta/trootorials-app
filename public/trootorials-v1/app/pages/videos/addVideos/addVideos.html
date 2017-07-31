@@ -1,0 +1,41 @@
+<div class="row" style="padding:15px;background-color:white;">
+  <div class="col-md-2">
+
+  </div>
+  <div class="col-md-8 ">
+    <form ng-submit="uploadComplete(form)" id="myForm" enctype="multipart/form-data" ng-controller="addCtrl">
+
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" ng-model="form.title" name="title" placeholder="Enter Title">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" ng-model="form.description" name="description" rows="5" id="comment" placeholder="Enter Description"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" class="form-control" ng-model="form.author" name="author" id="exampleInputPassword1" placeholder="Enter Author Name">
+      </div>
+      <div class="form-group">
+        <label>duration</label>
+        <input type="text" class="form-control" ng-model="form.duration" name="duration" id="exampleInputPassword1" placeholder="Enter Author Name">
+      </div>
+      <div class="form-group">
+        <label>ispublic</label>
+        <input type="text" class="form-control" ng-model="form.public" name="public" id="exampleInputPassword1" placeholder="Enter Author Name">
+      </div>
+      <input type="file" name="" file-model="form.file">
+      <!-- <input type="file" onchange="angular.element(this).scope().fileChanged(this)" id="userfile" name="userfile" multiple/> -->
+      <input type="submit" name="" value="submit">
+      <!-- <li ng-repeat = "file in files">
+      {{file.name}}
+  </li> -->
+
+    </form>
+    {{form}}
+  </div>
+  <div class="col-md-2">
+
+  </div>
+</div>

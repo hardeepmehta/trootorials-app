@@ -1,0 +1,56 @@
+<div class="row" style="padding:15px;background-color:white;">
+  <div class="col-md-2">
+
+  </div>
+  <div class="col-md-8 ">
+    <form ng-submit="">
+      <div class="form-group">
+
+        <label>Name</label>
+        <input type="text" class="form-control" ng-model="form.name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label>Mobile</label>
+        <input type="text" maxlength="10" class="form-control" ng-model="form.mobile" name="mobile" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-control" ng-model="form.email" name="email" required>
+      </div>
+      <!-- <div class="form-group" ng-hide="b==1">
+        <label>Password</label>
+        <input type="password" class="form-control" ng-model="form.password" name="pwd" >
+      </div> -->
+      <div class="form-group">
+        <label class="checkbox-inline"><input type="checkbox" value="">Make Premium</label>
+      </div>
+
+      <div class="form-group">
+        <input
+            type="file"
+            ngf-select
+            ng-model="form.file"
+            name="file"
+            ngf-pattern="'image/*'"
+            accept="image/*"
+            ngf-max-size="20MB"
+            />
+      </div>
+
+      <div class="form-group">
+        <label>Level</label>
+        <select ng-model="form.level" ng-options="c as c.level for c in levels" required>
+      </select>
+      </div>
+
+      <div class="form-group">
+        <div class="error" style="color:red" ng-model="error">{{error}}</div>
+      </div>
+
+      <input type="submit" name="submit" ng-click=" b == 1 ? createPost(form.name,form.mobile,form.email,form.level.level,form.file) : updatedCourse() " class="btn btn-default"></input>
+    </form>
+  </div>
+  <div class="col-md-2">
+
+  </div>
+</div>

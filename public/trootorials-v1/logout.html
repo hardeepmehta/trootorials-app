@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Troofal</title>
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900&subset=latin,greek,greek-ext,vietnamese,cyrillic-ext,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
+
+  <!-- <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png"> -->
+  <!-- <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png"> -->
+  <!-- <link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon-96x96.png"> -->
+
+  <!-- build:css({.tmp/serve,src}) styles/404.css -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="app/css/404.css">
+  <!-- endinject -->
+  <!-- endbuild -->
+  <script src="../trootorials-v1/bower_components/angular/angular.js"></script>
+  <script src="../trootorials-v1/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+  <link href="../trootorials-v1/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style type="text/css" media="screen">
+    body {
+      background: url("assets/img/peachy-bg.jpg") no-repeat center center fixed;
+
+      -moz-background-size: cover;
+
+      -webkit-background-size: cover;
+
+      -o-background-size: cover;
+
+      background-size: cover;
+    }
+  </style>
+
+
+</head>
+
+<body>
+  <div class="page-not-found-modal" ng-app="LocalLogout" ng-controller="LogoutCtrl">
+    <h1>You have been logged out</h1>
+
+    <p>You will be sent back to login page <a href="index.html">Go to Login Page.</a></p>
+  </div>
+
+  <script src="logout.js"></script>
+
+</body>
+
+</html>

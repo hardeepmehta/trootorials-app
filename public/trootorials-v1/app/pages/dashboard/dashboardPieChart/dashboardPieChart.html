@@ -1,0 +1,16 @@
+<div class="row pie-charts">
+  <div class="pie-chart-item-container" ng-repeat="chart in charts">
+    <div ba-panel>
+      <a href="{{ ::chart.link }}">
+      <div class="pie-chart-item">
+        <div class="chart" rel="{{ ::chart.color }}" data-percent="60"> <span class="percent"></span> </div>
+        <div class="description">
+          <div>{{ ::chart.description }}</div>
+          <div class="description-stats">{{ ::chart.stats }}</div>
+        </div>
+        <i class="fa fa-{{ ::chart.icon }} fa-4x" style="margin-left: 182px;"></i>
+      </div>
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="row" ng-controller="displayAllCourses">
+  <div class="" ng-show="loading == true" style="text-align:center;padding-top:40px;padding-bottom:40px">
+    <img style = "height:20%; width:20%" src="../../trootorials-v1/assets/img/app/profile/loading.gif" alt="">
+  </div>
+  <div ng-show="loading == false && clicked == false" ng-repeat="gotCourse in reciCourse" class="col-md-4">
+    <div class="panel panel-primary"  ng-click="courseClicked(gotCourse.id)">
+      <div class="panel-heading">{{gotCourse.title}}</div>
+        <img src="courseUploads/{{gotCourse.imageUrl}}" alt="" width="100%">
+      <div class="panel-body">{{gotCourse.description}}</div>
+      <div class="panel-footer">Duration:{{gotCourse.duration}}</div>
+    </div>
+</div>
+<div class="" ng-show="clicked == true">
+  <table style="background-color:#FFFFFF" class="table table-bordered table-hover table-condensed">
+    <tr style="font-weight:bold;">
+      <td>Video ID</td>
+      <td>Video title</td>
+      <td>Video description</td>
+    </tr>
+    <tr ng-repeat="gotVideo in videos">
+      <td>{{gotVideo.videoid}}</td>
+      <td>{{gotVideo.title}}</td>
+      <td>{{gotVideo.description}}</td>
+    </tr>
+  </table>
+  <button class="btn btn-primary editable-table-button btn-xs" style="margin-left:40%;margin-top:2%" type="button" name="button" ng-click="clicked = false">Back</button>
+
+</div>
