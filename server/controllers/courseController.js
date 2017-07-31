@@ -43,8 +43,8 @@ function uploadHandler ( req , res ) {
   // console.log("OS" + JSON.stringify(os))
   form.parse(req);
 
-  form.uploadDir ='courseUploads/'
-
+  form.uploadDir ='public/trootorials-v1/courseUploads/'
+  console.log("form directory "+form.uploadDir)
   form
     .on('field', function(field, value) {
       // console.log(field, value);
@@ -203,7 +203,7 @@ function CourseUpdateHandler(req, res, next) {
             })
           } else {
             if(req.body.imageUrl != null){
-              var filePath = 'courseUploads/'+obj.data.imageUrl;
+              var filePath = 'public/trootorials-v1/courseUploads/'+obj.data.imageUrl;
               fs.unlinkSync(filePath);
               data = {
                 title: req.body.title,
@@ -253,7 +253,7 @@ function CourseDeleteHandler(req, res, next) {
         } else {
           // console.log("obj"+JSON.stringify(obj))
           if(obj.data.imageUrl != null){
-            var filePath = 'courseUploads/'+obj.data.imageUrl;
+            var filePath = 'public/trootorials-v1/courseUploads/'+obj.data.imageUrl;
             console.log(filePath)
             fs.unlinkSync(filePath);
           }

@@ -41,7 +41,7 @@ function uploadHandler ( req , res ) {
   // console.log("OS" + JSON.stringify(os))
   form.parse(req);
 
-  form.uploadDir ='userUploads/'
+  form.uploadDir ='public/trootorials-v1/userUploads/'
   // os.tmpdir();
 
   form
@@ -202,7 +202,7 @@ function deleteHandler(req, res) {
           })
         } else {
           if(obj.data.imageUrl != null){
-            var filePath = "userUploads/"+obj.data.imageUrl;
+            var filePath = "public/trootorials-v1/userUploads/"+obj.data.imageUrl;
             console.log("filepath "+ filePath)
             fs.unlinkSync(filePath,function(err){
               res.send({
@@ -264,7 +264,7 @@ function updateHandler(req, res) {
             })
           } else {
             if(req.body.imageUrl != null){
-              var filePath = 'userUploads/'+obj.data.imageUrl;
+              var filePath = 'public/trootorials-v1/userUploads/'+obj.data.imageUrl;
               // fs.unlinkSync(filePath);
               newdata = {
                 name: req.body.name,

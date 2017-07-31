@@ -27,7 +27,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
     $scope.id = 0;
     $scope.redirect = function() {
-      $window.location.href = "trootorials-v1/#/videos/addVideos";
+      $window.location.href = "#/videos/addVideos";
     }
     $http.get("/trootorials-v1/api/all-videos?token=" + token).then(function(response) {
       if (response.data.error === 0) {
@@ -203,7 +203,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
         t.f ={};
 
         $timeout(function() {
-        $window.location.href = "trootorials-v1/#/videos/allVideos"
+        $window.location.href = "#/videos/allVideos"
       },3000);
     }
 

@@ -255,6 +255,8 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
         url: '/trootorials-v1/api/course/upload', //webAPI exposed to upload the file
         data:{file:file} //pass file as data, should be user ng-model
     }).then(function (resp) {
+            // console.log("API hit upload")
+            // console.log("upload resp "+resp)
             if(resp.data[0][1]['path']){
             // return resp.data[0][1]['path']
             $scope.fileUrl = resp.data[0][1]['path']
@@ -264,6 +266,9 @@ angular.module('BlurAdmin.pages.courses.addCourses').controller('ModalInstanceCt
             else {
               $scope.error = "Error uploading files"
             }
+        },function(error){
+          // console.log("Not hit")
+          // console.log("error" + JSON.stringify(error))
         })
     }
   }

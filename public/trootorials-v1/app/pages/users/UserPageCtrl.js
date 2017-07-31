@@ -141,9 +141,9 @@ angular.module('BlurAdmin.pages.users').controller('ModalInstanceCtrl', ['$scope
     $scope.error = "Title already exists"
     else {
       if($scope.form.file){
-          console.log($scope.form.file)
+          // console.log($scope.form.file)
    $scope.upload($scope.form.file,function(url){
-    console.log("URL "+url)
+    // console.log("URL "+url)
   var m = parseInt(id);
   $http({
       method: 'POST',
@@ -196,9 +196,9 @@ else{
   $scope.createPost = function(named, mobiled, emailid, levelid, file) {
     // //console.log(levelid);
     if (file) { //check if from is valid
-        console.log(file)
+        // console.log(file)
          $scope.upload(file,function(url){
-          console.log("URL "+url)
+          // console.log("URL "+url)
     var data = {
       name: named,
       mobile: mobiled,
@@ -221,7 +221,7 @@ else{
         })
       })
       .then(function(success) {
-        console.log(success)
+        // console.log(success)
         if (success.data.error == true)
           $scope.error = "User already exists. Please enter a new email id"
 
@@ -239,7 +239,7 @@ else{
   }
 
   $scope.upload = function(file,cb) {
-    console.log(file)
+    // console.log(file)
     Upload.upload({
         url: '/trootorials-v1/api/user/upload', //webAPI exposed to upload the file
         data:{file:file} //pass file as data, should be user ng-model
