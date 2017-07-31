@@ -29,10 +29,10 @@ const PORT = process.env.PORT || 5000;
 var app = express();
 
 app.use('/trootorials-v1/bower_components',  express.static(__dirname + '/bower_components'));
-app.use('/uploads',  express.static(__dirname + '/uploads'));
-app.use('/courseUploads',  express.static(__dirname + '/courseUploads'));
-app.use('/userUploads',  express.static(__dirname + '/userUploads'));
-app.use('/videoUploads',  express.static(__dirname + '/videoUploads'));
+app.use('/public/trootorials-v1/uploads',  express.static(__dirname + '/uploads'));
+app.use('/public/trootorials-v1/courseUploads',  express.static(__dirname + '/courseUploads'));
+app.use('/public/trootorials-v1/userUploads',  express.static(__dirname + '/userUploads'));
+app.use('/public/trootorials-v1/videoUploads',  express.static(__dirname + '/videoUploads'));
 
 
 // Set path of static assets
