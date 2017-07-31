@@ -9,28 +9,28 @@ var fs = require('fs');
 module.exports = function(app) {
 
   //Add a new user
-  app.post('/api/add-user/?', addUserHandler); //checked
+  app.post('/trootorials-v1/api/add-user/?', addUserHandler); //checked
 
   //Show all users
-  app.get('/api/all-users/?', allUsersHandler); //checked
+  app.get('/trootorials-v1/api/all-users/?', allUsersHandler); //checked
 
   //Get
-  app.get('/api/get-user/:id/?', particularUserHandler); //checked
+  app.get('/trootorials-v1/api/get-user/:id/?', particularUserHandler); //checked
 
   //Delete a user
-  app.post('/api/delete-user/:id/?', deleteHandler); //checked
+  app.post('/trootorials-v1/api/delete-user/:id/?', deleteHandler); //checked
 
   //Update a user
-  app.post('/api/edit-user/:id/?', updateHandler);
+  app.post('/trootorials-v1/api/edit-user/:id/?', updateHandler);
 
   //Reset password
-  app.post('/api/update-password/?', resetPasswordHandler);
+  app.post('/trootorials-v1/api/update-password/?', resetPasswordHandler);
 
   //show password
-  app.get('/api/show-password/?', showPasswordHandler);
+  app.get('/trootorials-v1/api/show-password/?', showPasswordHandler);
 
   //upload thumbnail
-  app.post('/api/user/upload', uploadHandler);
+  app.post('/trootorials-v1/api/user/upload', uploadHandler);
 }
 
 

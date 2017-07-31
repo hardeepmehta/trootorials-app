@@ -5,7 +5,7 @@ const apiService = require('services/apiService'),
 module.exports = function(app, passport) {
 
   // Get Start Tutorial
-  app.get('/api/start-tutorial', getStartTutorialHandler);
+  app.get('/trootorials-v1/api/start-tutorial', getStartTutorialHandler);
 };
 
 function getStartTutorialHandler(req, res, next) {

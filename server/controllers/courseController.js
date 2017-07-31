@@ -17,22 +17,22 @@ var levelText = {
 
 module.exports = function(app, passport) {
   // Add course
-  app.post('/api/add-course/?', addCourseHandler); //checked
+  app.post('/trootorials-v1/api/add-course/?', addCourseHandler); //checked
 
   // Get All Courses
-  app.get('/api/all-courses/?', getCourseHandler); //checked
+  app.get('/trootorials-v1/api/all-courses/?', getCourseHandler); //checked
 
   //Update post
-  app.post('/api/edit-course/:id/?', CourseUpdateHandler); //checked
+  app.post('/trootorials-v1/api/edit-course/:id/?', CourseUpdateHandler); //checked
 
   //get Update
-  app.get('/api/get-course/:id/?', getCourseUpdateHandler); //checked
+  app.get('/trootorials-v1/api/get-course/:id/?', getCourseUpdateHandler); //checked
 
   //Delete
-  app.post('/api/delete-course/:id/?', CourseDeleteHandler);
+  app.post('/trootorials-v1/api/delete-course/:id/?', CourseDeleteHandler);
 
   //upload thumbnail
-  app.post('/api/course/upload', uploadHandler); //checked
+  app.post('/trootorials-v1/api/course/upload', uploadHandler); //checked
 };
 
 
