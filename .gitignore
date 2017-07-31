@@ -18,3 +18,5 @@ public/uploads/*
 bower.sublime-workspace
 *sublime*
 .idea/
+videoUploads/*
+userUploads/*
