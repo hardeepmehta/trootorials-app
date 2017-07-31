@@ -5,7 +5,7 @@ localstorageApp.controller('LoginCtrl', ['$scope', 'localStorageService', '$http
   // console.log("retrieve " + localStorageService.get('TOKEN'))
 
   if (localStorageService.get('TOKEN') != null) {
-    $window.location.href = '/home.html';
+    $window.location.href = '/trootorials-v1/home.html';
   }
 
   $scope.error = ""
@@ -37,7 +37,7 @@ localstorageApp.controller('LoginCtrl', ['$scope', 'localStorageService', '$http
             var token = JSON.stringify(success.data.token)
             localStorageService.add('TOKEN', JSON.stringify(success.data.token)); // Password name added to local storage
             // console.log("retrieve " + localStorageService.get('TOKEN'))
-            $window.location.href = '/home.html';
+            $window.location.href = '/trootorials-v1/home.html';
           }
           else {
             $scope.error = "You are not authorised"

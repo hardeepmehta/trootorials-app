@@ -68,7 +68,7 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
         t.f = {};
 
         $timeout(function() {
-          $window.location.href = "#/videos/allVideos"
+          $window.location.href = "trootorials-v1/#/videos/allVideos"
         }, 3000);
 
       }, function(error) {
@@ -84,7 +84,7 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
 
   var token = localStorageService.get('TOKEN')
   if (token == null) {
-    $window.location.href = '/index.html';
+    $window.location.href = 'trootorials-v1/index.html';
   }
   token = token.substring(1, token.length - 1);
 

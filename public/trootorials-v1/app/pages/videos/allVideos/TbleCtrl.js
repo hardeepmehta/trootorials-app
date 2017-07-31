@@ -18,7 +18,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
     var token = localStorageService.get('TOKEN')
     if (token == null) {
-      $window.location.href = '/index.html';
+      $window.location.href = 'trootorials-v1/index.html';
     }
     token = token.substring(1, token.length - 1);
 
@@ -27,13 +27,13 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
     $scope.id = 0;
     $scope.redirect = function() {
-      $window.location.href = "#/videos/addVideos";
+      $window.location.href = "trootorials-v1/#/videos/addVideos";
     }
     $http.get("/api/all-videos?token=" + token).then(function(response) {
       if (response.data.error === 0) {
 
         localStorageService.remove('TOKEN')
-        $window.location.href = '/index.html';
+        $window.location.href = 'trootorials-v1/index.html';
       }
       $scope.loading = true;
       setTimeout(function() {
@@ -203,7 +203,7 @@ myApp.service('fileUpload', ['$http', '$window','$timeout','localStorageService'
         t.f ={};
 
         $timeout(function() {
-        $window.location.href = "#/videos/allVideos"
+        $window.location.href = "trootorials-v1/#/videos/allVideos"
       },3000);
     }
 

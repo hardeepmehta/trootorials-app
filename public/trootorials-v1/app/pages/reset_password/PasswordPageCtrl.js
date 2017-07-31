@@ -6,7 +6,7 @@ localstorageApp.controller('PasswordPageCtrl', ['$scope', '$window', '$http', 'l
 
     var token = localStorageService.get('TOKEN')
     if (token == null) {
-      $window.location.href = '/index.html';
+      $window.location.href = 'trootorials-v1/index.html';
     }
 
     var currentPassword = ""
@@ -17,7 +17,7 @@ localstorageApp.controller('PasswordPageCtrl', ['$scope', '$window', '$http', 'l
       if (response.data.error === 0) {
         //        console.log("got 0");
         localStorageService.remove('TOKEN')
-        $window.location.href = '/index.html';
+        $window.location.href = 'trootorials-v1/index.html';
       }
       currentPassword = response.data.password
     });

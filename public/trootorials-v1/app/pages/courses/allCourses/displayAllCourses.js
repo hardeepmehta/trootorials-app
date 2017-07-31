@@ -8,7 +8,7 @@ localstorageApp.controller('displayAllCourses', ['$scope', '$filter', 'editableO
     // console.log("retrieve" + localStorageService.get('TOKEN'))
     token = localStorageService.get('TOKEN')
     if (token == null) {
-      $window.location.href = '/index.html';
+      $window.location.href = 'trootorials-v1/index.html';
     }
     token = token.substring(1, token.length - 1);
 
@@ -19,7 +19,7 @@ localstorageApp.controller('displayAllCourses', ['$scope', '$filter', 'editableO
         if (response.data.error === 0) {
           // console.log("got 0");
           localStorageService.remove('TOKEN')
-          $window.location.href = '/index.html';
+          $window.location.href = 'trootorials-v1/index.html';
         }
         $scope.loading = true;
         setTimeout(function() {
