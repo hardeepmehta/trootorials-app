@@ -270,7 +270,8 @@ function updateHandler(req, res) {
                 name: req.body.name,
                 mobile: req.body.mobile,
                 email: req.body.email,
-                imageUrl: req.body.imageUrl,
+                imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
+                imagePath: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
                 level: req.body.level
               }
             }

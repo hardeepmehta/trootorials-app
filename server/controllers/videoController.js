@@ -118,7 +118,7 @@ function addVideoHandler(req, res) {
         author: req.body.author,
         duration: req.body.duration,
         file: req.body.file,
-        videoPath:process.env['USER_CDN_ADDRESS']+"/"+"uploads/"+req.body.file,        
+        videoPath:process.env['USER_CDN_ADDRESS']+"/"+"uploads/"+req.body.file,
         imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
         imagePath:process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
         ispublic: req.body.ispublic
@@ -302,6 +302,8 @@ function videoUpdateHandler(req, res, next) {
         author: req.body.author,
         duration: req.body.duration,
         file: req.body.file,
+        videoPath: process.env['USER_CDN_ADDRESS']+"/"+"uploads/"+req.body.file,
+        
         //uploadedat: req.body.uploadedat,
         ispublic: req.body.ispublic
       }
@@ -334,9 +336,11 @@ function videoUpdateHandler(req, res, next) {
                 author: req.body.author,
                 duration: req.body.duration,
                 file: req.body.file,
+                videoPath: process.env['USER_CDN_ADDRESS']+"/"+"uploads/"+req.body.file,
                 //uploadedat: req.body.uploadedat,
                 ispublic: req.body.ispublic,
                 imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
+                imagePath: process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl
               }
             }
             sql.update(sql.video, data, whereObj, function(obj) {
