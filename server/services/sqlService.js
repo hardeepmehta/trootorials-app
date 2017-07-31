@@ -27,6 +27,9 @@ var Course = sequelize.define('Course', {
   imageUrl: {
     type: Sequelize.STRING
   },
+  imagePath: {
+    type: Sequelize.STRING
+  },
   level: {
     type: Sequelize.STRING
   }
@@ -54,6 +57,9 @@ var User = sequelize.define('User', {
     type: Sequelize.STRING
   },
   imageUrl: {
+    type: Sequelize.STRING
+  },
+  imagePath: {
     type: Sequelize.STRING
   },
   level: {
@@ -85,7 +91,13 @@ var Video = sequelize.define('Video', {
   file: {
     type: Sequelize.STRING
   },
+  videoPath: {
+    type: Sequelize.STRING
+  },
   imageUrl: {
+    type: Sequelize.STRING
+  },
+  imagePath: {
     type: Sequelize.STRING
   },
   ispublic: {

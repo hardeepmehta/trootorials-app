@@ -121,6 +121,7 @@ function addCourseHandler(req, res, next) {
         description: req.body.description,
         duration: req.body.duration,
         imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
+        imagePath:process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
         level: level,
         levelText: levelText[parseInt(level)]
       }
@@ -150,6 +151,7 @@ function addCourseHandler(req, res, next) {
                   description:obj.data.description,
                   duration:obj.data.duration,
                   imageUrl:obj.data.imageUrl,
+                  imagePath:obj.data.imagePath,
                   level:obj.data.level,
                   levelText:levelText[parseInt(obj.data.level)],
                   createdAt:obj.data.createdAt,
@@ -301,6 +303,7 @@ function getCourseUpdateHandler(req, res, next) {
                 description:obj.data.description,
                 duration:obj.data.duration,
                 imageUrl:obj.data.imageUrl,
+                imagePath:obj.data.imagePath,
                 level:obj.data.level,
                 levelText:levelText[parseInt(obj.data.level)],
                 createdAt:obj.data.createdAt,

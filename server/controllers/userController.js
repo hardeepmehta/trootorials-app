@@ -143,6 +143,7 @@ function addUserHandler(req, res) {
         email: req.body.email,
         password: encryptService.encrypt(req.body.password),
         imageUrl: req.body.imageUrl.substring(req.body.imageUrl.lastIndexOf('/')+1),
+        imagePath:process.env['USER_CDN_ADDRESS']+"/"+req.body.imageUrl,
         level: req.body.level,
       }
       if (!(data.name && data.mobile && data.email && data.password && data.level)) {
