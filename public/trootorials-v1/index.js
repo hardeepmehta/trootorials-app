@@ -15,7 +15,7 @@ localstorageApp.controller('LoginCtrl', ['$scope', 'localStorageService', '$http
     $http({
         method: 'POST',
         format: 'json',
-        url: '/api/login',
+        url: 'api/login',
         data: JSON.stringify({
           email: $scope.uemail,
           password: $scope.upasswd,
