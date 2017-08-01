@@ -21,7 +21,8 @@
 
         <div class="form-group">
           <label>Course Id</label>
-          <input type="text" class="form-control" required ng-model="form.course" name="course" id="exampleInputPassword1" placeholder="Enter course id">
+          <!-- <input type="text" class="form-control" required ng-model="form.course" name="course" id="exampleInputPassword1" placeholder="Enter course id"> -->
+          <select ng-model="form.course" class="form-control" ng-options="x.id as x.title for x in names"></select>
         </div>
 
         <div class="form-group">

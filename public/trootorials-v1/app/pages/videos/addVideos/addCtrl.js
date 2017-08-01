@@ -34,6 +34,7 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
     filename = filename + uuid;
     q = filename;
     fd.append('file', file, filename);
+
     return $http.post(uploadUrl, fd, {
         transformRequest: angular.identity,
         uploadEventHandlers: {
@@ -55,36 +56,55 @@ myApp.service('fileUpload', ['$http', '$window', '$timeout', function($http, $wi
       .error(function() {});
   }
 
-  this.submit = function(f, uploadUrl, t) {
-    $http({
-        method: 'POST',
-        format: 'json',
-        url: uploadUrl,
-        data: JSON.stringify(f)
-      })
-      .then(function(success) {
-
-        t.success = true;
-        t.f = {};
-
-        $timeout(function() {
-          $window.location.href = "#/videos/allVideos"
-        }, 3000);
-
-      }, function(error) {
-
-      });
-  }
+  this.submit = function(f, uploadUrl, t,r) {
+    // return $http({
+    //     method: 'POST',
+    //     format: 'json',
+    //     url: uploadUrl,
+    //     data: JSON.stringify(f)
+    //   })
+    //   .then(function(res) {
+    //     // $http({
+    //     //     method: 'POST',
+    //     //     format: 'json',
+    //     //     url: '/api/add-mapping?token='+token,
+    //     //     data: JSON.stringify({
+    //     //       courseid: parseInt(courseid),
+    //     //       videoid : res.data.data.data.id
+    //     //     })
+    //     //   })
+    //     //   .then(function(res) {
+    //     //
+    //     // },function(error){
+    //     //
+    //     // });}
+    //     return res;
+    //     console.log('working123123');
+    //     console.log(res);
+    //     t.success = true;
+    //     t.f = {};
+    //
+    //     // $timeout(function() {
+    //     //   $window.location.href = "#/videos/allVideos"
+    //     // }, 3000);
+    //
+    //   }, function(error) {
+    //       console.log(error);
+    //   });
+  };
+  this.getAllCourse = function() {
+    // console.log('working');
+}
 }]);
 
 
-myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window', 'localStorageService','Upload',
-function($scope, fileUpload, $window, localStorageService ,Upload) {
+myApp.controller('addCtrl', ['$scope', 'fileUpload', '$window','localStorageService','Upload','$http','$timeout',
+function($scope, fileUpload, $window, localStorageService ,Upload,$http,$timeout) {
 
 
   var token = localStorageService.get('TOKEN')
   if (token == null) {
-    $window.location.href = 'trootorials-v1/index.html';
+    $window.location.href = '/index.html';
   }
   token = token.substring(1, token.length - 1);
 
@@ -92,10 +112,35 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
   $scope.view = false;
   $scope.success = false;
   $scope.add = true;
+  // $scope.form.course = 123;
+  // fileUpload.getAllCourse();
+  // console.log('working');
+  // alert('working')
+  // $scope.form= {
+  //   course:'bob'
+  // }
+  $http.get("/trootorials-v1/api/all-courses/?token=" + token).then(function(response) {
+    if (response.data.error === 0) {
+
+      localStorageService.remove('TOKEN')
+      $window.location.href = '/index.html';
+    }
+    // var arr = [];
+    // for (var i = 0; i < response.data.data.length; i++) {
+    //   console.log(response.data.data);
+    //   arr.push(response.data.data[i].title)
+    //   // $scope.form= {
+    //   //   course:response.data.data[i].title
+    //   // }
+    // }
+    $scope.names= response.data.data;
+  });
 
   $scope.uploadFile = function(f) {
     // $scope.add = false;
     var file = $scope.myFile;
+    // console.log(f);
+// console.log(f.course);
 
     var thumbnail = $scope.form.file
 
@@ -119,8 +164,42 @@ function($scope, fileUpload, $window, localStorageService ,Upload) {
           imageUrl: url,
           file: q,
         }
-        var uploadUrl = "/trootorials-v1/api/add-video?token=" + token
-        fileUpload.submit($scope.var, uploadUrl, $scope,f.course);
+        var uploadUrl = "/trootorials-v1/api/add-video?token=" + token;
+
+        // var map = fileUpload.submit($scope.var, uploadUrl, $scope,f.course
+        $http({
+            method: 'POST',
+            format: 'json',
+            url:  "/trootorials-v1/api/add-video?token=" + token,
+            data: JSON.stringify($scope.var)
+          })
+          .then(function(res) {
+            $http({
+                method: 'POST',
+                format: 'json',
+                url: '/trootorials-v1/api/add-mapping?token='+token,
+                data: JSON.stringify({
+                  courseid: parseInt(f.course),
+                  videoid : res.data.data.data.id
+                })
+              }).then(function(response) {
+                    // console.log(response);
+                  },function(error){
+
+                  })
+
+            $scope.success = true;
+            $scope.form = {};
+
+            $timeout(function() {
+              $window.location.href = "#/videos/allVideos"
+            }, 3000);
+
+          }, function(error) {
+              // console.log(error);
+          });
+
+
     })
   }
   }
