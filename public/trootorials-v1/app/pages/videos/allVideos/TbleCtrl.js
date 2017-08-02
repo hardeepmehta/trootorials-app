@@ -89,20 +89,47 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
     $scope.removeVideo = function(id, $index) {
       var m = parseInt(id);
-      if ($window.confirm("Are you sure you want to delete?") == true) {
-        $http.post("/trootorials-v1/api/delete-video/" + m + "?token=" + token).then(function(response) {
-          $scope.loading = true;
+        swal({
+          title: "Are you sure?",
+        text: "You will not be able to recover this imaginary file!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, delete it!",
+        closeOnConfirm: false,
+        html: false
+        },
+    function() {
+      $http.post("/trootorials-v1/api/delete-video/" + m + "?token=" + token).then(function(response) {
+        $scope.loading = true;
+        swal({
+          title: "Deleted",
+          text: "File has been successfully deleted",
+          type: "success"
+        }, function() {
+          // location.reload();
+          // $scope.loading = false;
           setTimeout(function() {
+
+
             $scope.loading = false;
+
+
             $scope.$apply();
           }, 2000);
-          $scope.users.splice($index, 1);
-          $http.post("/trootorials-v1/api/deletevideo-mapping/"+m+"?token="+token).then(function(response){
-
-          });
         });
+        // $scope.loading = false;
+        //  $scope.$apply();
+        $scope.users.splice($index, 1);
+        $http.post("/trootorials-v1/api/deletevideo-mapping/" + m + "?token=" + token).then(function(response) {
 
-      } else {}
+        });
+      });
+      // swal("Deleted!",
+      // "Your imaginary file has been deleted.",
+      // "success");
+    });
+
     }
     $scope.openProgressDialog = baProgressModal.open;
 
