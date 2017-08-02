@@ -22,45 +22,36 @@
       {{course.id}}
     </td>
     <td>
-      <span editable-text="user.title" e-name="name" e-form="rowform" e-required>
+      <span editable-text="course.title" e-name="name" e-form="rowform" e-required>
           {{ course.title || 'empty' }}
       </span>
     </td>
 
     <td>
-      <span editable-text="user.description" e-name="name" e-form="rowform" e-required>
+      <span editable-text="course.description" e-name="name" e-form="rowform" e-required>
           {{ course.description || 'empty' }}
       </span>
     </td>
 
     <td>
-      <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
+      <span editable-text="course.duration" e-name="name" e-form="rowform" e-required>
           {{ course.duration || 'empty' }}
       </span>
     </td>
 
     <td>
-      <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
+      <span editable-text="course.level" e-name="name" e-form="rowform" e-required>
           {{ course.level || 'empty' }}
       </span>
     </td>
 
     <td>
-      <span editable-text="user.duration" e-name="name" e-form="rowform" e-required>
+      <span editable-text="course.imageUrl" e-name="name" e-form="rowform" e-required>
           {{ course.imageUrl || 'empty' }}
       </span>
     </td>
 
     <td>
-      <form editable-form name="rowform" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == course">
-        <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary editable-table-button btn-xs">
-          Save
-        </button>
-        <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default editable-table-button btn-xs">
-          Cancel
-        </button>
-      </form>
-
       <div class="buttons" ng-show="!rowform.$visible">
         <button class="btn btn-primary editable-table-button btn-xs" ng-click="open('lg',0,course.id)" data-toggle="modal">Edit</button>
         <button class="btn btn-danger editable-table-button btn-xs" ng-click="removeCourse(course.id , $index)">Delete</button>

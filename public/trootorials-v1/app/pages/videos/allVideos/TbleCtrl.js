@@ -91,7 +91,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
       var m = parseInt(id);
         swal({
           title: "Are you sure?",
-        text: "You will not be able to recover this imaginary file!",
+        text: "You will not be able to recover this  file!",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",
