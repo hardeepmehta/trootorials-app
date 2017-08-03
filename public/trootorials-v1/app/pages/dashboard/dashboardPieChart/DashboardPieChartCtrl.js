@@ -6,7 +6,7 @@ localstorageApp.controller('DashboardPieChartCtrl', ['$scope', '$timeout', '$htt
     // console.log("retrieve" + localStorageService.get('TOKEN'))
     var token = localStorageService.get('TOKEN')
     if (token == null) {
-      $window.location.href = 'trootorials-v1/index.html';
+      $window.location.href = '/trootorials-v1/index.html';
     }
 
     token = token.substring(1, token.length - 1);
@@ -16,7 +16,7 @@ localstorageApp.controller('DashboardPieChartCtrl', ['$scope', '$timeout', '$htt
       if (response.data.error === 0) {
         //  console.log("got 0");
         localStorageService.remove('TOKEN')
-        $window.location.href = 'trootorials-v1/index.html';
+        $window.location.href = '/trootorials-v1/index.html';
       } else {
         //  console.log(response.data[0].courses);
         //  console.log(response.data[1].videos);

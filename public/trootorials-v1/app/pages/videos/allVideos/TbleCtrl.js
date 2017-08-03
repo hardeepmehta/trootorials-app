@@ -18,7 +18,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
 
     var token = localStorageService.get('TOKEN')
     if (token == null) {
-      $window.location.href = '/index.html';
+      $window.location.href = '/trootorials-v1/index.html';
     }
     token = token.substring(1, token.length - 1);
 
@@ -33,7 +33,7 @@ localstorageApp.controller('TbleCtrl', ['$rootScope', '$scope', '$filter', 'edit
       if (response.data.error === 0) {
 
         localStorageService.remove('TOKEN')
-        $window.location.href = '/index.html';
+        $window.location.href = '/trootorials-v1/index.html';
       }
       $scope.loading = true;
       setTimeout(function() {
@@ -271,7 +271,7 @@ myApp.controller('ModalInstanceCtrl1', ['$http','$scope', '$uibModalInstance',  
     if (response.data.error === 0) {
 
       localStorageService.remove('TOKEN')
-      $window.location.href = '/index.html';
+      $window.location.href = '/trootorials-v1/index.html';
     }
     // var arr = [];
     // for (var i = 0; i < response.data.data.length; i++) {

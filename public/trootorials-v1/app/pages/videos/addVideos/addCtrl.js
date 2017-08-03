@@ -104,7 +104,7 @@ function($scope, fileUpload, $window, localStorageService ,Upload,$http,$timeout
 
   var token = localStorageService.get('TOKEN')
   if (token == null) {
-    $window.location.href = '/index.html';
+    $window.location.href = '/trootorials-v1/index.html';
   }
   token = token.substring(1, token.length - 1);
 
@@ -123,7 +123,7 @@ function($scope, fileUpload, $window, localStorageService ,Upload,$http,$timeout
     if (response.data.error === 0) {
 
       localStorageService.remove('TOKEN')
-      $window.location.href = '/index.html';
+      $window.location.href = '/trootorials-v1/index.html';
     }
     // var arr = [];
     // for (var i = 0; i < response.data.data.length; i++) {

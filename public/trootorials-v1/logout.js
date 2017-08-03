@@ -7,7 +7,7 @@ localstorageApp.controller('LogoutCtrl', ['$scope', 'localStorageService', '$htt
   console.log("token value" + token)
 
   $timeout(function() {
-    $window.location.href = 'trootorials-v1/index.html';
+    $window.location.href = '/trootorials-v1/index.html';
   }, 4000)
   // $window.location.href = '/index.html';
 
