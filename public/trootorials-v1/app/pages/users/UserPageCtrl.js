@@ -7,7 +7,7 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
 
     var token = localStorageService.get('TOKEN')
     if (token == null) {
-      $window.location.href = 'trootorials-v1/index.html';
+      $window.location.href = '/trootorials-v1/index.html';
     }
     token = token.substring(1, token.length - 1);
 
@@ -19,7 +19,7 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
       if (response.data.error === 0) {
         // //console.log("got 0");
         localStorageService.remove('TOKEN')
-        $window.location.href = 'trootorials-v1/index.html';
+        $window.location.href = '/trootorials-v1/index.html';
       }
       $scope.loading = true;
       setTimeout(function() {
@@ -78,18 +78,43 @@ localstorageApp.controller('UserPageCtrl', ['$rootScope', '$scope', '$filter', '
 
 
 
-    $scope.removeCourse = function(id, $index) {
+    $scope.removeUser = function(id, $index) {
       var m = parseInt(id);
-      if ($window.confirm("Are you sure you want to delete?") == true) {
-        $http.post("/trootorials-v1/api/delete-user/" + m + "/" + "?token=" + token).then(function(response) {
-          $scope.users.splice($index, 1);
+        swal({
+          title: "Are you sure?",
+        text: "You will not be able to recover this User!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, delete it!",
+        closeOnConfirm: false,
+        html: false
+        },
+    function() {
+      $http.post("/trootorials-v1/api/delete-user/" + m + "?token=" + token).then(function(response) {
+        $scope.loading = true;
+        swal({
+          title: "Deleted",
+          text: "User has been successfully deleted",
+          type: "success"
+        }, function() {
+          // location.reload();
+          // $scope.loading = false;
+          setTimeout(function() {
+
+
+            $scope.loading = false;
+
+
+            $scope.$apply();
+          }, 2000);
         });
-      } else {}
-      $scope.loading = true;
-      setTimeout(function() {
-        $scope.loading = false;
-        $scope.$apply();
-      }, 2000);
+
+          $scope.users.splice($index, 1);
+
+      });
+    });
+
     }
 
     $scope.openProgressDialog = baProgressModal.open;
